@@ -16,8 +16,8 @@ HLT   # comment at end of line
 Numbers
 ------
 ```
-Numbers are unsigned
-unadorned integer represents a decimal value
+Numbers are unsigned integers
+An unadorned integer represents a decimal value
 $ represents a hex value $D7E0
 % represents a binary value %0101_1100_1011
 underscores in numbers are ignored
@@ -68,10 +68,11 @@ Directives start with .
 - .set
 - .word
 - .array
+- .fill-array
 - .string
-- .include
-- .inject insert or copy??
 - .move
+- .include
+- .copy
 
 ### .set ###
 ```
@@ -90,9 +91,25 @@ Sets a variable to a constant value
 
 ### .array ###
 ```
-.array size fill
+Array reserves multiple consecutive slots in memory and sets the slots
+to specific values.  The values are listed between brackets [] and
+delimited by whitespace.
+.array [list of whitespace delimited unsigned integers]
+.array [1 2 3]
+Array values are free form within the brackets []
+.array [
+    $F0 $F1 $F2 $F3
+    $F4 $F5 $F6 $F7
+]
+```
+### .fill-array ###
+```
+The f
+.fill-array size fill
 (my_array)
 .array 16 0  # my_array now refers to first address of 16-element array
+             # initialized to all zeros
+.array 4 $FF # Creates an array of 4 values of 255
 ```
 
 ### .string ###
@@ -102,23 +119,32 @@ Sets a variable to a constant value
 .str "Hello Joe"    # a string; can be referred to by greet symbol
 ```
 
-### .inject .insert or copy??? ###
+### .move ###
+<!-- Do you really need this, include and copy? -->
+Assembler moves context to specified address during assembly
+Can only move forward in address space from current address,
+not backwards
+```
+.move $0F00
+.move audio
+```
+
+### .copy ###
 Copies binary content of file directly into final assembled binary
-at specified address
-(or at current location if no address is specified).
-Zero fills holes in file
+starting at current location.
+Zero fills holes in asm file
+Optionally takes start and end values for binary file
+start defaults to 0 and end defaults to end of file
+start and end are in terms of 16-bit words in file
 
 ```
-.copy path/file-name.ext address
-.copy video/mario-tiles tiles
-.copy story.txt $9000
+.copy path/file-name.ext [start] [end]
+.move tiles
+.copy video/mario-tiles.bin
 .copy text/story.txt  # copies data into ram starting at current address
+.copy video-data.bin $400
+.copy video-data.bin $400 $4FF  # copy 255 words starting at $400
 ```
-<!--
-# probably not:
-# .word and .array only valid under .static section
--->
-
 
 ### .include ###
 Processed during first pass.  Includes the assembly text
@@ -126,17 +152,10 @@ of all .include directives.  Then the assembler processes the
 total file as one big file.  Not recursive.
 ```
 .include path/to/program.asm    # includes it here
-.include path/to/program.asm address
+.move math-library
+.include path/to/math-lib.asm
 ```
 
-
-### .move ###
-<!-- Do you really need this, include and copy? -->
-Assembler moves context to specified address during assembly
-```
-.move $0F00
-.move audio
-```
 
 Labels
 ------
@@ -151,20 +170,20 @@ Name an address with a label/symbol
 works for both code (jumps) and data (variable names)
 ```
 
+
+Symbols
+-------
+Labels and variables are named with symbols.
+Symbols start with a letter and can contain numbers, - and \_.
+
+
 Pseudo operations
 -----------------
 ```
 CPY R1 R2     ->  ADI R1 0 R2
 NOP           ->  ADI R1 0 R1
-WRD $1234 R7  ->  LBY $34 R7 HBY $12 R7 
+WRD $1234 R7  ->  LBY $34 R7   HBY $12 R7 
 ```
-
-<!--
-Could have format
-ADD R1 R2 -> R3
-or
-ADD R1 R2 R3
--->
 
 
 Assembly Format of the 16 Operations
