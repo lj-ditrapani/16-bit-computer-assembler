@@ -183,6 +183,9 @@ Pseudo operations
 CPY R1 R2     ->  ADI R1 0 R2
 NOP           ->  ADI R1 0 R1
 WRD $1234 R7  ->  LBY $34 R7   HBY $12 R7
+INC R3        ->  ADI R3 1 R3
+DEC R3        ->  SBI R3 1 R3
+JMP R3        ->  BRN R0 R3 NZP
 ```
 
 
@@ -203,8 +206,8 @@ ORR R  R  R
 XOR R  R  R
 NOT R  R
 SHF R  D  A  R
-BRN value-condition  R  R
-BRN flag-condition  R
+BRN R  value-condition R
+BRN flag-condition R
 SPC R
 
 Legend
@@ -262,7 +265,7 @@ Shift the value in R5 right by 7 and store in R0
 SHF R5 R 7 R0   #  $D5E0
 
 If value in R7 is negative or zero, PC = value in RB
-BRN NZ R7 RB    #  $E7B6
+BRN R7 NZ RB    #  $E7B6
 If both carry and overflow flags are *NOT* set, jump to address in R8
 BRN - RB        #  $E0B8
 If carry flag is set, jump to address in R8
