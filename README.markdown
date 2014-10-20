@@ -182,7 +182,7 @@ Pseudo operations
 ```
 CPY R1 R2     ->  ADI R1 0 R2
 NOP           ->  ADI R1 0 R1
-WRD $1234 R7  ->  LBY $34 R7   HBY $12 R7 
+WRD $1234 R7  ->  LBY $34 R7   HBY $12 R7
 ```
 
 
@@ -242,7 +242,6 @@ STR RF R1       #  $4F10
 Add value in RE to value in R6 and store in RA
 ADD RE R6 RA    #  $5E6A
 ADD R14 R6 R10  #  $5E6A
-  
 
 Same format for SUB, AND, ORR, XOR as ADD
 
