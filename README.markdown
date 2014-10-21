@@ -178,8 +178,8 @@ Labels and variables are named with symbols.
 Symbols start with a letter and can contain letters, numbers, - and \_.
 
 
-Pseudo operations
------------------
+Pseudo Instructions
+-------------------
 ```
 pseudo        |   Actual assembled instructions
 ------------------------------------------------
