@@ -160,32 +160,35 @@ total file as one big file.  Not recursive.
 Labels
 ------
 ```
-Labels/symbols are surrounded with ()
+Labels are symbols surrounded with ()
 (label_name)
 labels go on separate lines by them selves
+The value of a label is the memory address of the line below it
 
-One instruction/label per line
+One label per line
 
-Name an address with a label/symbol
-works for both code (jumps) and data (variable names)
+Use a label to name an address
+Works for both code (jumps) and data (variable names)
 ```
 
 
 Symbols
 -------
 Labels and variables are named with symbols.
-Symbols start with a letter and can contain numbers, - and \_.
+Symbols start with a letter and can contain letters, numbers, - and \_.
 
 
 Pseudo operations
 -----------------
 ```
-CPY R1 R2     ->  ADI R1 0 R2
-NOP           ->  ADI R1 0 R1
-WRD $1234 R7  ->  LBY $34 R7   HBY $12 R7
-INC R3        ->  ADI R3 1 R3
-DEC R3        ->  SBI R3 1 R3
-JMP R3        ->  BRN R0 R3 NZP
+pseudo        |   Actual assembled instructions
+------------------------------------------------
+CPY R1 R2     |   ADI R1 0 R2
+NOP           |   ADI R1 0 R1
+WRD $1234 R7  |   LBY $34 R7   HBY $12 R7
+INC R3        |   ADI R3 1 R3
+DEC R3        |   SBI R3 1 R3
+JMP R3        |   BRN R0 R3 NZP
 ```
 
 
