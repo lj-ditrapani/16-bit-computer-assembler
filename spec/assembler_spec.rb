@@ -18,14 +18,14 @@ describe Assembler do
 end
 
 
-describe Assembler::AssemblyState do
+describe Assembler::Assembly do
   before do
     lines = [
       'a',
       'b',
       'c'
     ]
-    @state = Assembler::AssemblyState.new(lines)
+    @state = Assembler::Assembly.new(lines)
   end
 
   describe 'peek_line' do
@@ -81,4 +81,42 @@ describe Assembler::AssemblyState do
     end
   end
 
+end
+
+
+describe Assembler::CommandList do
+  before do
+    @state = Assembler::CommandList.new
+  end
+  describe 'add_command' do
+    before do
+      class MockCommand
+        attr_accessor :word_length
+      end
+      @cmd = MockCommand.new
+    end
+    describe 'when command is 1 machine word long' do
+      it 'should increment the word_index by one (no args)' do
+        @cmd.word_length = 1
+        @state.add_command @cmd
+        assert_equal 1, @state.word_index
+      end
+    end
+    describe 'when command is 4 machine words long' do
+      it 'should incement the word_index by 4' do
+        @cmd.word_length = 4
+        @state.add_command @cmd
+        assert_equal 4, @state.word_index
+      end
+    end
+    describe 'when 2 commands of 1 and 4 machine words in length' do
+      it 'should incement the word_index by 5' do
+        @cmd.word_length = 1
+        @state.add_command @cmd
+        @cmd.word_length = 4
+        @state.add_command @cmd
+        assert_equal 5, @state.word_index
+      end
+    end
+  end
 end
