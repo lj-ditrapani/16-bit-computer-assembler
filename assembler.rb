@@ -4,7 +4,7 @@
 module Assembler
 
 
-  class AssemblyState
+  class Assembly
     attr_reader :line_number
 
     def initialize(lines)
@@ -24,16 +24,25 @@ module Assembler
   end
 
 
-  class MachineCodeState
+  class CommandList
     attr_reader :word_index
 
     def initialize()
+      # The index of the next free address
       @word_index = 0
       @commands = []
     end
 
-    def inc_words(n=0)
+    def add_command(cmd)
+      inc_words cmd.word_length
+    end
+
+    def inc_words(n)
       @word_index += n
+    end
+
+    def word_length
+      @word_index
     end
 
   end
@@ -46,8 +55,6 @@ module Assembler
       exit
     end
     lines = File.readlines(ARGV[0]).to_a
-    puts lines[0].inspect
-    puts lines.length
     line_index = 0
     word_index = 0
     new_lines = []
