@@ -4,6 +4,10 @@
 module Assembler
 
 
+  class AsmError < StandardError
+  end
+
+
   class Assembly
     attr_reader :line_number
 
@@ -130,6 +134,26 @@ module Assembler
       st[("R" + c).to_sym] = i + 10
     end
     st
+  end
+
+
+  def self.to_int(str)
+    if /^\d[x|X]/ === str[0..1]
+      raise AsmError.new, "Malformed integer"
+    end
+    begin
+      num = case str[0]
+            when "%" then Integer(str[1..-1], 2)
+            when "$" then Integer(str[1..-1], 16)
+            else Integer str
+            end
+    rescue ArgumentError
+      raise AsmError.new, "Malformed integer"
+    end
+    if num > 0xFFFF
+      raise AsmError.new, "Number greater than $FFFF"
+    end
+    num
   end
 
 end
