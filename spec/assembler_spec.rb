@@ -15,6 +15,46 @@ describe Assembler do
       assert_equal '.word  42', new_line
     end
   end
+
+  describe "to_int" do
+    tests = [
+      ["$10", 16],
+      ["$FF", 255],
+      ["$FFFF", 0xFFFF],
+      ["$FF_FF", 0xFFFF],
+      ["$FEED", 0xFEED],
+      ["%0101_1111", 0x5F],
+      ["%1010_0101_0000_1101", 0xA50D],
+      ["%1010010100001101", 0xA50D],
+      ["10", 10],
+      ["65_000", 0xFDE8],
+      ["65000", 0xFDE8],
+    ]
+    tests.each do |str, num|
+      it "#{str.inspect} --> #{num}" do
+        assert_equal num, Assembler::to_int(str)
+      end
+    end
+    tests = ["0xFF00", "$FFEZ", "hello", "13F"]
+    tests.each do |str|
+      it "#{str.inspect} raises exception" do
+        err = assert_raises Assembler::AsmError do
+          Assembler::to_int str
+        end
+        assert_match "Malformed integer", err.message
+      end
+    end
+    tests = ["$10000", "66000"]
+    tests.each do |str|
+      it "#{str.inspect} raises exception" do
+        err = assert_raises Assembler::AsmError do
+          Assembler::to_int str
+        end
+        assert_match "Number greater than $FFFF", err.message
+      end
+    end
+  end
+
   describe "make_symbol_table has pre-defined symbols" do
     tests = [
       [:R0, 0],
