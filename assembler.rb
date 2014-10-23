@@ -141,15 +141,16 @@ module Assembler
     if /^\d[x|X]/ === str[0..1]
       raise AsmError.new, "Malformed integer"
     end
-    begin
-      num = case str[0]
-            when "%" then Integer(str[1..-1], 2)
-            when "$" then Integer(str[1..-1], 16)
-            else Integer str
-            end
-    rescue ArgumentError
-      raise AsmError.new, "Malformed integer"
-    end
+    start, base = case str[0]
+                  when "%" then [1, 2]
+                  when "$" then [1, 16]
+                  else [0, 10]
+                  end
+    num = begin
+            Integer(str[start..-1], base)
+          rescue ArgumentError
+            raise AsmError.new, "Malformed integer"
+          end
     if num > 0xFFFF
       raise AsmError.new, "Number greater than $FFFF"
     end
