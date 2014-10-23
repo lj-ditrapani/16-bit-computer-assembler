@@ -65,7 +65,7 @@ module Assembler
     lines = File.readlines(ARGV[0]).to_a
     asm = Assembly.new lines
     commands = CommandList.new
-    symbol_table = {:R0 => 0, :R1 => 1}
+    symbol_table = make_symbol_table
     new_lines = []
     # can't use each_with_index since the line_number and word_index can
     # change by a variable # based on the command
@@ -83,17 +83,17 @@ module Assembler
         # handle .set
         name, str_value, rest = args_str.split(/\s+/, 3)
         value = begin
-          Integer(str_value)
-        rescue
-          symbol_table[str_value.to_sym]
-          # need error handling here!
-        end
+                  to_int(str_value)
+                rescue
+                  symbol_table[str_value.to_sym]
+                  # need error handling here!
+                end
         symbol_table[name] = value
       end
       new_lines.push line
     end
     puts new_lines
-    puts symbol_table
+    symbol_table.each {|k, v| puts "  #{k.to_s.rjust(11)} => #{v}"}
   end
 
 
