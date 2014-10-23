@@ -6,11 +6,13 @@ LJD 16-bit CPU Assembly Language
 Comments
 --------
 
-Use # to comment a line
+Use # to comment a line.
 ```
 # this is a comment
 HLT   # comment at end of line
 ```
+Comments can be placed on any line except on lines between
+.long-string and .end-long-string directives.
 
 
 Numbers
@@ -39,27 +41,19 @@ cell-xy-flips
 sprites
 sprite-colors
 cell-colors
-keyboard
 sound
 net-out
 net-in
 storage-out
 storage-in
+keyboard
+net-status
+enable-bits
+storage-read-address
+storage-write-address
+frame-interrupt-vector
 ```
 
-
-Strings
--------
-```
-"one two three"
-"c"
-"embedded \" in string"
-"\"Hi\" she said"
-Use two \\ to represent a \
-"win\\path\\file.txt"
-"Bin number \%0101  Hex number \$AOU"
-"\n\t\r" special chars newline, tab
-```
 
 Directives
 ----------
@@ -70,6 +64,8 @@ Directives start with .
 - .array
 - .fill-array
 - .string
+- .long-string
+- .end-long-string
 - .move
 - .include
 - .copy
@@ -96,11 +92,18 @@ to specific values.  The values are listed between brackets [] and
 delimited by whitespace.
 .array [list of whitespace delimited unsigned integers]
 .array [1 2 3]
-Array values are free form within the brackets []
+Array values are free-form within the brackets []
 .array [
-    $F0 $F1 $F2 $F3
-    $F4 $F5 $F6 $F7
+    $F0 $F1 $F2 $F3     # First 4 words
+    $F4 $F5 $F6 $F7     # Last 4 words
 ]
+# Array with 9 mixed-representation numbers; 3 pre line
+.array [
+    %0101_0000_1111_1010 $FEED 16
+    %1111_0000_1111_1010 $FACE 32
+    %0000_1111_1111_0101 $BACE 64
+]
+
 ```
 ### .fill-array ###
 ```
@@ -118,9 +121,47 @@ The f
 (greet)
 .str "Hello Joe"    # a string; can be referred to by greet symbol
 ```
+The .str directive and the string must fit on a single line.
+Use the .long-string directive for multi-line strings
+```
+.str "one two three"
+.str "c"
+.str "embedded \" in string"
+.str "\"Hi\" she said"
+Use two \\ to represent a \
+.str "win\\path\\file.txt"
+.str "\n\t\r" special chars newline, tab
+```
+
+### .long-string ###
+Begins a multi-line string
+
+Format:
+
+    .long-string (literal-newlines|escaped-newlines)
+
+With literal-newlines, the '\n' char is appended to each line
+
+  .long-string literal-newlines
+  line one
+  line two
+  line three
+  .end-long-string
+
+With escaped-newlines, the newlines at the end of each line are stripped
+and the only way to have a newline is to explicitly use the escape
+sequence '\n'.
+
+  .long-string escaped-newlines
+  line one
+  still line one \n now line two
+  still line two
+  .end-long-string
+
+### .end-long-string ###
+Ends a multi-line string (see .long-string above for examples)
 
 ### .move ###
-<!-- Do you really need this, include and copy? -->
 Assembler moves context to specified address during assembly
 Can only move forward in address space from current address,
 not backwards
@@ -162,7 +203,7 @@ Labels
 ```
 Labels are symbols surrounded with ()
 (label_name)
-labels go on separate lines by them selves
+labels go on separate lines by themselves
 The value of a label is the memory address of the line below it
 
 One label per line
