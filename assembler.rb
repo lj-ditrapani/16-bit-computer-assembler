@@ -21,6 +21,10 @@ module Assembler
       @lines.shift
     end
 
+    def empty?
+      @lines.empty?
+    end
+
   end
 
 
@@ -55,13 +59,14 @@ module Assembler
       exit
     end
     lines = File.readlines(ARGV[0]).to_a
-    line_index = 0
-    word_index = 0
+    asm = Assembly.new lines
+    commands = CommandList.new
+    symbol_table = {}
     new_lines = []
     # can't use each_with_index since the line_number and word_index can
     # change by a variable # based on the command
-    until lines.empty?
-      line = strip(lines.shift)
+    until asm.empty?
+      line = strip(asm.pop_line)
       if line.empty?
         next
       end
