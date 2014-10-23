@@ -61,7 +61,7 @@ module Assembler
     lines = File.readlines(ARGV[0]).to_a
     asm = Assembly.new lines
     commands = CommandList.new
-    symbol_table = {}
+    symbol_table = {'R0' => 0, 'R1' => 1}
     new_lines = []
     # can't use each_with_index since the line_number and word_index can
     # change by a variable # based on the command
@@ -70,9 +70,26 @@ module Assembler
       if line.empty?
         next
       end
+      cmd_str, args_str = line.split(/\s+/, 2)
+      if cmd_str[0] == '('
+        # handle label
+        symbol_table[line[1...-1]] = commands.word_index
+      end
+      if cmd_str == '.set'
+        # handle .set
+        name, str_value, rest = args_str.split(/\s+/, 3)
+        value = begin
+          Integer(str_value)
+        rescue
+          symbol_table[str_value]
+          # need error handling here!
+        end
+        symbol_table[name] = value
+      end
       new_lines.push line
     end
     puts new_lines
+    puts symbol_table
   end
 
 
