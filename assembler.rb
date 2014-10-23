@@ -99,11 +99,14 @@ module Assembler
 
   def self.strip(line)
     new_line = line.strip
-    if new_line[0] == '#'
-      ''
-    else
-      new_line
+    if new_line.empty? or new_line[0] == '#'
+      return ''
     end
+    first_word, rest = new_line.split(' ', 2)
+    if first_word == '.string'
+      return new_line
+    end
+    new_line.split('#', 2)[0].strip
   end
 
 
