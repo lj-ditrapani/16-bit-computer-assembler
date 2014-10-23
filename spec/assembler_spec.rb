@@ -14,6 +14,16 @@ describe Assembler do
       new_line = Assembler.strip(line)
       assert_equal '.word  42', new_line
     end
+    it "should not remove comment at end of .string directive" do
+      line = '  .string " my string " # My comment'
+      new_line = Assembler.strip(line)
+      assert_equal '.string " my string " # My comment', new_line
+    end
+    it "should remove comment at end of line" do
+      line = "  ADI R1 $A R3 \t # My comment\n"
+      new_line = Assembler.strip(line)
+      assert_equal "ADI R1 $A R3", new_line
+    end
   end
 
   describe "to_int" do
@@ -162,21 +172,21 @@ describe Assembler::CommandList do
       @cmd = MockCommand.new
     end
     describe 'when command is 1 machine word long' do
-      it 'should increment the word_index by one (no args)' do
+      it 'increments the word_index by one (no args)' do
         @cmd.word_length = 1
         @state.add_command @cmd
         assert_equal 1, @state.word_index
       end
     end
     describe 'when command is 4 machine words long' do
-      it 'should incement the word_index by 4' do
+      it 'incements the word_index by 4' do
         @cmd.word_length = 4
         @state.add_command @cmd
         assert_equal 4, @state.word_index
       end
     end
     describe 'when 2 commands of 1 and 4 machine words in length' do
-      it 'should incement the word_index by 5' do
+      it 'incements the word_index by 5' do
         @cmd.word_length = 1
         @state.add_command @cmd
         @cmd.word_length = 4
@@ -186,3 +196,19 @@ describe Assembler::CommandList do
     end
   end
 end
+
+
+=begin
+describe Assembler::Token do
+  it 'handles symbols' do
+    token = Assembler::Token.new "my-label"
+    assert_equal :symbol, token.type
+    assert_equal :"my-label", token.value
+  end
+  it 'handles integers' do
+    token = Assembler::Token.new "$F099"
+    assert_equal :int, token.type
+    assert_equal 0xF099, token.value
+  end
+end
+=end
