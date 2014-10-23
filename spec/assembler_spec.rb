@@ -15,6 +15,32 @@ describe Assembler do
       assert_equal '.word  42', new_line
     end
   end
+  describe "make_symbol_table has pre-defined symbols" do
+    tests = [
+      [:R0, 0],
+      [:R1, 1],
+      [:RA, 10],
+      [:RF, 15],
+      [:sound,           0xD800],
+      [:"net-in",        0xDC00],
+      [:"storage-out",   0xE800],
+      [:"cell-x-y-flip", 0xFD60],
+      [:sprites,         0xFE8C],
+      [:"sprite-colors", 0xFFAC],
+      [:keyboard,        0xFFFA],
+      [:"net-status",    0xFFFB],
+      [:"enable-bits",   0xFFFC],
+      [:"storage-read-address",   0xFFFD],
+      [:"storage-write-address",  0xFFFE],
+      [:"frame-interrupt-vector", 0xFFFF],
+    ]
+    st = Assembler.make_symbol_table
+    tests.each do |key, value|
+      it "has value #{value} associated with key #{key}" do
+        assert_equal value, st[key]
+      end
+    end
+  end
 end
 
 
