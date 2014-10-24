@@ -8,6 +8,21 @@ module Assembler
   end
 
 
+  class Token
+    attr_reader :type, :value
+
+    def initialize(str)
+      if ['$', '%', /\d/].any? {|match| match === str[0]}
+        @type = :int
+        @value = Assembler.to_int str
+      else
+        @type = :symbol
+        @value = str.to_sym
+      end
+    end
+  end
+
+
   class Assembly
     attr_reader :line_number
 
