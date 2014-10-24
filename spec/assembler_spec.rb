@@ -198,7 +198,6 @@ describe Assembler::CommandList do
 end
 
 
-=begin
 describe Assembler::Token do
   it 'handles symbols' do
     token = Assembler::Token.new "my-label"
@@ -211,4 +210,3 @@ describe Assembler::Token do
     assert_equal 0xF099, token.value
   end
 end
-=end
