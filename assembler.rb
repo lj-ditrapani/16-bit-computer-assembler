@@ -91,22 +91,16 @@ module Assembler
         next
       end
       first_word, args_str = line.split(/\s+/, 2)
-      # type = line_type first_word
-      # Assembler.send type
-      if first_word[0] == '('
-        # handle label
-        symbol_table[line[1...-1].to_sym] = commands.word_index
-      end
-      if first_word == '.set'
-        # handle .set
-        name, str_value, rest = args_str.split(/\s+/, 3)
-        token = Token.new str_value
-        value = if token.type == :symbol
-                  symbol_table[token.value]
-                else
-                  token.value
-                end
-        symbol_table[name] = value
+      type = line_type first_word
+      case type
+      when :label then
+        label(first_word, symbol_table, commands.word_index)
+      when :set_directive then
+        set_directive(args_str, symbol_table)
+      when :include_directive then
+        include_directive(args_str)
+      when :command then
+        handle_command(first_word, args_str, commands)
       end
       new_lines.push line
     end
@@ -176,6 +170,39 @@ module Assembler
       raise AsmError.new, "Number greater than $FFFF"
     end
     num
+  end
+
+  def self.line_type(first_word)
+    if first_word[0] == '('
+      :label
+    elsif first_word == '.set'
+      :set_directive
+    elsif first_word == '.include'
+      :include_directive
+    else
+      :command
+    end
+  end
+
+  def self.label(first_word, symbol_table, word_index)
+    symbol_table[first_word[1...-1].to_sym] = word_index
+  end
+
+  def self.set_directive(args_str, symbol_table)
+    name, str_value = args_str.split(/\s+/, 2)
+    token = Token.new str_value
+    value = if token.type == :symbol
+              symbol_table[token.value]
+            else
+              token.value
+            end
+    symbol_table[name] = value
+  end
+
+  def self.include_directive(args_str)
+  end
+
+  def self.handle_command(first_word, args_str, commands)
   end
 
 end
