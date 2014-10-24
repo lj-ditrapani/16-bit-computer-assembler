@@ -18,6 +18,7 @@ module Assembler
       else
         @type = :symbol
         @value = str.to_sym
+        # could check for invalid symbols
       end
     end
   end
@@ -89,19 +90,21 @@ module Assembler
       if line.empty?
         next
       end
-      cmd_str, args_str = line.split(/\s+/, 2)
-      if cmd_str[0] == '('
+      first_word, args_str = line.split(/\s+/, 2)
+      # type = line_type first_word
+      # Assembler.send type
+      if first_word[0] == '('
         # handle label
         symbol_table[line[1...-1].to_sym] = commands.word_index
       end
-      if cmd_str == '.set'
+      if first_word == '.set'
         # handle .set
         name, str_value, rest = args_str.split(/\s+/, 3)
-        value = begin
-                  to_int(str_value)
-                rescue
-                  symbol_table[str_value.to_sym]
-                  # need error handling here!
+        token = Token.new str_value
+        value = if token.type == :symbol
+                  symbol_table[token.value]
+                else
+                  token.value
                 end
         symbol_table[name] = value
       end
