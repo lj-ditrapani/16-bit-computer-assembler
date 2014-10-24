@@ -100,7 +100,7 @@ module Assembler
       when :include_directive then
         include_directive(args_str)
       when :command then
-        handle_command(first_word, args_str, commands)
+        handle_command(first_word, args_str, asm, commands)
       end
       new_lines.push line
     end
@@ -202,9 +202,41 @@ module Assembler
   def self.include_directive(args_str)
   end
 
-  def self.handle_command(first_word, args_str, commands)
+  def self.handle_command(first_word_str, args_str, asm, commands)
+    first_word = first_word_str.to_sym
+    args = args_str.split
+    pseudo_instructions_list = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
+    command = if first_word_str[0] == '.'
+                Directives.send(first_word, args_str, asm, commands)
+              elsif pseudo_instructions_list.include? first_word
+                PseudoInstructions.send(first_word, *args)
+              else
+                Instructions.send(first_word, *args)
+              end
   end
 
+end
+
+
+class Assembler::Command
+  attr_reader :word_length
+end
+
+module Assembler::Directives
+  def self.directive_to_class_name(symbol)
+    symbol[1..-1].split('-').map(&:capitalize).push('Directive').join.to_sym
+  end
+  class MoveDirective < Assembler::Command
+    def initialize
+    end
+  end
+  def self.handle(first_word, args_str, asm, commands)
+    map = {
+      :move => :MoveDirective,
+      :string => :StringDirective,
+      :"long-string" => :LongStringDirective,
+    }
+  end
 end
 
 
