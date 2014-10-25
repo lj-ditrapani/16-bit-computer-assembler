@@ -84,26 +84,36 @@ module Assembler
     commands = CommandList.new
     symbol_table = make_symbol_table
     new_lines = []
-    # can't use each_with_index since the line_number and word_index can
-    # change by a variable # based on the command
-    until asm.empty?
-      line = strip(asm.pop_line)
-      if line.empty?
-        next
+    begin
+      # can't use each_with_index since the line_number and word_index can
+      # change by a variable # based on the command
+      until asm.empty?
+        line = strip(asm.pop_line)
+        if line.empty?
+          next
+        end
+        first_word, args_str = line.split(/\s+/, 2)
+        type = line_type first_word
+        case type
+        when :label then
+          label(first_word, symbol_table, commands.word_index)
+        when :set_directive then
+          set_directive(args_str, symbol_table)
+        when :include_directive then
+          include_directive(args_str)
+        when :command then
+          handle_command(first_word, args_str, asm, commands)
+        end
+        new_lines.push line
       end
-      first_word, args_str = line.split(/\s+/, 2)
-      type = line_type first_word
-      case type
-      when :label then
-        label(first_word, symbol_table, commands.word_index)
-      when :set_directive then
-        set_directive(args_str, symbol_table)
-      when :include_directive then
-        include_directive(args_str)
-      when :command then
-        handle_command(first_word, args_str, asm, commands)
-      end
-      new_lines.push line
+    rescue AsmError => e
+      $stderr.puts "\n\n****"
+      $stderr.puts "ASM ERROR in file #{ARGV[0]}"
+      $stderr.puts "LINE # #{asm.line_number}"
+      $stderr.puts e.message
+      $stderr.puts e.backtrace.join "/n"
+      $stderr.puts "****\n\n"
+      exit
     end
     puts new_lines
     symbol_table.each {|k, v| puts "  #{k.to_s.rjust(11)} => #{v}"}
@@ -257,6 +267,9 @@ module Assembler::PseudoInstructions
   class WRD < Assembler::Command
     def initialize(args_str)
       # get value, store for later
+      value_str, register = args_str.split
+      @value = Assembler::Token.new value_str
+      @register = register
       @word_length = 2
     end
 
@@ -264,8 +277,23 @@ module Assembler::PseudoInstructions
     end
   end
 
+  class INC < Assembler::Command
+    def initialize(args_str)
+    end
+  end
+
+  class DEC < Assembler::Command
+    def initialize(args_str)
+    end
+  end
+
+  class JMP < Assembler::Command
+    def initialize(args_str)
+    end
+  end
+
   def self.handle(op_code_symbol, args_str)
-    # const_get(op_code_symbol).new(args_str)
+    const_get(op_code_symbol).new(args_str)
   end
 end
 
