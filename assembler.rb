@@ -231,6 +231,10 @@ end
 
 class Assembler::Command
   attr_reader :word_length
+
+  def initialize
+    @word_length = 1
+  end
 end
 
 module Assembler::Directives
@@ -264,12 +268,24 @@ end
 
 module Assembler::PseudoInstructions
 
+  class CYP < Assembler::Command
+    def initialize(args_str)
+      super
+    end
+  end
+
+  class NOP < Assembler::Command
+    def initialize(args_str)
+      super
+    end
+  end
+
   class WRD < Assembler::Command
     def initialize(args_str)
       # get value, store for later
       value_str, register = args_str.split
       @value = Assembler::Token.new value_str
-      @register = register
+      @register = Assembler::Token.new register
       @word_length = 2
     end
 
