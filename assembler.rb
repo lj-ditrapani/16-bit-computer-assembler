@@ -58,6 +58,7 @@ module Assembler
     end
 
     def add_command(cmd)
+      @commands.push cmd
       inc_words cmd.word_length
     end
 
@@ -204,14 +205,14 @@ module Assembler
 
   def self.handle_command(first_word_str, args_str, asm, commands)
     first_word = first_word_str.to_sym
-    args = args_str.split
     pseudo_instructions_list = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
+    word_index = commands.word_index
     command = if first_word_str[0] == '.'
-                Directives.send(first_word, args_str, asm, commands)
+                Directives.handle(first_word, args_str, asm, word_index)
               elsif pseudo_instructions_list.include? first_word
-                PseudoInstructions.send(first_word, *args)
+                PseudoInstructions.handle(first_word, args_str)
               else
-                Instructions.send(first_word, *args)
+                Instructions.handle(first_word, args_str)
               end
   end
 
@@ -223,19 +224,54 @@ class Assembler::Command
 end
 
 module Assembler::Directives
+
   def self.directive_to_class_name(symbol)
     symbol[1..-1].split('-').map(&:capitalize).push('Directive').join.to_sym
   end
+
   class MoveDirective < Assembler::Command
-    def initialize
+    def initialize(args_str, asm, word_index)
     end
   end
-  def self.handle(first_word, args_str, asm, commands)
-    map = {
-      :move => :MoveDirective,
-      :string => :StringDirective,
-      :"long-string" => :LongStringDirective,
-    }
+
+  class WordDirective < Assembler::Command
+    def initialize(args_str, asm, word_index)
+    end
+  end
+
+  class ArrayDirective < Assembler::Command
+    def initialize(args_str, asm, word_index)
+    end
+  end
+
+  def self.handle(directive_symbol, args_str, asm, word_index)
+    class_name = directive_to_class_name directive_symbol
+    const_get(class_name).new(args_str, asm, word_index)
+  end
+
+end
+
+
+module Assembler::PseudoInstructions
+
+  class WRD < Assembler::Command
+    def initialize(args_str)
+      # get value, store for later
+      @word_length = 2
+    end
+
+    def machine_code(symbol_table)
+    end
+  end
+
+  def self.handle(op_code_symbol, args_str)
+    # const_get(op_code_symbol).new(args_str)
+  end
+end
+
+
+module Assembler::Instructions
+  def self.handle(op_code_symbol, args_str)
   end
 end
 
