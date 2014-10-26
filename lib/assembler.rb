@@ -8,7 +8,6 @@ require './lib/assembler/instructions'
 module Assembler
 
 
-
   def self.main
     usage = "Usage:  ./assembler.rb path/to/file.asm > path/to/file.exe"
     if ARGV.length != 1
@@ -119,6 +118,7 @@ module Assembler
     num
   end
 
+
   def self.line_type(first_word)
     if first_word[0] == '('
       :label
@@ -131,9 +131,11 @@ module Assembler
     end
   end
 
+
   def self.label(first_word, symbol_table, word_index)
     symbol_table[first_word[1...-1].to_sym] = word_index
   end
+
 
   def self.set_directive(args_str, symbol_table)
     name, str_value = args_str.split(/\s+/, 2)
@@ -146,8 +148,10 @@ module Assembler
     symbol_table[name] = value
   end
 
+
   def self.include_directive(args_str)
   end
+
 
   def self.handle_command(first_word_str, args_str, asm, commands)
     first_word = first_word_str.to_sym
@@ -161,6 +165,7 @@ module Assembler
                 Instructions.handle(first_word, args_str)
               end
   end
+
 
 end
 
