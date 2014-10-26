@@ -1,76 +1,12 @@
 #! /usr/bin/env ruby
+require './lib/assembler/base'
+require './lib/assembler/directives'
+require './lib/assembler/pseudo_instructions'
+require './lib/assembler/instructions'
 
 
 module Assembler
 
-
-  class AsmError < StandardError
-  end
-
-
-  class Token
-    attr_reader :type, :value
-
-    def initialize(str)
-      if ['$', '%', /\d/].any? {|match| match === str[0]}
-        @type = :int
-        @value = Assembler.to_int str
-      else
-        @type = :symbol
-        @value = str.to_sym
-        # could check for invalid symbols
-      end
-    end
-  end
-
-
-  class Assembly
-    attr_reader :line_number
-
-    def initialize(lines)
-      @line_number = 0
-      @lines = lines
-    end
-
-    def peek_line
-      @lines[0]
-    end
-
-    def pop_line
-      @line_number += 1
-      @lines.shift
-    end
-
-    def empty?
-      @lines.empty?
-    end
-
-  end
-
-
-  class CommandList
-    attr_reader :word_index
-
-    def initialize()
-      # The index of the next free address
-      @word_index = 0
-      @commands = []
-    end
-
-    def add_command(cmd)
-      @commands.push cmd
-      inc_words cmd.word_length
-    end
-
-    def inc_words(n)
-      @word_index += n
-    end
-
-    def word_length
-      @word_index
-    end
-
-  end
 
 
   def self.main
@@ -226,97 +162,6 @@ module Assembler
               end
   end
 
-end
-
-
-class Assembler::Command
-  attr_reader :word_length
-
-  def initialize
-    @word_length = 1
-  end
-end
-
-module Assembler::Directives
-
-  def self.directive_to_class_name(symbol)
-    symbol[1..-1].split('-').map(&:capitalize).push('Directive').join.to_sym
-  end
-
-  class MoveDirective < Assembler::Command
-    def initialize(args_str, asm, word_index)
-    end
-  end
-
-  class WordDirective < Assembler::Command
-    def initialize(args_str, asm, word_index)
-    end
-  end
-
-  class ArrayDirective < Assembler::Command
-    def initialize(args_str, asm, word_index)
-    end
-  end
-
-  def self.handle(directive_symbol, args_str, asm, word_index)
-    class_name = directive_to_class_name directive_symbol
-    const_get(class_name).new(args_str, asm, word_index)
-  end
-
-end
-
-
-module Assembler::PseudoInstructions
-
-  class CYP < Assembler::Command
-    def initialize(args_str)
-      super
-    end
-  end
-
-  class NOP < Assembler::Command
-    def initialize(args_str)
-      super
-    end
-  end
-
-  class WRD < Assembler::Command
-    def initialize(args_str)
-      # get value, store for later
-      value_str, register = args_str.split
-      @value = Assembler::Token.new value_str
-      @register = Assembler::Token.new register
-      @word_length = 2
-    end
-
-    def machine_code(symbol_table)
-    end
-  end
-
-  class INC < Assembler::Command
-    def initialize(args_str)
-    end
-  end
-
-  class DEC < Assembler::Command
-    def initialize(args_str)
-    end
-  end
-
-  class JMP < Assembler::Command
-    def initialize(args_str)
-    end
-  end
-
-  def self.handle(op_code_symbol, args_str)
-    const_get(op_code_symbol).new(args_str)
-  end
-end
-
-
-module Assembler::Instructions
-  def self.handle(op_code_symbol, args_str)
-  end
 end
 
 
