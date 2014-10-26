@@ -1,0 +1,18 @@
+#! /usr/bin/env ruby
+require './lib/assembler'
+
+
+module Assembler
+  def self.run_cli()
+    usage = "Usage:  ./assembler.rb path/to/file.asm > path/to/file.exe"
+    if ARGV.length != 1
+      puts usage
+      exit
+    end
+    file_path = ARGV[0]
+    Assembler.main(file_path)
+  end
+end
+
+
+Assembler.run_cli()
