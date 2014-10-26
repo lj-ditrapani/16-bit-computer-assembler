@@ -7,7 +7,7 @@ def run_cli_test(name, asm_file)
   exe_path = "actual-executables/#{exe_file}"
   expected_exe_path = "expected-executables/#{exe_file}"
   describe "When the #{asm_file} program is given as CL input" do
-    %x(./lib/assembler.rb assembly-programs/#{asm_file} > #{exe_path})
+    %x(./bin/assembler assembly-programs/#{asm_file} > #{exe_path})
     it "Should produce the #{exe_file} file as output" do
       assert FileUtils.cmp(exe_path, expected_exe_path)
     end
