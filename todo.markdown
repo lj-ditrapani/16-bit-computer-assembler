@@ -4,3 +4,5 @@
 - Refactor token symbol code in `.set_directive` into a
   SymbolTable class
 - `to_int` error handling:  forbid negative values
+- Re-organise tests to match file hierarchy
+- Split tests into multiple files
