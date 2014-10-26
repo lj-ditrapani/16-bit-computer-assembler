@@ -1,4 +1,3 @@
-#! /usr/bin/env ruby
 require './lib/assembler/base'
 require './lib/assembler/directives'
 require './lib/assembler/pseudo_instructions'
@@ -8,13 +7,8 @@ require './lib/assembler/instructions'
 module Assembler
 
 
-  def self.main
-    usage = "Usage:  ./assembler.rb path/to/file.asm > path/to/file.exe"
-    if ARGV.length != 1
-      puts usage
-      exit
-    end
-    lines = File.readlines(ARGV[0]).to_a
+  def self.main(file_path)
+    lines = File.readlines(file_path).to_a
     asm = Assembly.new lines
     commands = CommandList.new
     symbol_table = make_symbol_table
@@ -167,9 +161,4 @@ module Assembler
   end
 
 
-end
-
-
-if __FILE__ == $0
-  Assembler.main()
 end
