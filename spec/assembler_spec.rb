@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require './lib/assembler.rb'
+require './lib/assembler'
 
 
 describe Assembler do
