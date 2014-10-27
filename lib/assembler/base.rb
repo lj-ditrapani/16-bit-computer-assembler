@@ -76,6 +76,17 @@ module Assembler
       @word_index
     end
 
+    def machine_code(symbol_table)
+      array = @commands.map {|cmd| cmd.machine_code symbol_table}
+      array.flatten
+    end
+
+    def machine_code(symbol_table)
+      @commands.reduce([]) do |array, cmd|
+        array.concat cmd.machine_code(symbol_table)
+      end
+    end
+
   end
 
 
