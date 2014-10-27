@@ -37,7 +37,7 @@ module Assembler
       end
     rescue AsmError => e
       $stderr.puts "\n\n****"
-      $stderr.puts "ASM ERROR in file #{ARGV[0]}"
+      $stderr.puts "ASM ERROR in file #{file_path}"
       $stderr.puts "LINE # #{asm.line_number}"
       $stderr.puts e.message
       $stderr.puts e.backtrace.join "/n"
@@ -46,6 +46,9 @@ module Assembler
     end
     puts new_lines
     symbol_table.each {|k, v| puts "  #{k.to_s.rjust(11)} => #{v}"}
+    machine_code_arr = commands.machine_code symbol_table
+    machine_code_str = machine_code_arr.pack("S>*")
+    print machine_code_str
   end
 
 
