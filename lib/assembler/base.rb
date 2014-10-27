@@ -27,6 +27,10 @@ module Assembler
         # could check for invalid symbols
       end
     end
+
+    def to_s
+      "#<Assembler::Token #{@type} #{@value}>"
+    end
   end
 
 
