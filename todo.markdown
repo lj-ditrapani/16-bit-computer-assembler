@@ -6,3 +6,4 @@
 - `to_int` error handling:  forbid negative values
 - Re-organise tests to match file hierarchy
 - Split tests into multiple files
+- Add `get_int(symbol_table)` method to Token
