@@ -33,10 +33,10 @@ module Assembler
     end
 
     def get_int(symbol_table)
-      if @value.type == :int
-        @value.value
+      if @type == :int
+        @value
       else
-        symbol_table[@value.value]
+        symbol_table[@value]
       end
     end
 
