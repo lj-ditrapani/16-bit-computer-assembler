@@ -45,7 +45,9 @@ module Assembler
       exit
     end
     puts new_lines
-    symbol_table.each {|k, v| puts "  #{k.to_s.rjust(11)} => #{v}"}
+    symbol_table.each do |k, v|
+      puts "  #{k.inspect.to_s.rjust(11)} => #{v}"
+    end
     machine_code_arr = commands.machine_code symbol_table
     machine_code_str = machine_code_arr.pack("S>*")
     print machine_code_str
@@ -142,7 +144,7 @@ module Assembler
             else
               token.value
             end
-    symbol_table[name] = value
+    symbol_table[name.to_sym] = value
   end
 
 
