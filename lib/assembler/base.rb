@@ -32,6 +32,14 @@ module Assembler
       end
     end
 
+    def get_int(symbol_table)
+      if @value.type == :int
+        @value.value
+      else
+        symbol_table[@value.value]
+      end
+    end
+
     def to_s
       "#<Assembler::Token #{@type} #{@value}>"
     end
