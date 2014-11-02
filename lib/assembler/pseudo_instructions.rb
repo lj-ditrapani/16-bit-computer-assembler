@@ -22,21 +22,25 @@ module Assembler::PseudoInstructions
     end
 
     def machine_code(symbol_table)
+      []
     end
   end
 
   class INC < Assembler::Command
     def initialize(args_str)
+      super()
     end
   end
 
   class DEC < Assembler::Command
     def initialize(args_str)
+      super()
     end
   end
 
   class JMP < Assembler::Command
     def initialize(args_str)
+      super()
     end
   end
 
