@@ -3,9 +3,10 @@ require './lib/assembler'
 
 describe Assembler::Instructions do
   tests = [
-    [:HBY, '$AB RC', 0x1ABC]
+    [:HBY, '$AB RC', 0x1ABC],
+    [:LBY, '$CB RA', 0x2CBA],
   ]
-  symbol_table = { :RC => 12}
+  symbol_table = { :RA => 10, :RC => 12}
   tests.each do |op_code, args_str, expected_machine_code|
     describe op_code do
       str = "Given #{op_code} #{args_str}, "
