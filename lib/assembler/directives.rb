@@ -6,16 +6,19 @@ module Assembler::Directives
 
   class MoveDirective < Assembler::Command
     def initialize(args_str, asm, word_index)
+      super()
     end
   end
 
   class WordDirective < Assembler::Command
     def initialize(args_str, asm, word_index)
+      super()
     end
   end
 
   class ArrayDirective < Assembler::Command
     def initialize(args_str, asm, word_index)
+      super()
     end
   end
 
