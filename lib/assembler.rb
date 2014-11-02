@@ -14,8 +14,8 @@ module Assembler
     symbol_table = make_symbol_table
     new_lines = []
     begin
-      # can't use each_with_index since the line_number and word_index can
-      # change by a variable # based on the command
+      # can't use each_with_index since the line_number and word_index
+      # can change by a variable # based on the command
       until asm.empty?
         line = strip(asm.pop_line)
         if line.empty?
@@ -161,6 +161,9 @@ module Assembler
               else
                 Instructions.handle(first_word, args_str)
               end
+    unless command.nil?
+      commands.add_command command
+    end
   end
 
 
