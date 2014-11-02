@@ -9,16 +9,8 @@ module Assembler::Instructions
     end
 
     def machine_code(symbol_table)
-      value = if @value.type == :int
-                @value.value
-              else
-                symbol_table[@value.value]
-              end
-      register = if @register.type == :int
-                   @register.value
-                 else
-                   symbol_table[@register.value]
-                 end
+      value = @value.get_int symbol_table
+      register = @register.get_int symbol_table
       [1 << 12 | value << 4 | register]
     end
   end
@@ -32,16 +24,8 @@ module Assembler::Instructions
     end
 
     def machine_code(symbol_table)
-      value = if @value.type == :int
-                @value.value
-              else
-                symbol_table[@value.value]
-              end
-      register = if @register.type == :int
-                   @register.value
-                 else
-                   symbol_table[@register.value]
-                 end
+      value = @value.get_int symbol_table
+      register = @register.get_int symbol_table
       [2 << 12 | value << 4 | register]
     end
   end
