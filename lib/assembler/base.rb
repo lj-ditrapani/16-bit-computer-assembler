@@ -7,6 +7,10 @@ module Assembler
     def initialize
       @word_length = 1
     end
+
+    def machine_code(symbol_table)
+      []
+    end
   end
 
 
