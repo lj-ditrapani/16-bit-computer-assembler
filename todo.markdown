@@ -1,3 +1,4 @@
+- Remove if in Instructions#handle once instructions are complete
 - Remove unless command.nil? check once commands implemented
 - Remove call to super() in Command subclasses if not needed
 - Remove Command#machine\_code when no longer needed
