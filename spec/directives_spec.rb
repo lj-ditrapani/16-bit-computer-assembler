@@ -3,7 +3,7 @@ require './lib/assembler'
 
 describe Assembler::Directives do
   tests = [
-    ['0x00FF', 0x0010, 239],
+    ['$00FF', 0x0010, 239],
     ['audio', 0x005, (0xD800 - 5)],
   ]
   symbol_table = { :audio => 0xD800 }
@@ -15,8 +15,8 @@ describe Assembler::Directives do
         machine_code = cmd.machine_code symbol_table
         assert_equal word_length, cmd.word_length
         assert_equal word_length, machine_code.length
-        assert_equal 0, actual_machine_code[0]
-        assert_equal 0, actual_machine_code[-1]
+        assert_equal 0, machine_code[0]
+        assert_equal 0, machine_code[-1]
       end
     end
   end
