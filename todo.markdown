@@ -1,3 +1,12 @@
+- .move directive tests
+- .work directive tests
+- Refactor Instruction classes
+    - Use Instruction base class with `def_init` and
+      `def_machine_code` class methods that take a block and create
+      instance methods via def_method
+- .word directive:
+  if using a symbol as the target address, must resolve symbol
+  to compute the `word_length`
 - Remove if in Instructions#handle once instructions are complete
 - Remove unless command.nil? check once commands implemented
 - Remove call to super() in Command subclasses if not needed
