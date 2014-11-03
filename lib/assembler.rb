@@ -73,7 +73,7 @@ module Assembler
 
   def self.make_symbol_table
     st = {
-      :sound => 0xD800,
+      :audio => 0xD800,
       :"net-in" => 0xDC00,
       :"net-out" => 0xE000,
       :"storage-in" => 0xE400,

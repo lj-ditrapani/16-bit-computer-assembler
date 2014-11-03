@@ -41,7 +41,7 @@ cell-xy-flips
 sprites
 sprite-colors
 cell-colors
-sound
+audio
 net-out
 net-in
 storage-out

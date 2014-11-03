@@ -71,7 +71,7 @@ describe Assembler do
       [:R1, 1],
       [:RA, 10],
       [:RF, 15],
-      [:sound,           0xD800],
+      [:audio,           0xD800],
       [:"net-in",        0xDC00],
       [:"storage-out",   0xE800],
       [:"cell-x-y-flip", 0xFD60],
