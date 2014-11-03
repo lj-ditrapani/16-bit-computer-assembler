@@ -10,7 +10,7 @@
 - Remove if in Instructions#handle once instructions are complete
 - Remove unless command.nil? check once commands implemented
 - Remove call to super() in Command subclasses if not needed
-- Remove Command#machine\_code when no longer needed
+- Remove `Command#machine_code` when no longer needed
 - Find ruby lint program
 - Error-handling for .set directive (if value is not a non-negative
   integer and not a previously-defined symbol)
@@ -20,3 +20,5 @@
 - Re-organise tests to match file hierarchy
 - Split tests into multiple files
 - Add `get_int(symbol_table)` method to Token
+- Restore `spec/acceptance_spec.rb` "with-symbol" tests once
+  "no-symbol" tests are passing
