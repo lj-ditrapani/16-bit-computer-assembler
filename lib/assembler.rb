@@ -31,7 +31,9 @@ module Assembler
         when :include_directive then
           include_directive(args_str)
         when :command then
-          handle_command(first_word, args_str, asm, commands)
+          handle_command(
+            first_word, args_str, asm, commands, symbol_table
+          )
         end
         new_lines.push line
       end
@@ -44,10 +46,12 @@ module Assembler
       $stderr.puts "****\n\n"
       exit
     end
+=begin
     puts new_lines
     symbol_table.each do |k, v|
       puts "  #{k.inspect.to_s.rjust(11)} => #{v}"
     end
+=end
     machine_code_arr = commands.machine_code symbol_table
     machine_code_str = machine_code_arr.pack("S>*")
     print machine_code_str
@@ -152,12 +156,12 @@ module Assembler
   end
 
 
-  def self.handle_command(first_word_str, args_str, asm, commands)
+  def self.handle_command(first_word_str, args_str, asm, commands, symbol_table)
     first_word = first_word_str.to_sym
     pseudo_instructions_list = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
     word_index = commands.word_index
     command = if first_word_str[0] == '.'
-                Directives.handle(first_word, args_str, asm, word_index)
+                Directives.handle(first_word, args_str, asm, word_index, symbol_table)
               elsif pseudo_instructions_list.include? first_word
                 PseudoInstructions.handle(first_word, args_str)
               else
