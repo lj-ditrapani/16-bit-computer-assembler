@@ -164,7 +164,11 @@ Ends a multi-line string (see .long-string above for examples)
 ### .move ###
 Assembler moves context to specified address during assembly
 Can only move forward in address space from current address,
-not backwards
+not backwards.  Cannot use symbols that refer to labels. The argument
+must be a number, a pre-defined symbol, or a symbol previously defined
+by a .set directive.
+If the argument is a symbol defined by the .set directive, the .set
+directive must appear before the .move command.
 ```
 .move $0F00
 .move audio
