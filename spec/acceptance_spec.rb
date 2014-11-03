@@ -19,6 +19,6 @@ describe "Assembler CLI" do
   program_names = %w(adding branching while-loop)
   program_names.each do |name|
     run_cli_test name, "#{name}.no-symbols.asm"
-    run_cli_test name, "#{name}.symbols.asm"
+    #run_cli_test name, "#{name}.symbols.asm"
   end
 end
