@@ -3,22 +3,20 @@ require './lib/assembler'
 
 describe Assembler::Directives do
   tests = [
-    [:'.word', '0x00FF', 0x0010, [], [0] * 239],
-    [:'.word', 'audio', 0x005, [], [0] * 1000],
-    [:'.array', []],
-    [:'.move', []],
+    ['0x00FF', 0x0010, 239],
+    ['audio', 0x005, (0xD800 - 5)],
   ]
-  symbol_table = { :RA => 10, :RB => 11, :RC => 12}
-  def self.handle(directive_symbol, args_str, asm, word_index, symbol_table)
-  tests.each do |directive, args_str, asm, word_index, expected_machine_code|
-    describe directive do
-      str = "Given #{directive} #{args_str}, "
-      str += "returns machine code of #{expected_machine_code}"
-      it str do
-        cmd = Assembler::Instructions.handle(directive, args_str)
-        actual_machine_code = cmd.machine_code symbol_table
-        assert_equal 1, cmd.word_length
-        assert_equal expected_machine_code, actual_machine_code[0]
+  symbol_table = { :audio => 0xD800 }
+  tests.each do |args_str, word_index, word_length|
+    describe ".word Directive" do
+      it ".word #{args_str} -> array of #{word_length} zeros" do
+        d = Assembler::Directives
+        cmd = d.handle(:".word", args_str, [], word_index, symbol_table)
+        machine_code = cmd.machine_code symbol_table
+        assert_equal word_length, cmd.word_length
+        assert_equal word_length, machine_code.length
+        assert_equal 0, actual_machine_code[0]
+        assert_equal 0, actual_machine_code[-1]
       end
     end
   end
