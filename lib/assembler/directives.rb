@@ -12,7 +12,7 @@ module Assembler::Directives
     end
 
     def machine_code(symbol_table)
-      [0...@word_length].map { 0x0000 }
+      (0...@word_length).map { 0x0000 }
     end
   end
 
