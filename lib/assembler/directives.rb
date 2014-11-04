@@ -19,6 +19,11 @@ module Assembler::Directives
   class WordDirective < Assembler::Command
     def initialize(args_str, asm, word_index, symbol_table)
       super()
+      @value = Assembler::Token.new args_str
+    end
+
+    def machine_code(symbol_table)
+      [@value.get_int(symbol_table)]
     end
   end
 
