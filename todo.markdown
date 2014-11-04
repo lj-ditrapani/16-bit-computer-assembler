@@ -1,5 +1,3 @@
-- .move directive tests
-- .work directive tests
 - Refactor Instruction classes
     - Use Instruction base class with `def_init` and
       `def_machine_code` class methods that take a block and create
