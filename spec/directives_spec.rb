@@ -20,4 +20,20 @@ describe Assembler::Directives do
       end
     end
   end
+  tests = [
+    ['42', 42],
+    ['audio', 0xD800],
+  ]
+  tests.each do |args_str, word|
+    describe ".word Directive" do
+      it ".word #{args_str} -> [#{word}]" do
+        d = Assembler::Directives
+        cmd = d.handle(:".word", args_str, [], 0, symbol_table)
+        machine_code = cmd.machine_code symbol_table
+        assert_equal 1, cmd.word_length
+        assert_equal 1, machine_code.length
+        assert_equal word, machine_code[0]
+      end
+    end
+  end
 end
