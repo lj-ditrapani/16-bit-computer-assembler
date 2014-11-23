@@ -63,7 +63,7 @@ Directives start with .
 - .word
 - .array
 - .fill-array
-- .string
+- .str
 - .long-string
 - .end-long-string
 - .move
@@ -115,10 +115,13 @@ The f
 .array 4 $FF # Creates an array of 4 values of 255
 ```
 
-### .string ###
+### .str ###
+A string is a sequence of 7-bit ASCII characters.  Two characters are
+packed into a word.  The first character in the high-order byte and the
+second character into the low-order byte.
 ```
 .str "Hello World"  # a string
-(greet)
+(greet)             # The symbol points to the next word in memory
 .str "Hello Joe"    # a string; can be referred to by greet symbol
 ```
 The .str directive and the string must fit on a single line.
@@ -142,33 +145,34 @@ Format:
 
 With literal-newlines, the '\n' char is appended to each line
 
-  .long-string literal-newlines
-  line one
-  line two
-  line three
-  .end-long-string
+    .long-string literal-newlines
+    line one
+    line two
+    line three
+    .end-long-string
 
 With escaped-newlines, the newlines at the end of each line are stripped
 and the only way to have a newline is to explicitly use the escape
 sequence '\n'.
 
-  .long-string escaped-newlines
-  line one
-  still line one \n now line two
-  still line two
-  .end-long-string
+    .long-string escaped-newlines
+    line one
+    still line one \n now line two
+    still line two
+    .end-long-string
 
 ### .end-long-string ###
 Ends a multi-line string (see .long-string above for examples)
 
 ### .move ###
-Assembler moves context to specified address during assembly
+Assembler moves context to specified address during assembly.
 Can only move forward in address space from current address,
 not backwards.  Cannot use symbols that refer to labels. The argument
 must be a number, a pre-defined symbol, or a symbol previously defined
 by a .set directive.
 If the argument is a symbol defined by the .set directive, the .set
 directive must appear before the .move command.
+Zero fills holes in binary machine code.
 ```
 .move $0F00
 .move audio
@@ -177,13 +181,12 @@ directive must appear before the .move command.
 ### .copy ###
 Copies binary content of file directly into final assembled binary
 starting at current location.
-Zero fills holes in asm file
 Optionally takes start and end values for binary file
 start defaults to 0 and end defaults to end of file
 start and end are in terms of 16-bit words in file
 
 ```
-.copy path/file-name.ext [start] [end]
+.copy path/file-name.ext [start [end]]
 .move tiles
 .copy video/mario-tiles.bin
 .copy text/story.txt  # copies data into ram starting at current address
@@ -192,10 +195,13 @@ start and end are in terms of 16-bit words in file
 ```
 
 ### .include ###
-Processed during first pass.  Includes the assembly text
-of all .include directives.  Then the assembler processes the
-total file as one big file.  Not recursive.
+Includes the assembly text lines of the file referred to by
+the `.include` directive.  The lines are inserted at the current
+location of the assembly lines.  The assembler then processes the
+lines normally.  This allows for recursive includes (includes of files
+that include other files, etc.)
 ```
+.set math-library $9000
 .include path/to/program.asm    # includes it here
 .move math-library
 .include path/to/math-lib.asm
