@@ -136,9 +136,9 @@ module Assembler::Instructions
         @value_register = Assembler::Token.new args.shift
         nzp = args.shift
         cond = 0
-        if nzp =~ /N/ then cond += 4 end
-        if nzp =~ /Z/ then cond += 2 end
-        if nzp =~ /P/ then cond += 1 end
+        cond += 4 if nzp =~ /N/
+        cond += 2 if nzp =~ /Z/
+        cond += 1 if nzp =~ /P/
         @cond = cond
       else
         @value_register = Assembler::Token.new '0'
