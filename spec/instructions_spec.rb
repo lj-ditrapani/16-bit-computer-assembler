@@ -8,9 +8,14 @@ describe Assembler::Instructions do
     [:LOD, 'RA RC', 0x3A0C],
     [:STR, 'RB RC', 0x4BC0],
     [:ADD, 'RA RB RC', 0x5ABC],
+    [:SUB, 'RB RA RC', 0x6BAC],
+    [:ADI, 'RA 3 RC', 0x7A3C],
+    [:ADI, 'RA x RC', 0x7A7C],
+    [:SBI, 'RC 8 RA', 0x8C8A],
+    [:SBI, 'RC y RA', 0x8CFA],
     [:END, nil, 0x0000],
   ]
-  symbol_table = { :RA => 10, :RB => 11, :RC => 12}
+  symbol_table = { :RA => 10, :RB => 11, :RC => 12, :x => 7, :y => 15}
   tests.each do |op_code, args_str, expected_machine_code|
     describe op_code do
       str = "Given #{op_code} #{args_str}, "
