@@ -1,7 +1,8 @@
 module Assembler::Directives
 
   def self.directive_to_class_name(symbol)
-    symbol[1..-1].split('-').map(&:capitalize).push('Directive').join.to_sym
+    str_list = symbol[1..-1].split('-').map(&:capitalize)
+    str_list.push('Directive').join.to_sym
   end
 
   class MoveDirective < Assembler::Command
@@ -33,8 +34,8 @@ module Assembler::Directives
     end
   end
 
-  def self.handle(directive_symbol, args_str, asm, word_index, symbol_table)
-    class_name = directive_to_class_name directive_symbol
+  def self.handle(directive, args_str, asm, word_index, symbol_table)
+    class_name = directive_to_class_name directive
     const_get(class_name).new(args_str, asm, word_index, symbol_table)
   end
 
