@@ -14,10 +14,10 @@ describe Assembler do
       new_line = Assembler.strip(line)
       assert_equal '.word  42', new_line
     end
-    it "should not remove comment at end of .string directive" do
-      line = '  .string " my string " # My comment'
+    it "should not remove comment at end of .str directive" do
+      line = '  .str " my string " # My comment'
       new_line = Assembler.strip(line)
-      assert_equal '.string " my string " # My comment', new_line
+      assert_equal '.str " my string " # My comment', new_line
     end
     it "should remove comment at end of line" do
       line = "  ADI R1 $A R3 \t # My comment\n"
