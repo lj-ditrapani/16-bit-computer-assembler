@@ -64,7 +64,7 @@ module Assembler
       return ''
     end
     first_word, rest = new_line.split(' ', 2)
-    if first_word == '.string'
+    if first_word == '.str'
       return new_line
     end
     new_line.split('#', 2)[0].strip
