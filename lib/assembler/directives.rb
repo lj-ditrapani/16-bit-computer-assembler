@@ -31,6 +31,27 @@ module Assembler::Directives
   class ArrayDirective < Assembler::Command
     def initialize(args_str, asm, word_index, symbol_table)
       super()
+      unless args_str[0] == '['
+        raise Assembler::AsmError, "Array must start with '['"
+      end
+      line = args_str[1..-1]
+      lines = [line]
+      until line =~ /]/
+        line = Assembler.strip(asm.pop_line)
+        lines.push line
+      end
+      # Remove trailing ']'
+      lines[-1] = lines[-1].gsub!(']', '')
+      str = lines.join ' '
+      @elements = str.split.map {|e| Assembler.to_int e}
+    end
+
+    def word_length
+      @elements.length
+    end
+
+    def machine_code(symbol_table)
+      @elements
     end
   end
 
