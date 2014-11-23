@@ -128,6 +128,40 @@ module Assembler::Instructions
     end
   end
 
+  class BRN < Assembler::Command
+    def initialize(args_str)
+      super()
+      args = args_str.split
+      if args.length == 3
+        @value_register = Assembler::Token.new args.shift
+        nzp = args.shift
+        cond = 0
+        if nzp =~ /N/ then cond += 4 end
+        if nzp =~ /Z/ then cond += 2 end
+        if nzp =~ /P/ then cond += 1 end
+        @cond = cond
+      else
+        @value_register = Assembler::Token.new '0'
+        cv = args.shift
+        value = if cv == 'V'
+                  2
+                elsif cv == 'C'
+                  1
+                else
+                  0
+                end
+        @cond = 8 | value
+      end
+      @address_register = Assembler::Token.new args.shift
+    end
+
+    def machine_code(symbol_table)
+      rv = @value_register.get_int symbol_table
+      rp = @address_register.get_int symbol_table
+      [0xE << 12 | rv << 8 | rp << 4 | @cond]
+    end
+  end
+
   class END_ < Assembler::Command
     def initialize(args_str)
       super()
@@ -139,7 +173,8 @@ module Assembler::Instructions
   end
 
   def self.handle(op_code_symbol, args_str)
-    if [:HBY, :LBY, :LOD, :STR, :ADD, :SUB, :ADI, :SBI, :END].include? op_code_symbol
+    list = [:END, :HBY, :LBY, :LOD, :STR, :ADD, :SUB, :ADI, :SBI, :BRN]
+    if list.include? op_code_symbol
       # END is a reserved word; rename to END_
       if op_code_symbol == :END
         op_code_symbol = :END_
