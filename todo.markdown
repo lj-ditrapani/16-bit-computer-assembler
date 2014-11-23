@@ -1,3 +1,4 @@
+- ADD SUB ADI & SBI instructions are identical minus op-code
 - Refactor Instruction classes
     - Use Instruction base class with `def_init` and
       `def_machine_code` class methods that take a block and create
@@ -12,8 +13,7 @@
 - Refactor token symbol code in `.set_directive` into a
   SymbolTable class
 - `to_int` error handling:  forbid negative values
-- Re-organise tests to match file hierarchy
-- Split tests into multiple files
+- Re-organize tests to match file hierarchy
 - Add `get_int(symbol_table)` method to Token
 - Restore `spec/acceptance_spec.rb` "with-symbol" tests once
   "no-symbol" tests are passing
