@@ -128,6 +128,25 @@ module Assembler::Instructions
     end
   end
 
+  class SHF < Assembler::Command
+    def initialize(args_str)
+      super()
+      rs1, dir, ammount, rd = args_str.split
+      @rs1 = Assembler::Token.new rs1
+      @dir = dir
+      @ammount = Assembler::Token.new ammount
+      @rd = Assembler::Token.new rd
+    end
+
+    def machine_code(symbol_table)
+      rs1 = @rs1.get_int symbol_table
+      ammount = @ammount.get_int(symbol_table) - 1
+      ammount += 8 if @dir == 'R'
+      rd = @rd.get_int symbol_table
+      [0xD << 12 | rs1 << 8 | ammount << 4 | rd]
+    end
+  end
+
   class BRN < Assembler::Command
     def initialize(args_str)
       super()
@@ -174,7 +193,9 @@ module Assembler::Instructions
   end
 
   def self.handle(op_code_symbol, args_str)
-    list = [:END, :HBY, :LBY, :LOD, :STR, :ADD, :SUB, :ADI, :SBI, :BRN]
+    list = [
+      :END, :HBY, :LBY, :LOD, :STR, :ADD, :SUB, :ADI, :SBI, :SHF, :BRN
+    ]
     if list.include? op_code_symbol
       # END is a reserved word; rename to END_
       if op_code_symbol == :END
