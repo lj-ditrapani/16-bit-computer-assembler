@@ -35,4 +35,14 @@ describe Assembler::Instructions do
       end
     end
   end
+
+  describe "BRN Exception" do
+    it "Raises exception when flag condition is invalid" do
+      err = assert_raises Assembler::AsmError do
+        Assembler::Instructions.handle(:BRN, 'N RA')
+      end
+      assert_match /got "N" instead/, err.message
+    end
+  end
+
 end
