@@ -36,4 +36,29 @@ describe Assembler::Directives do
       end
     end
   end
+  tests = [
+    ["[1 2 3]", [], [1, 2, 3]],
+    ["[ 1 2 3", ["  4 5 6", "  7 8 9]"], [1, 2, 3, 4, 5, 6, 7, 8, 9]],
+    ["[", ["\t1", " 2", "]\t"], [1, 2]],
+    [
+      "[$FFFF %0110_0000_1001_1111 64]",
+      [],
+      [0xFFFF, 0b0110_0000_1001_1111, 64]
+    ],
+  ]
+  tests.each do |args_str, lines, words|
+    describe ".array Directive" do
+      it ".array #{args_str} -> #{words.inspect}" do
+        d = Assembler::Directives
+        asm = Assembler::Assembly.new lines
+        cmd = d.handle(:".array", args_str, asm, 0, {})
+        machine_code = cmd.machine_code({})
+        length = words.length
+        assert_equal length, cmd.word_length
+        assert_equal length, machine_code.length
+        assert_equal words, machine_code
+        assert asm.empty?
+      end
+    end
+  end
 end
