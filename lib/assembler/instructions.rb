@@ -143,12 +143,13 @@ module Assembler::Instructions
       else
         @value_register = Assembler::Token.new '0'
         cv = args.shift
-        value = if cv == 'V'
-                  2
-                elsif cv == 'C'
-                  1
-                else
-                  0
+        str = "Bad condition code in BRN, should be - C or V, but got"\
+              " #{cv.inspect} instead"
+        value = case cv
+                when 'V' then 2
+                when 'C' then 1
+                when '-' then 0
+                else raise Assembler::AsmError.new, str
                 end
         @cond = 8 | value
       end
