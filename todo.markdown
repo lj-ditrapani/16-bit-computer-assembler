@@ -1,12 +1,15 @@
-- Readme:  Legend R -> actual number 0-15 or $0-$F or %0000-%1111
-  (R0-R15 & RA-RF are just pre-defined symbols that map to 0-15)
+- Method to create instruction word from 4 nibble components
+  `op << 12 | a << 8 | b << 4 | c`
+  `make_word(op, a, b, c)`
+  `make_word(1, high_byte, low_byte, rd)`
+  `make_word(1, rs1, rs2, rd)`
 - ADD SUB ADI SBI AND ORR XOR instructions are identical minus op-code
 - Use Assembler::Directives::XxxxDirective to describe tests?
 - Refactor Instruction classes
     - Use Instruction base class with `def_init` and
       `def_machine_code` class methods that take a block and create
       instance methods via def_method
-- Remove unless `command.nil?` check once commands implemented
+- Remove `unless command.nil?` check once commands implemented
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
 - Find ruby lint program
