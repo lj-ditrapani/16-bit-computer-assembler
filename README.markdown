@@ -268,7 +268,7 @@ Legend
 ---------------------------------------------------------------------
 i4                  4-bit unsigned integer
 i8                  8-bit unsigned integer
-R                   Register (R0-R15 decimal) or (R0-RF hexadecimal)
+R                   Register number 0-15 (R0-R15 & RA-RF are symbols)
 D                   Direction (L or R)
 A                   Shift amount (1-8)
 value-condition     any combination of [NZP]
@@ -282,13 +282,13 @@ Examples
 Examples of how to write the different instructions with the assembled
 hexadecimal output in the comments on the right.
 ```
-Set low byte of R5 to 16
-LBY $10 R5      #  $1105
-LBY 16 R5       #  $1105
-
 Set high byte of RA to 255
-HBY $FF RA      #  $2FFA
-HBY 255 R10     #  $2FFA
+HBY $FF RA      #  $1FFA
+HBY 255 R10     #  $1FFA
+
+Set low byte of R5 to 16
+LBY $10 R5      #  $2105
+LBY 16 R5       #  $2105
 
 Load R3 with value at memory address in R9
 LOD R9 R3       #  $3903
