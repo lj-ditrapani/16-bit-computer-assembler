@@ -234,7 +234,7 @@ module Assembler::Instructions
                 when 'V' then 2
                 when 'C' then 1
                 when '-' then 0
-                else raise Assembler::AsmError.new, str
+                else raise Assembler::AsmError, str
                 end
         @cond = 8 | value
       end

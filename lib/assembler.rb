@@ -103,7 +103,7 @@ module Assembler
 
   def self.to_int(str)
     if /^\d[x|X]/ === str[0..1]
-      raise AsmError.new, "Malformed integer"
+      raise AsmError, "Malformed integer"
     end
     start, base = case str[0]
                   when "%" then [1, 2]
@@ -113,10 +113,10 @@ module Assembler
     num = begin
             Integer(str[start..-1], base)
           rescue ArgumentError
-            raise AsmError.new, "Malformed integer"
+            raise AsmError, "Malformed integer"
           end
     if num > 0xFFFF
-      raise AsmError.new, "Number greater than $FFFF"
+      raise AsmError, "Number greater than $FFFF"
     end
     num
   end
