@@ -1,12 +1,12 @@
 - Readme:  Legend R -> actual number 0-15 or $0-$F or %0000-%1111
   (R0-R15 & RA-RF are just pre-defined symbols that map to 0-15)
-- ADD SUB ADI & SBI instructions are identical minus op-code
+- ADD SUB ADI SBI AND ORR XOR instructions are identical minus op-code
 - Use Assembler::Directives::XxxxDirective to describe tests?
 - Refactor Instruction classes
     - Use Instruction base class with `def_init` and
       `def_machine_code` class methods that take a block and create
       instance methods via def_method
-- Remove unless command.nil? check once commands implemented
+- Remove unless `command.nil?` check once commands implemented
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
 - Find ruby lint program
