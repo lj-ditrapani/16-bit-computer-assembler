@@ -14,6 +14,10 @@ describe Assembler::Instructions do
     [:ADI, 'RA x RC', 0x7A7C],
     [:SBI, 'RC 8 RA', 0x8C8A],
     [:SBI, 'RC y RA', 0x8CFA],
+    [:AND, 'RA RB RC', 0x9ABC],
+    [:ORR, 'RA RB RC', 0xAABC],
+    [:XOR, 'RA RB RC', 0xBABC],
+    [:NOT, 'RA RC', 0xCA0C],
     [:SHF, 'RB R 7 RC', 0xDBEC],
     [:SHF, 'RB R 1 RC', 0xDB8C],
     [:SHF, 'RB R 8 RC', 0xDBFC],
@@ -26,6 +30,7 @@ describe Assembler::Instructions do
     [:BRN, '- RB', 0xE0B8],
     [:BRN, 'C RB', 0xE0B9],
     [:BRN, 'V RB', 0xE0BA],
+    [:SPC, 'RA', 0xF00A],
   ]
   symbol_table = { :RA => 10, :RB => 11, :RC => 12, :x => 7, :y => 15}
   tests.each do |op_code, args_str, expected_machine_code|
