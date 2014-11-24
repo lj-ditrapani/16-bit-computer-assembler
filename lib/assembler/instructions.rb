@@ -128,6 +128,72 @@ module Assembler::Instructions
     end
   end
 
+  class AND < Assembler::Command
+    def initialize(args_str)
+      super()
+      rs1, rs2, rd = args_str.split
+      @rs1 = Assembler::Token.new rs1
+      @rs2 = Assembler::Token.new rs2
+      @rd = Assembler::Token.new rd
+    end
+
+    def machine_code(symbol_table)
+      rs1 = @rs1.get_int symbol_table
+      rs2 = @rs2.get_int symbol_table
+      rd = @rd.get_int symbol_table
+      [9 << 12 | rs1 << 8 | rs2 << 4 | rd]
+    end
+  end
+
+  class ORR < Assembler::Command
+    def initialize(args_str)
+      super()
+      rs1, rs2, rd = args_str.split
+      @rs1 = Assembler::Token.new rs1
+      @rs2 = Assembler::Token.new rs2
+      @rd = Assembler::Token.new rd
+    end
+
+    def machine_code(symbol_table)
+      rs1 = @rs1.get_int symbol_table
+      rs2 = @rs2.get_int symbol_table
+      rd = @rd.get_int symbol_table
+      [0xA << 12 | rs1 << 8 | rs2 << 4 | rd]
+    end
+  end
+
+  class XOR < Assembler::Command
+    def initialize(args_str)
+      super()
+      rs1, rs2, rd = args_str.split
+      @rs1 = Assembler::Token.new rs1
+      @rs2 = Assembler::Token.new rs2
+      @rd = Assembler::Token.new rd
+    end
+
+    def machine_code(symbol_table)
+      rs1 = @rs1.get_int symbol_table
+      rs2 = @rs2.get_int symbol_table
+      rd = @rd.get_int symbol_table
+      [0xB << 12 | rs1 << 8 | rs2 << 4 | rd]
+    end
+  end
+
+  class NOT < Assembler::Command
+    def initialize(args_str)
+      super()
+      rs1, rd = args_str.split
+      @rs1 = Assembler::Token.new rs1
+      @rd = Assembler::Token.new rd
+    end
+
+    def machine_code(symbol_table)
+      rs1 = @rs1.get_int symbol_table
+      rd = @rd.get_int symbol_table
+      [0xC << 12 | rs1 << 8 | rd]
+    end
+  end
+
   class SHF < Assembler::Command
     def initialize(args_str)
       super()
@@ -182,6 +248,18 @@ module Assembler::Instructions
     end
   end
 
+  class SPC < Assembler::Command
+    def initialize(args_str)
+      super()
+      @rs1 = Assembler::Token.new args_str
+    end
+
+    def machine_code(symbol_table)
+      rs1 = @rs1.get_int symbol_table
+      [0xF << 12 | rs1]
+    end
+  end
+
   class END_ < Assembler::Command
     def initialize(args_str)
       super()
@@ -193,16 +271,11 @@ module Assembler::Instructions
   end
 
   def self.handle(op_code_symbol, args_str)
-    list = [
-      :END, :HBY, :LBY, :LOD, :STR, :ADD, :SUB, :ADI, :SBI, :SHF, :BRN
-    ]
-    if list.include? op_code_symbol
-      # END is a reserved word; rename to END_
-      if op_code_symbol == :END
-        op_code_symbol = :END_
-      end
-      const_get(op_code_symbol).new args_str
+    # END is a reserved word; rename to END_
+    if op_code_symbol == :END
+      op_code_symbol = :END_
     end
+    const_get(op_code_symbol).new args_str
   end
 
 end
