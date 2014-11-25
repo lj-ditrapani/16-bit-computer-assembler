@@ -3,7 +3,7 @@ module Assembler::Instructions
   class Instruction
     attr_reader :word_length
 
-    def initialize(args_str)
+    def initialize(args_str='')
       @word_length = 1
     end
 
@@ -14,7 +14,7 @@ module Assembler::Instructions
 
   class Instruction3 < Instruction
     def initialize(args_str)
-      super(args_str)
+      super()
       rs1, rs2, rd = args_str.split
       @rs1 = Assembler::Token.new rs1
       @rs2 = Assembler::Token.new rs2
@@ -179,15 +179,15 @@ module Assembler::Instructions
     end
   end
 
-  class SPC < Assembler::Command
+  class SPC < Instruction
     def initialize(args_str)
       super()
       @rs1 = Assembler::Token.new args_str
     end
 
-    def machine_code(symbol_table)
+    def nibbles(symbol_table)
       rs1 = @rs1.get_int symbol_table
-      [0xF << 12 | rs1]
+      [0xF, 0, 0, rs1]
     end
   end
 
