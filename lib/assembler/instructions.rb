@@ -66,44 +66,31 @@ module Assembler::Instructions
     end
   end
 
-  class HBY < Instruction2
-    OP_CODE = 1
-
-    def get_3_nibbles(value, register)
-      [value >> 4, value & 0xFF, register]
-    end
+  get_3_nibbles_HBY_LBY = ->(value, register) do
+    [value >> 4, value & 0xFF, register]
   end
 
-  class LBY < Instruction2
-    OP_CODE = 2
-
-    def get_3_nibbles(value, register)
-      [value >> 4, value & 0xFF, register]
-    end
+  get_3_nibbles_LOD_NOT = ->(source_register, destination_register) do
+    [source_register, 0, destination_register]
   end
 
-  class LOD < Instruction2
-    OP_CODE = 3
-
-    def get_3_nibbles(address, register)
-      [address, 0, register]
-    end
+  get_3_nibbles_STR = ->(address, register) do
+    [address, register, 0]
   end
 
-  class STR < Instruction2
-    OP_CODE = 4
-
-    def get_3_nibbles(address, register)
-      [address, register, 0]
+  instructions_with_2_operands = [
+    [:HBY, 1, get_3_nibbles_HBY_LBY],
+    [:LBY, 2, get_3_nibbles_HBY_LBY],
+    [:LOD, 3, get_3_nibbles_LOD_NOT],
+    [:STR, 4, get_3_nibbles_STR],
+    [:NOT, 0xC, get_3_nibbles_LOD_NOT],
+  ]
+  instructions_with_2_operands.each do |name, code, function|
+    c = Class.new(Instruction2) do
+      define_method(:get_3_nibbles, &function)
     end
-  end
-
-  class NOT < Instruction2
-    OP_CODE = 0xC
-
-    def get_3_nibbles(rs1, rd)
-      [rs1, 0, rd]
-    end
+    c::OP_CODE = code
+    const_set name, c
   end
 
   class SHF < Instruction
