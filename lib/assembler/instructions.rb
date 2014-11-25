@@ -12,6 +12,20 @@ module Assembler::Instructions
     end
   end
 
+  class Instruction2 < Instruction
+    def initialize(args_str)
+      value1, value2 = args_str.split
+      @value1 = Assembler::Token.new value1
+      @value2 = Assembler::Token.new value2
+    end
+
+    def nibbles(symbol_table)
+      value1 = @value1.get_int symbol_table
+      value2 = @value2.get_int symbol_table
+      [self.class::OP_CODE] + get_3_nibbles(value1, value2)
+    end
+  end
+
   class Instruction3 < Instruction
     def initialize(args_str)
       rs1, rs2, rd = args_str.split
@@ -52,78 +66,43 @@ module Assembler::Instructions
     end
   end
 
-  class HBY < Assembler::Command
-    def initialize(args_str)
-      super()
-      value_str, register = args_str.split
-      @value = Assembler::Token.new value_str
-      @register = Assembler::Token.new register
-    end
+  class HBY < Instruction2
+    OP_CODE = 1
 
-    def machine_code(symbol_table)
-      value = @value.get_int symbol_table
-      register = @register.get_int symbol_table
-      [1 << 12 | value << 4 | register]
+    def get_3_nibbles(value, register)
+      [value >> 4, value & 0xFF, register]
     end
   end
 
-  class LBY < Assembler::Command
-    def initialize(args_str)
-      super()
-      value_str, register = args_str.split
-      @value = Assembler::Token.new value_str
-      @register = Assembler::Token.new register
-    end
+  class LBY < Instruction2
+    OP_CODE = 2
 
-    def machine_code(symbol_table)
-      value = @value.get_int symbol_table
-      register = @register.get_int symbol_table
-      [2 << 12 | value << 4 | register]
+    def get_3_nibbles(value, register)
+      [value >> 4, value & 0xFF, register]
     end
   end
 
-  class LOD < Assembler::Command
-    def initialize(args_str)
-      super()
-      addr_str, register = args_str.split
-      @address = Assembler::Token.new addr_str
-      @register = Assembler::Token.new register
-    end
+  class LOD < Instruction2
+    OP_CODE = 3
 
-    def machine_code(symbol_table)
-      address = @address.get_int symbol_table
-      register = @register.get_int symbol_table
-      [3 << 12 | address << 8 | register]
+    def get_3_nibbles(address, register)
+      [address, 0, register]
     end
   end
 
-  class STR < Assembler::Command
-    def initialize(args_str)
-      super()
-      addr_str, register = args_str.split
-      @address = Assembler::Token.new addr_str
-      @register = Assembler::Token.new register
-    end
+  class STR < Instruction2
+    OP_CODE = 4
 
-    def machine_code(symbol_table)
-      address = @address.get_int symbol_table
-      register = @register.get_int symbol_table
-      [4 << 12 | address << 8 | register << 4]
+    def get_3_nibbles(address, register)
+      [address, register, 0]
     end
   end
 
-  class NOT < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rd = Assembler::Token.new rd
-    end
+  class NOT < Instruction2
+    OP_CODE = 0xC
 
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [0xC << 12 | rs1 << 8 | rd]
+    def get_3_nibbles(rs1, rd)
+      [rs1, 0, rd]
     end
   end
 
