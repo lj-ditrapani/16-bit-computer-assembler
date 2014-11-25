@@ -9,6 +9,3 @@
   SymbolTable class
 - `to_int` error handling:  forbid negative values
 - Re-organize tests to match file hierarchy
-- Add `get_int(symbol_table)` method to Token
-- Restore `spec/acceptance_spec.rb` "with-symbol" tests once
-  "no-symbol" tests are passing
