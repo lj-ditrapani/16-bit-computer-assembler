@@ -57,15 +57,6 @@ module Assembler::Instructions
     const_set name, c
   end
 
-  class END_ < Instruction
-    def initialize(_)
-    end
-
-    def nibbles(_)
-      [0, 0, 0, 0]
-    end
-  end
-
   get_3_nibbles_HBY_LBY = ->(value, register) do
     [value >> 4, value & 0xFF, register]
   end
@@ -91,6 +82,15 @@ module Assembler::Instructions
     end
     c::OP_CODE = code
     const_set name, c
+  end
+
+  class END_ < Instruction
+    def initialize(_)
+    end
+
+    def nibbles(_)
+      [0, 0, 0, 0]
+    end
   end
 
   class SHF < Instruction
