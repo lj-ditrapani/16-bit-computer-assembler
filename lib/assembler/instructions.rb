@@ -125,7 +125,7 @@ module Assembler::Instructions
     end
   end
 
-  class SHF < Assembler::Command
+  class SHF < Instruction
     def initialize(args_str)
       super()
       rs1, dir, ammount, rd = args_str.split
@@ -135,16 +135,16 @@ module Assembler::Instructions
       @rd = Assembler::Token.new rd
     end
 
-    def machine_code(symbol_table)
+    def nibbles(symbol_table)
       rs1 = @rs1.get_int symbol_table
       ammount = @ammount.get_int(symbol_table) - 1
       ammount += 8 if @dir == 'R'
       rd = @rd.get_int symbol_table
-      [0xD << 12 | rs1 << 8 | ammount << 4 | rd]
+      [0xD, rs1, ammount, rd]
     end
   end
 
-  class BRN < Assembler::Command
+  class BRN < Instruction
     def initialize(args_str)
       super()
       args = args_str.split
@@ -172,10 +172,10 @@ module Assembler::Instructions
       @address_register = Assembler::Token.new args.shift
     end
 
-    def machine_code(symbol_table)
+    def nibbles(symbol_table)
       rv = @value_register.get_int symbol_table
       rp = @address_register.get_int symbol_table
-      [0xE << 12 | rv << 8 | rp << 4 | @cond]
+      [0xE, rv, rp, @cond]
     end
   end
 
