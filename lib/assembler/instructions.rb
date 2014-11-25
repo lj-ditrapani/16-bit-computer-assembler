@@ -25,8 +25,23 @@ module Assembler::Instructions
       rs1 = @rs1.get_int symbol_table
       rs2 = @rs2.get_int symbol_table
       rd = @rd.get_int symbol_table
-      [op_code, rs1, rs2, rd]
+      [self.class::OP_CODE, rs1, rs2, rd]
     end
+  end
+
+  instructions_with_3_operands = [
+    [:ADD, 5],
+    [:SUB, 6],
+    [:ADI, 7],
+    [:SBI, 8],
+    [:AND, 9],
+    [:ORR, 10],
+    [:XOR, 11],
+  ]
+  instructions_with_3_operands.each do |name, code|
+    c = Class.new(Instruction3)
+    c::OP_CODE = code
+    const_set name, c
   end
 
   class END_ < Instruction
@@ -92,103 +107,6 @@ module Assembler::Instructions
       address = @address.get_int symbol_table
       register = @register.get_int symbol_table
       [4 << 12 | address << 8 | register << 4]
-    end
-  end
-
-  class ADD < Instruction3
-    def op_code
-      5
-    end
-  end
-
-  class SUB < Instruction3
-    def op_code
-      6
-    end
-  end
-
-  class ADI < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
-    end
-
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [7 << 12 | rs1 << 8 | rs2 << 4 | rd]
-    end
-  end
-
-  class SBI < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
-    end
-
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [8 << 12 | rs1 << 8 | rs2 << 4 | rd]
-    end
-  end
-
-  class AND < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
-    end
-
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [9 << 12 | rs1 << 8 | rs2 << 4 | rd]
-    end
-  end
-
-  class ORR < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
-    end
-
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [0xA << 12 | rs1 << 8 | rs2 << 4 | rd]
-    end
-  end
-
-  class XOR < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
-    end
-
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [0xB << 12 | rs1 << 8 | rs2 << 4 | rd]
     end
   end
 
