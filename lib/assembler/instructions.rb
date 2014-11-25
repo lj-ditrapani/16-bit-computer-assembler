@@ -1,8 +1,6 @@
 module Assembler::Instructions
 
   class Instruction
-    attr_reader :word_length
-
     def word_length
       1
     end
@@ -12,33 +10,19 @@ module Assembler::Instructions
     end
   end
 
-  class Instruction2 < Instruction
+  class InstructionWithOnlyTokenArgs < Instruction
     def initialize(args_str)
-      value1, value2 = args_str.split
-      @value1 = Assembler::Token.new value1
-      @value2 = Assembler::Token.new value2
+      @tokens = args_str.split.map { |a| Assembler::Token.new a }
     end
 
     def nibbles(symbol_table)
-      value1 = @value1.get_int symbol_table
-      value2 = @value2.get_int symbol_table
-      [self.class::OP_CODE] + get_3_nibbles(value1, value2)
-    end
-  end
-
-  class Instruction3 < Instruction
-    def initialize(args_str)
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
+      ints = @tokens.map { |token| token.get_int(symbol_table) }
+      [self.class::OP_CODE] + get_3_nibbles(*ints)
     end
 
-    def nibbles(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [self.class::OP_CODE, rs1, rs2, rd]
+    # Overide for individual Instruction2 classes
+    def get_3_nibbles(*args)
+      args
     end
   end
 
@@ -52,7 +36,7 @@ module Assembler::Instructions
     [:XOR, 11],
   ]
   instructions_with_3_operands.each do |name, code|
-    c = Class.new(Instruction3)
+    c = Class.new(InstructionWithOnlyTokenArgs)
     c::OP_CODE = code
     const_set name, c
   end
@@ -77,7 +61,7 @@ module Assembler::Instructions
     [:NOT, 0xC, get_3_nibbles_LOD_NOT],
   ]
   instructions_with_2_operands.each do |name, code, function|
-    c = Class.new(Instruction2) do
+    c = Class.new(InstructionWithOnlyTokenArgs) do
       define_method(:get_3_nibbles, &function)
     end
     c::OP_CODE = code
