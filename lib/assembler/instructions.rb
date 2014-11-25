@@ -1,5 +1,40 @@
 module Assembler::Instructions
 
+  class Instruction
+    attr_reader :word_length
+
+    def initialize(args_str)
+      @word_length = 1
+    end
+
+    def machine_code(symbol_table)
+      [Assembler::Instructions.make_word(*nibbles(symbol_table))]
+    end
+  end
+
+  class Instruction3 < Instruction
+    def initialize(args_str)
+      super(args_str)
+      rs1, rs2, rd = args_str.split
+      @rs1 = Assembler::Token.new rs1
+      @rs2 = Assembler::Token.new rs2
+      @rd = Assembler::Token.new rd
+    end
+
+    def nibbles(symbol_table)
+      rs1 = @rs1.get_int symbol_table
+      rs2 = @rs2.get_int symbol_table
+      rd = @rd.get_int symbol_table
+      [op_code, rs1, rs2, rd]
+    end
+  end
+
+  class END_ < Instruction
+    def nibbles(_)
+      [0, 0, 0, 0]
+    end
+  end
+
   class HBY < Assembler::Command
     def initialize(args_str)
       super()
@@ -60,37 +95,15 @@ module Assembler::Instructions
     end
   end
 
-  class ADD < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
-    end
-
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [5 << 12 | rs1 << 8 | rs2 << 4 | rd]
+  class ADD < Instruction3
+    def op_code
+      5
     end
   end
 
-  class SUB < Assembler::Command
-    def initialize(args_str)
-      super()
-      rs1, rs2, rd = args_str.split
-      @rs1 = Assembler::Token.new rs1
-      @rs2 = Assembler::Token.new rs2
-      @rd = Assembler::Token.new rd
-    end
-
-    def machine_code(symbol_table)
-      rs1 = @rs1.get_int symbol_table
-      rs2 = @rs2.get_int symbol_table
-      rd = @rd.get_int symbol_table
-      [6 << 12 | rs1 << 8 | rs2 << 4 | rd]
+  class SUB < Instruction3
+    def op_code
+      6
     end
   end
 
@@ -260,14 +273,8 @@ module Assembler::Instructions
     end
   end
 
-  class END_ < Assembler::Command
-    def initialize(args_str)
-      super()
-    end
-
-    def machine_code(symbol_table)
-      [0x0000]
-    end
+  def self.make_word(op_code, a, b, c)
+    op_code << 12 | a << 8 | b << 4 | c
   end
 
   def self.handle(op_code_symbol, args_str)
