@@ -5,9 +5,6 @@
     - .end-long-string
     - .include
     - .copy
-- PseudoInstructions
-    - specs for pseudoInstructions
-    - NOP
 - Use Assembler::Directives::XxxxDirective to describe tests?
 - Remove `unless command.nil?` check once commands implemented
 - Remove call to super() in Command subclasses if not needed
@@ -19,3 +16,7 @@
 - `to_int` error handling:  forbid negative values
 - Re-organize tests to match file hierarchy
 - Fix rubocop offenses
+- PseudoInstructions
+    - specs for pseudoInstructions
+- `acceptance_spec.rb` Create a full program test that includes
+  NOP, fill-array, str, long-string, include, and copy
