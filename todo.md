@@ -1,3 +1,13 @@
+- Directives
+    - .fill-array
+    - .str
+    - .long-string
+    - .end-long-string
+    - .include
+    - .copy
+- PseudoInstructions
+    - specs for pseudoInstructions
+    - NOP
 - Use Assembler::Directives::XxxxDirective to describe tests?
 - Remove `unless command.nil?` check once commands implemented
 - Remove call to super() in Command subclasses if not needed
