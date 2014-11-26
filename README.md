@@ -235,7 +235,7 @@ Pseudo Instructions
 pseudo        |   Actual assembled instructions
 ------------------------------------------------
 CPY R1 R2     |   ADI R1 0 R2
-NOP           |   ADI R1 0 R1
+NOP           |   ADI R0 0 R0
 WRD $1234 R7  |   LBY $34 R7   HBY $12 R7
 INC R3        |   ADI R3 1 R3
 DEC R3        |   SBI R3 1 R3
