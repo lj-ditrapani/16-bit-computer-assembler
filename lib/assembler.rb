@@ -29,7 +29,7 @@ module Assembler
         when :set_directive then
           set_directive(args_str, symbol_table)
         when :include_directive then
-          include_directive(args_str)
+          include_directive(args_str, asm)
         when :command then
           handle_command(
             first_word, args_str, asm, commands, symbol_table
@@ -39,19 +39,13 @@ module Assembler
       end
     rescue AsmError => e
       $stderr.puts "\n\n****"
-      $stderr.puts "ASM ERROR in file #{file_path}"
+      $stderr.puts "ASSEMBLER ERROR in file #{file_path}"
       $stderr.puts "LINE # #{asm.line_number}"
       $stderr.puts e.message
       $stderr.puts e.backtrace.join "/n"
       $stderr.puts "****\n\n"
       exit
     end
-=begin
-    puts new_lines
-    symbol_table.each do |k, v|
-      puts "  #{k.inspect.to_s.rjust(11)} => #{v}"
-    end
-=end
     machine_code_arr = commands.machine_code symbol_table
     machine_code_str = machine_code_arr.pack("S>*")
     print machine_code_str
@@ -63,7 +57,7 @@ module Assembler
     if new_line.empty? or new_line[0] == '#'
       return ''
     end
-    first_word, rest = new_line.split(' ', 2)
+    first_word = new_line.split(' ', 2)[0]
     if first_word == '.str'
       return new_line
     end
@@ -152,7 +146,7 @@ module Assembler
   end
 
 
-  def self.include_directive(args_str)
+  def self.include_directive(args_str, asm)
   end
 
 
