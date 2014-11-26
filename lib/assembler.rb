@@ -3,10 +3,8 @@ require './lib/assembler/directives'
 require './lib/assembler/pseudo_instructions'
 require './lib/assembler/instructions'
 
-
+# All code for project contained within this top-level module
 module Assembler
-
-
   def self.main(file_path)
     lines = File.readlines(file_path).to_a
     asm = Assembly.new lines
@@ -18,9 +16,7 @@ module Assembler
       # can change by a variable # based on the command
       until asm.empty?
         line = strip(asm.pop_line)
-        if line.empty?
-          next
-        end
+        next if line.empty?
         first_word, args_str = line.split(/\s+/, 2)
         type = line_type first_word
         case type
@@ -42,28 +38,22 @@ module Assembler
       $stderr.puts "ASSEMBLER ERROR in file #{file_path}"
       $stderr.puts "LINE # #{asm.line_number}"
       $stderr.puts e.message
-      $stderr.puts e.backtrace.join "/n"
+      $stderr.puts e.backtrace.join "\n"
       $stderr.puts "****\n\n"
       exit
     end
     machine_code_arr = commands.machine_code symbol_table
-    machine_code_str = machine_code_arr.pack("S>*")
+    machine_code_str = machine_code_arr.pack('S>*')
     print machine_code_str
   end
 
-
   def self.strip(line)
     new_line = line.strip
-    if new_line.empty? or new_line[0] == '#'
-      return ''
-    end
+    return '' if new_line.empty? || new_line[0] == '#'
     first_word = new_line.split(' ', 2)[0]
-    if first_word == '.str'
-      return new_line
-    end
+    return new_line if first_word == '.str'
     new_line.split('#', 2)[0].strip
   end
-
 
   def self.make_symbol_table
     st = {
@@ -83,38 +73,32 @@ module Assembler
       :"enable-bits" => 0xFFFC,
       :"storage-read-address" => 0xFFFD,
       :"storage-write-address" => 0xFFFE,
-      :"frame-interrupt-vector" => 0xFFFF,
+      :"frame-interrupt-vector" => 0xFFFF
     }
     (0...16).each do |i|
-      st[("R" + i.to_s).to_sym] = i
+      st[('R' + i.to_s).to_sym] = i
     end
     ('A'..'F').each_with_index do |c, i|
-      st[("R" + c).to_sym] = i + 10
+      st[('R' + c).to_sym] = i + 10
     end
     st
   end
 
-
   def self.to_int(str)
-    if /^\d[x|X]/ === str[0..1]
-      raise AsmError, "Malformed integer"
-    end
+    fail AsmError, 'Malformed integer' if /^\d[x|X]/ === str[0..1]
     start, base = case str[0]
-                  when "%" then [1, 2]
-                  when "$" then [1, 16]
+                  when '%' then [1, 2]
+                  when '$' then [1, 16]
                   else [0, 10]
                   end
     num = begin
             Integer(str[start..-1], base)
           rescue ArgumentError
-            raise AsmError, "Malformed integer"
+            raise AsmError, 'Malformed integer'
           end
-    if num > 0xFFFF
-      raise AsmError, "Number greater than $FFFF"
-    end
+    fail AsmError, 'Number greater than $FFFF' if num > 0xFFFF
     num
   end
-
 
   def self.line_type(first_word)
     if first_word[0] == '('
@@ -128,11 +112,9 @@ module Assembler
     end
   end
 
-
   def self.label(first_word, symbol_table, word_index)
     symbol_table[first_word[1...-1].to_sym] = word_index
   end
-
 
   def self.set_directive(args_str, symbol_table)
     name, str_value = args_str.split(/\s+/, 2)
@@ -145,26 +127,27 @@ module Assembler
     symbol_table[name.to_sym] = value
   end
 
-
   def self.include_directive(args_str, asm)
   end
 
-
-  def self.handle_command(first_word_str, args_str, asm, commands, symbol_table)
+  def self.handle_command(first_word_str,
+                          args_str,
+                          asm,
+                          commands,
+                          symbol_table)
     first_word = first_word_str.to_sym
     pseudo_instructions_list = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
     word_index = commands.word_index
     command = if first_word_str[0] == '.'
-                Directives.handle(first_word, args_str, asm, word_index, symbol_table)
+                args = [
+                  first_word, args_str, asm, word_index, symbol_table
+                ]
+                Directives.handle(*args)
               elsif pseudo_instructions_list.include? first_word
                 PseudoInstructions.handle(first_word, args_str)
               else
                 Instructions.handle(first_word, args_str)
               end
-    unless command.nil?
-      commands.add_command command
-    end
+    commands.add_command command unless command.nil?
   end
-
-
 end
