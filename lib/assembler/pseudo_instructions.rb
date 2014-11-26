@@ -8,7 +8,12 @@ module Assembler::PseudoInstructions
 
   class NOP < Assembler::Command
     def initialize(args_str)
-      super
+      super()
+    end
+
+    def machine_code(symbol_table)
+      # ADI R0 0 R0   ---  R0 + 0 => R0
+      [0x7000]
     end
   end
 
