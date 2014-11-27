@@ -9,4 +9,3 @@ describe Assembler::PseudoInstructions::NOP do
     assert_equal [0x7000], actual_machine_code
   end
 end
-
