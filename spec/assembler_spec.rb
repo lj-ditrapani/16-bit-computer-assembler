@@ -1,88 +1,87 @@
 require 'minitest/autorun'
 require './lib/assembler'
 
-
 describe Assembler do
-  describe "strip" do
-    it "should remove line comments at beginning of line" do
+  describe 'strip' do
+    it 'should remove line comments at beginning of line' do
       line = "# this is a comment\n"
       new_line = Assembler.strip(line)
       assert_empty new_line
     end
-    it "should strip white space and beginning and end of line" do
+    it 'should strip white space and beginning and end of line' do
       line = "  \t .word  42  \t  \n"
       new_line = Assembler.strip(line)
       assert_equal '.word  42', new_line
     end
-    it "should not remove comment at end of .str directive" do
+    it 'should not remove comment at end of .str directive' do
       line = '  .str " my string " # My comment'
       new_line = Assembler.strip(line)
       assert_equal '.str " my string " # My comment', new_line
     end
-    it "should remove comment at end of line" do
+    it 'should remove comment at end of line' do
       line = "  ADI R1 $A R3 \t # My comment\n"
       new_line = Assembler.strip(line)
-      assert_equal "ADI R1 $A R3", new_line
+      assert_equal 'ADI R1 $A R3', new_line
     end
   end
 
-  describe "to_int" do
+  describe 'to_int' do
     tests = [
-      ["$10", 16],
-      ["$FF", 255],
-      ["$FFFF", 0xFFFF],
-      ["$FF_FF", 0xFFFF],
-      ["$FEED", 0xFEED],
-      ["%0101_1111", 0x5F],
-      ["%1010_0101_0000_1101", 0xA50D],
-      ["%1010010100001101", 0xA50D],
-      ["10", 10],
-      ["65_000", 0xFDE8],
-      ["65000", 0xFDE8],
+      ['$10', 16],
+      ['$FF', 255],
+      ['$FFFF', 0xFFFF],
+      ['$FF_FF', 0xFFFF],
+      ['$FEED', 0xFEED],
+      ['%0101_1111', 0x5F],
+      ['%1010_0101_0000_1101', 0xA50D],
+      ['%1010010100001101', 0xA50D],
+      ['10', 10],
+      ['65_000', 0xFDE8],
+      ['65000', 0xFDE8]
     ]
     tests.each do |str, num|
       it "#{str.inspect} --> #{num}" do
-        assert_equal num, Assembler::to_int(str)
+        assert_equal num, Assembler.to_int(str)
       end
     end
-    tests = ["0xFF00", "$FFEZ", "hello", "13F"]
+    tests = ['0xFF00', '$FFEZ', 'hello', '13F']
     tests.each do |str|
       it "#{str.inspect} raises exception" do
         err = assert_raises Assembler::AsmError do
-          Assembler::to_int str
+          Assembler.to_int str
         end
-        assert_match "Malformed integer", err.message
+        assert_match 'Malformed integer', err.message
       end
     end
-    tests = ["$10000", "66000"]
+    tests = ['$10000', '66000']
     tests.each do |str|
       it "#{str.inspect} raises exception" do
         err = assert_raises Assembler::AsmError do
-          Assembler::to_int str
+          Assembler.to_int str
         end
-        assert_match "Number greater than $FFFF", err.message
+        assert_match 'Number greater than $FFFF', err.message
       end
     end
   end
 
-  describe "make_symbol_table has pre-defined symbols" do
+  describe 'make_symbol_table has pre-defined symbols' do
     tests = [
       [:R0, 0],
       [:R1, 1],
       [:RA, 10],
       [:RF, 15],
       [:audio,           0xD800],
-      [:"net-in",        0xDC00],
-      [:"storage-out",   0xE800],
-      [:"cell-x-y-flip", 0xFD60],
+      [:'net-in',        0xDC00],
+      [:'storage-out',   0xE800],
+      [:'cell-x-y-flip', 0xFD60],
       [:sprites,         0xFE8C],
-      [:"sprite-colors", 0xFFAC],
+      [:'sprite-colors', 0xFFAC],
       [:keyboard,        0xFFFA],
-      [:"net-status",    0xFFFB],
-      [:"enable-bits",   0xFFFC],
-      [:"storage-read-address",   0xFFFD],
-      [:"storage-write-address",  0xFFFE],
-      [:"frame-interrupt-vector", 0xFFFF],
+      [:'net-status',    0xFFFB],
+      [:'enable-bits',   0xFFFC],
+      [:'storage-read-address',   0xFFFD],
+      [:'storage-write-address',  0xFFFE],
+      [:'frame-interrupt-vector', 0xFFFF]
     ]
     st = Assembler.make_symbol_table
     tests.each do |key, value|
@@ -105,19 +104,14 @@ describe Assembler do
 
 end
 
-
 describe Assembler::Assembly do
   before do
-    lines = [
-      'a',
-      'b',
-      'c'
-    ]
+    lines = %w(a b c)
     @state = Assembler::Assembly.new(lines)
   end
 
   describe 'peek_line' do
-    let(:line) { @state.peek_line() }
+    let(:line) { @state.peek_line }
     it 'should not alter the line_number' do
       assert_equal 0, @state.line_number
     end
@@ -125,7 +119,7 @@ describe Assembler::Assembly do
       assert_equal 'a', line
     end
     it 'should still return the top-most line' do
-      line = @state.peek_line()
+      line = @state.peek_line
       assert_equal 'a', line
     end
   end
@@ -155,11 +149,10 @@ describe Assembler::Assembly do
     end
   end
 
-  
   describe 'peek_line after poke line' do
     before do
-      @state.pop_line()
-      @line = @state.peek_line()
+      @state.pop_line
+      @line = @state.peek_line
     end
     it 'should not alter the line_number' do
       assert_equal 1, @state.line_number
@@ -171,13 +164,13 @@ describe Assembler::Assembly do
 
 end
 
-
 describe Assembler::CommandList do
   before do
     @state = Assembler::CommandList.new
   end
   describe 'add_command' do
     before do
+      # Mock of the Command class
       class MockCommand
         attr_accessor :word_length
       end
@@ -209,34 +202,32 @@ describe Assembler::CommandList do
   end
 end
 
-
 describe Assembler::Token do
   it 'handles symbols' do
-    token = Assembler::Token.new "my-label"
+    token = Assembler::Token.new 'my-label'
     assert_equal :symbol, token.type
-    assert_equal :"my-label", token.value
+    assert_equal :'my-label', token.value
   end
   it 'handles integers' do
-    token = Assembler::Token.new "$F099"
+    token = Assembler::Token.new '$F099'
     assert_equal :int, token.type
     assert_equal 0xF099, token.value
   end
 end
 
-
 describe Assembler::Directives do
   describe 'directive_to_class_name' do
     tests = [
-      [:".set", :SetDirective],
-      [:".word", :WordDirective],
-      [:".array", :ArrayDirective],
-      [:".fill-array", :FillArrayDirective],
-      [:".string", :StringDirective],
-      [:".long-string", :LongStringDirective],
-      [:".end-long-string", :EndLongStringDirective],
-      [:".move", :MoveDirective],
-      [:".include", :IncludeDirective],
-      [:".copy", :CopyDirective],
+      [:'.set', :SetDirective],
+      [:'.word', :WordDirective],
+      [:'.array', :ArrayDirective],
+      [:'.fill-array', :FillArrayDirective],
+      [:'.string', :StringDirective],
+      [:'.long-string', :LongStringDirective],
+      [:'.end-long-string', :EndLongStringDirective],
+      [:'.move', :MoveDirective],
+      [:'.include', :IncludeDirective],
+      [:'.copy', :CopyDirective]
     ]
     tests.each do |directive, expected_class_name|
       it "#{directive} --> #{expected_class_name}" do
