@@ -30,9 +30,9 @@ describe Assembler::Instructions do
     [:BRN, '- RB', 0xE0B8],
     [:BRN, 'C RB', 0xE0B9],
     [:BRN, 'V RB', 0xE0BA],
-    [:SPC, 'RA', 0xF00A],
+    [:SPC, 'RA', 0xF00A]
   ]
-  symbol_table = { :RA => 10, :RB => 11, :RC => 12, :x => 7, :y => 15}
+  symbol_table = { RA: 10, RB: 11, RC: 12, x: 7, y: 15 }
   tests.each do |op_code, args_str, expected_machine_code|
     describe op_code do
       str = "Given #{op_code} #{args_str}, "
@@ -46,12 +46,12 @@ describe Assembler::Instructions do
     end
   end
 
-  describe "BRN Exception" do
-    it "Raises exception when flag condition is invalid" do
+  describe 'BRN Exception' do
+    it 'Raises exception when flag condition is invalid' do
       err = assert_raises Assembler::AsmError do
         Assembler::Instructions.handle(:BRN, 'N RA')
       end
-      assert_match /got "N" instead/, err.message
+      assert_match(/got "N" instead/, err.message)
     end
   end
 
