@@ -1,6 +1,9 @@
+# Toplevel module
 module Assembler
-
-
+  # Instructions, pseudo-instructions, and most directives
+  # are commands (or follow the Command interface).
+  # They generate machine code and know how long the
+  # machine code will be via the word_length method.
   class Command
     attr_reader :word_length
 
@@ -8,21 +11,20 @@ module Assembler
       @word_length = 1
     end
 
-    def machine_code(symbol_table)
+    def machine_code(_symbol_table)
       []
     end
   end
 
-
   class AsmError < StandardError
   end
 
-
+  # A Token contains an int or a symbol that refers to an int
   class Token
     attr_reader :type, :value
 
     def initialize(str)
-      if ['$', '%', /\d/].any? {|match| match === str[0]}
+      if ['$', '%', /\d/].any? { |match| match === str[0] }
         @type = :int
         @value = Assembler.to_int str
       else
@@ -45,7 +47,7 @@ module Assembler
     end
   end
 
-
+  # Holds the list of assembly lines yet to be processed
   class Assembly
     attr_reader :line_number
 
@@ -66,14 +68,17 @@ module Assembler
     def empty?
       @lines.empty?
     end
-
   end
 
-
+  # Holds the list of commands parsed so far
+  # Once the first pass is finished, the command list will contain all
+  # the commands and the symbol table will be complete.
+  # The second pass can actually generate the machine code, since the
+  # symbol table is complete at that point.
   class CommandList
     attr_reader :word_index
 
-    def initialize()
+    def initialize
       # The index of the next free address
       @word_index = 0
       @commands = []
@@ -93,7 +98,7 @@ module Assembler
     end
 
     def machine_code(symbol_table)
-      array = @commands.map {|cmd| cmd.machine_code symbol_table}
+      array = @commands.map { |cmd| cmd.machine_code symbol_table }
       array.flatten
     end
 
@@ -102,8 +107,5 @@ module Assembler
         array.concat cmd.machine_code(symbol_table)
       end
     end
-
   end
-
-
 end

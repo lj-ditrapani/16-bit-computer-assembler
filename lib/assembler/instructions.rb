@@ -1,5 +1,5 @@
+# top-level module
 module Assembler::Instructions
-
   class Instruction
     def word_length
       1
@@ -33,7 +33,7 @@ module Assembler::Instructions
     [:SBI, 8],
     [:AND, 9],
     [:ORR, 10],
-    [:XOR, 11],
+    [:XOR, 11]
   ]
   instructions_with_3_operands.each do |name, code|
     c = Class.new(InstructionWithOnlyTokenArgs)
@@ -41,15 +41,16 @@ module Assembler::Instructions
     const_set name, c
   end
 
-  get_3_nibbles_HBY_LBY = ->(value, register) do
+  get_3_nibbles_HBY_LBY = lambda do |value, register|
     [value >> 4, value & 0xFF, register]
   end
 
-  get_3_nibbles_LOD_NOT = ->(source_register, destination_register) do
-    [source_register, 0, destination_register]
-  end
+  get_3_nibbles_LOD_NOT =
+      lambda do |source_register, destination_register|
+        [source_register, 0, destination_register]
+      end
 
-  get_3_nibbles_STR = ->(address, register) do
+  get_3_nibbles_STR = lambda do |address, register|
     [address, register, 0]
   end
 
@@ -58,7 +59,7 @@ module Assembler::Instructions
     [:LBY, 2, get_3_nibbles_HBY_LBY],
     [:LOD, 3, get_3_nibbles_LOD_NOT],
     [:STR, 4, get_3_nibbles_STR],
-    [:NOT, 0xC, get_3_nibbles_LOD_NOT],
+    [:NOT, 0xC, get_3_nibbles_LOD_NOT]
   ]
   instructions_with_2_operands.each do |name, code, function|
     c = Class.new(InstructionWithOnlyTokenArgs) do
@@ -109,13 +110,13 @@ module Assembler::Instructions
       else
         @value_register = Assembler::Token.new '0'
         cv = args.shift
-        str = "Bad condition code in BRN, should be - C or V, but got"\
+        str = 'Bad condition code in BRN, should be - C or V, but got'\
               " #{cv.inspect} instead"
         value = case cv
                 when 'V' then 2
                 when 'C' then 1
                 when '-' then 0
-                else raise Assembler::AsmError, str
+                else fail Assembler::AsmError, str
                 end
         @cond = 8 | value
       end
@@ -146,10 +147,7 @@ module Assembler::Instructions
 
   def self.handle(op_code_symbol, args_str)
     # END is a reserved word; rename to END_
-    if op_code_symbol == :END
-      op_code_symbol = :END_
-    end
+    op_code_symbol = :END_ if op_code_symbol == :END
     const_get(op_code_symbol).new args_str
   end
-
 end

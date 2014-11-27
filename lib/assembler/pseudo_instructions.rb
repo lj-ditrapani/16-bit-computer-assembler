@@ -1,5 +1,6 @@
+# Contains pseudo-instructions classes and knows how to handle a
+# pseudo-instruction
 module Assembler::PseudoInstructions
-
   class CYP < Assembler::Command
     def initialize(args_str)
       super
@@ -7,11 +8,11 @@ module Assembler::PseudoInstructions
   end
 
   class NOP < Assembler::Command
-    def initialize(args_str)
+    def initialize(_args_str)
       super()
     end
 
-    def machine_code(symbol_table)
+    def machine_code(_symbol_table)
       # ADI R0 0 R0   ---  R0 + 0 => R0
       [0x7000]
     end
