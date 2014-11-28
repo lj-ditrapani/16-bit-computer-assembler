@@ -1,5 +1,4 @@
 - Directives
-    - .fill-array
     - .str
     - .long-string
     - .end-long-string
@@ -20,3 +19,4 @@
     - specs for pseudoInstructions
 - `acceptance_spec.rb` Create a full program test that includes
   NOP, fill-array, str, long-string, include, and copy
+- Refactor directive classes
