@@ -61,4 +61,24 @@ describe Assembler::Directives do
       end
     end
   end
+  tests = [
+    ['1 0', [0]],
+    ['3 42', [42, 42, 42]],
+    ['4 $FF', [0xFF, 0xFF, 0xFF, 0xFF]],
+    ['2 %1010_1100', [0xAC, 0xAC]],
+    ['3 audio', [0xD800, 0xD800, 0xD800]]
+  ]
+  tests.each do |args_str, words|
+    describe '.fill-array Directive' do
+      it ".fill-array #{args_str} -> #{words.inspect}" do
+        d = Assembler::Directives
+        cmd = d.handle(:'.fill-array', args_str, [], 0, {})
+        machine_code = cmd.machine_code(symbol_table)
+        length = words.length
+        assert_equal length, cmd.word_length
+        assert_equal length, machine_code.length
+        assert_equal words, machine_code
+      end
+    end
+  end
 end
