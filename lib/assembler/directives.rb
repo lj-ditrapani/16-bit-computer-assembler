@@ -55,6 +55,19 @@ module Assembler::Directives
     end
   end
 
+  class FillArrayDirective < Assembler::Command
+    def initialize(args_str, asm, _word_index, _symbol_table)
+      super()
+      size, fill = args_str.split
+      @word_length = Assembler.to_int size
+      @fill = Assembler::Token.new fill
+    end
+
+    def machine_code(symbol_table)
+      [@fill.get_int(symbol_table)] * @word_length
+    end
+  end
+
   def self.handle(directive, args_str, asm, word_index, symbol_table)
     class_name = directive_to_class_name directive
     const_get(class_name).new(args_str, asm, word_index, symbol_table)
