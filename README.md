@@ -114,51 +114,52 @@ The f
              # initialized to all zeros
 .array 4 $FF # Creates an array of 4 values of 255
 ```
+Size cannot be a symbol; it must be a literal integer.
+Fill can be a literal integer or a symbol.
 
 ### .str ###
 A string is a sequence of 7-bit ASCII characters.  Two characters are
 packed into a word.  The first character in the high-order byte and the
 second character into the low-order byte.
+The string begins after the space first space following the .str
+directive and ends with a new line.
 ```
-.str "Hello World"  # a string
-(greet)             # The symbol points to the next word in memory
-.str "Hello Joe"    # a string; can be referred to by greet symbol
+# The string "Hello World"
+.str Hello World
+# The symbol points to the next word in memory
+(greet)
+# a string; can be referred to by greet symbol
+.str Hello Joe
+# You can use " in strings
+.str She said "hi"
 ```
 The .str directive and the string must fit on a single line.
-Use the .long-string directive for multi-line strings
-```
-.str "one two three"
-.str "c"
-.str "embedded \" in string"
-.str "\"Hi\" she said"
-Use two \\ to represent a \
-.str "win\\path\\file.txt"
-.str "\n\t\r" special chars newline, tab
-```
+Use the .long-string directive for multi-line strings.
+You cannot embed newlines in a .str string.
+Use the .long-string to embed newlines in a string.
 
 ### .long-string ###
 Begins a multi-line string
 
 Format:
 
-    .long-string (literal-newlines|escaped-newlines)
+    .long-string (keep-newlines|strip-newlines)
 
-With literal-newlines, the '\n' char is appended to each line
+With keep-newlines, the '\n' char is appended to each line
 
-    .long-string literal-newlines
+    .long-string keep-newlines
     line one
     line two
     line three
     .end-long-string
 
-With escaped-newlines, the newlines at the end of each line are stripped
-and the only way to have a newline is to explicitly use the escape
-sequence '\n'.
+With strip-newlines, the newlines at the end of each line are stripped.
+Newlines cannot appear in strip-newlines .long-strings.
 
-    .long-string escaped-newlines
+    .long-string strip-newlines
     line one
-    still line one \n now line two
-    still line two
+    still line one
+    still line one
     .end-long-string
 
 ### .end-long-string ###
