@@ -81,4 +81,22 @@ describe Assembler::Directives do
       end
     end
   end
+  tests = [
+    'a', 'a ', "a \t", 'abc', 'a b c', 'a "b" c', 'Hellow World',
+    'She said "hi" '
+  ]
+  tests.each do |args_str|
+    describe '.str Directive' do
+      words = args_str.split('').map(&:ord)
+      it ".str #{args_str} -> #{words.inspect}" do
+        d = Assembler::Directives
+        cmd = d.handle(:'.str', args_str, [], 0, {})
+        machine_code = cmd.machine_code(symbol_table)
+        length = words.length
+        assert_equal length, cmd.word_length
+        assert_equal length, machine_code.length
+        assert_equal words, machine_code
+      end
+    end
+  end
 end
