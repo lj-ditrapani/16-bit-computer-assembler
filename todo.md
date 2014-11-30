@@ -1,7 +1,4 @@
 - Directives
-    - .str
-    - .long-string
-    - .end-long-string
     - .include
     - .copy
 - Use Assembler::Directives::XxxxDirective to describe tests?
@@ -20,3 +17,5 @@
 - `acceptance_spec.rb` Create a full program test that includes
   NOP, fill-array, str, long-string, include, and copy
 - Refactor directive classes
+    - package last 3 asserts into a function?
+- .long-string:  write specs for failing cases
