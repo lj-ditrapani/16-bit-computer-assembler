@@ -82,7 +82,7 @@ describe Assembler::Directives do
     end
   end
   tests = [
-    'a', 'a ', "a \t", 'abc', 'a b c', 'a "b" c', 'Hellow World',
+    '', 'a', 'a ', "a \t", 'abc', 'a b c', 'a "b" c', 'Hellow World',
     'She said "hi" '
   ]
   tests.each do |args_str|
@@ -91,6 +91,37 @@ describe Assembler::Directives do
       it ".str #{args_str} -> #{words.inspect}" do
         d = Assembler::Directives
         cmd = d.handle(:'.str', args_str, [], 0, {})
+        machine_code = cmd.machine_code(symbol_table)
+        length = words.length
+        assert_equal length, cmd.word_length
+        assert_equal length, machine_code.length
+        assert_equal words, machine_code
+      end
+    end
+  end
+  list = [
+    ['.end-long-string'],
+    [' a b ', '.end-long-string  # end'],
+    [' a', 'b ', ".end-long-string\t# end"],
+    ['a', "\t\"b\"  \t", 'c d', '.end-long-string']
+  ]
+  make_test = ->(args_str, lines) { [args_str, lines] }
+  tests = list.map { |lines| make_test.call('keep-newlines', lines) } +
+          list.map { |lines| make_test.call('strip-newlines', lines) }
+  tests.each do |args_str, lines|
+    describe '.long-string Directive' do
+      d = Assembler::Directives
+      asm = Assembler::Assembly.new lines.dup
+      lines = lines.dup
+      lines.pop
+      char = if args_str == 'keep-newlines'
+               "\n"
+             else
+               ''
+             end
+      words = lines.join(char).split('').map(&:ord)
+      it ".long-string #{args_str} #{lines} -> #{words.inspect}" do
+        cmd = d.handle(:'.long-string', args_str, asm, 0, {})
         machine_code = cmd.machine_code(symbol_table)
         length = words.length
         assert_equal length, cmd.word_length
