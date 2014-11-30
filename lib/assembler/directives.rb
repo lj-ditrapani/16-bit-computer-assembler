@@ -83,4 +83,34 @@ module Assembler::Directives
       @code
     end
   end
+
+  class LongStringDirective < Assembler::Command
+    def initialize(args_str, asm, _word_index, _symbol_table)
+      msg = 'Missing .end-long-string to end .long-string directive'
+      lines = []
+      fail(Assembler::AsmError, msg) if asm.empty?
+      line = asm.pop_line
+      until Assembler.strip(line) == '.end-long-string'
+        lines.push line
+        fail(Assembler::AsmError, msg) if asm.empty?
+        line = asm.pop_line
+      end
+      msg = '.long-string parameter must be keep-newlines or' \
+            "strip-newlines. Received #{args_str.inspect} instead"
+      char = case args_str
+             when 'keep-newlines'
+               "\n"
+             when 'strip-newlines'
+               ''
+             else
+               fail Assembler::AsmError, msg
+             end
+      @code = lines.join(char).split('').map(&:ord)
+      @word_length = @code.length
+    end
+
+    def machine_code(symbol_table)
+      @code
+    end
+  end
 end
