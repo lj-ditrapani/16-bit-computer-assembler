@@ -11,8 +11,8 @@ Use # to comment a line.
 # this is a comment
 HLT   # comment at end of line
 ```
-Comments can be placed on any line except on lines between
-.long-string and .end-long-string directives.
+Comments can be placed on any lines except on .str lines and
+on lines between .long-string and .end-long-string directives.
 
 
 Numbers
@@ -121,8 +121,8 @@ Fill can be a literal integer or a symbol.
 A string is a sequence of 7-bit ASCII characters.  Two characters are
 packed into a word.  The first character in the high-order byte and the
 second character into the low-order byte.
-The string begins after the space first space following the .str
-directive and ends with a new line.
+The string begins with the first non-whitespace character following
+the .str directive and ends with a new line.
 ```
 # The string "Hello World"
 .str Hello World
