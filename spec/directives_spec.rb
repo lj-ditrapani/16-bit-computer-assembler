@@ -105,9 +105,8 @@ describe Assembler::Directives do
     [' a', 'b ', ".end-long-string\t# end"],
     ['a', "\t\"b\"  \t", 'c d', '.end-long-string']
   ]
-  make_test = ->(args_str, lines) { [args_str, lines] }
-  tests = list.map { |lines| make_test.call('keep-newlines', lines) } +
-          list.map { |lines| make_test.call('strip-newlines', lines) }
+  tests = list.map { |lines| ['keep-newlines', lines] } +
+          list.map { |lines| ['strip-newlines', lines] }
   tests.each do |args_str, lines|
     describe '.long-string Directive' do
       d = Assembler::Directives
