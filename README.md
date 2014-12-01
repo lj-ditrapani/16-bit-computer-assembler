@@ -179,6 +179,19 @@ Zero fills holes in binary machine code.
 .move audio
 ```
 
+### .include ###
+Includes the assembly text lines of the file referred to by
+the `.include` directive.  The lines are inserted at the current
+location of the assembly lines.  The assembler then processes the
+lines normally.  This allows for recursive includes (includes of files
+that include other files, etc.)
+```
+.set math-library $9000
+.include path/to/program.asm    # includes it here
+.move math-library
+.include path/to/math-lib.asm
+```
+
 ### .copy ###
 Copies binary content of file directly into final assembled binary
 starting at current location.
@@ -193,19 +206,6 @@ start and end are in terms of 16-bit words in file
 .copy text/story.txt  # copies data into ram starting at current address
 .copy video-data.bin $400
 .copy video-data.bin $400 $4FF  # copy 255 words starting at $400
-```
-
-### .include ###
-Includes the assembly text lines of the file referred to by
-the `.include` directive.  The lines are inserted at the current
-location of the assembly lines.  The assembler then processes the
-lines normally.  This allows for recursive includes (includes of files
-that include other files, etc.)
-```
-.set math-library $9000
-.include path/to/program.asm    # includes it here
-.move math-library
-.include path/to/math-lib.asm
 ```
 
 
