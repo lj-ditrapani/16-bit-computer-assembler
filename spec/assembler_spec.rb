@@ -110,20 +110,6 @@ describe Assembler::Assembly do
     @state = Assembler::Assembly.new(lines)
   end
 
-  describe 'peek_line' do
-    let(:line) { @state.peek_line }
-    it 'should not alter the line_number' do
-      assert_equal 0, @state.line_number
-    end
-    it 'should return the top-most line' do
-      assert_equal 'a', line
-    end
-    it 'should still return the top-most line' do
-      line = @state.peek_line
-      assert_equal 'a', line
-    end
-  end
-
   describe 'pop_line' do
     before do
       @line = @state.pop_line
@@ -146,19 +132,6 @@ describe Assembler::Assembly do
     end
     it 'should increment the line_number twice' do
       assert_equal 2, @state.line_number
-    end
-  end
-
-  describe 'peek_line after poke line' do
-    before do
-      @state.pop_line
-      @line = @state.peek_line
-    end
-    it 'should not alter the line_number' do
-      assert_equal 1, @state.line_number
-    end
-    it 'should return the top-most line' do
-      assert_equal 'b', @line
     end
   end
 
