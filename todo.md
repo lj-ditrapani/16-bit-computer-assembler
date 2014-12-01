@@ -1,3 +1,4 @@
+- Move test code inside the Assembler module?
 - Directives
     - .include
     - .copy
