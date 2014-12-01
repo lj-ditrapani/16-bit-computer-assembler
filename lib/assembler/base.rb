@@ -62,7 +62,7 @@ module Assembler
 
     def pop_line
       @line_number += 1
-      @lines.shift
+      @lines.shift.chomp
     end
 
     def empty?
