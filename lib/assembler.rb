@@ -6,7 +6,7 @@ require './lib/assembler/instructions'
 # All code for project contained within this top-level module
 module Assembler
   def self.main(file_path)
-    lines = File.readlines(file_path).to_a
+    lines = File.readlines(file_path)
     asm = Assembly.new lines
     commands = CommandList.new
     symbol_table = make_symbol_table
