@@ -76,6 +76,7 @@ module Assembler::Directives
   class StrDirective < Assembler::Command
     def initialize(args_str, _asm, _word_index, _symbol_table)
       @code = args_str.split('').map(&:ord)
+      @code.unshift @code.size
       @word_length = @code.length
     end
 
@@ -106,6 +107,7 @@ module Assembler::Directives
                fail Assembler::AsmError, msg
              end
       @code = lines.join(char).split('').map(&:ord)
+      @code.unshift @code.size
       @word_length = @code.length
     end
 
