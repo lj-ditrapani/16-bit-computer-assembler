@@ -25,6 +25,6 @@ end
 describe 'Assembler CLI' do
   program_names = %w(misc includer copier include-and-copy)
   program_names.each do |name|
-    run_cli_test name, "misc"
+    run_cli_test name, 'misc'
   end
 end
