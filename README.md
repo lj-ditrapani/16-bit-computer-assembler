@@ -205,17 +205,22 @@ that include other files, etc.)
 ### .copy ###
 Copies binary content of file directly into final assembled binary
 starting at current location.
+<!--
+Not implemented.  Maybe in future?
 Optionally takes start and end values for binary file
 start defaults to 0 and end defaults to end of file
 start and end are in terms of 16-bit words in file
+.copy path/file-name.ext [start [end]]
+.copy video-data.bin $400
+.copy video-data.bin $400 $4FF  # copy 255 words starting at $400
+-->
 
 ```
-.copy path/file-name.ext [start [end]]
+.copy path/file-name.ext
 .move tiles
 .copy video/mario-tiles.bin
 .copy text/story.txt  # copies data into ram starting at current address
-.copy video-data.bin $400
-.copy video-data.bin $400 $4FF  # copy 255 words starting at $400
+.copy video-data.bin
 ```
 
 
@@ -247,7 +252,7 @@ pseudo        |   Actual assembled instructions
 ------------------------------------------------
 CPY R1 R2     |   ADI R1 0 R2
 NOP           |   ADI R0 0 R0
-WRD $1234 R7  |   LBY $34 R7   HBY $12 R7
+WRD $1234 R7  |   HBY $12 R7    LBY $34 R7
 INC R3        |   ADI R3 1 R3
 DEC R3        |   SBI R3 1 R3
 JMP R3        |   BRN R0 R3 NZP
