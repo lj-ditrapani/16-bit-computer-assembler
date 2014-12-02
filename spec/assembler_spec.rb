@@ -106,7 +106,7 @@ end
 
 describe Assembler::Assembly do
   before do
-    lines = %w(a b c)
+    lines = %W(a\n b\n c\n)
     @state = Assembler::Assembly.new(lines)
   end
 
