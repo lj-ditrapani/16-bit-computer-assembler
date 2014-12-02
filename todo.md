@@ -1,14 +1,5 @@
-- Implementation of .str and .long-string does not match spec in README
-    - Change README:  string is one byte per word, not 2.
-      Makes programming easier at the cost of space
-    - The first word of a string contains the string length.
-      Add to README, correct specs and implementation.
-      The implementation omits the string size.
 - Must add .array-fill to misc.asm misc.exe etc
 - Move test code inside the Assembler module?
-- Directives
-    - .include
-    - .copy
 - Use Assembler::Directives::XxxxDirective to describe tests?
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
@@ -26,3 +17,7 @@
 - Refactor directive classes
     - package last 3 asserts into a function?
 - .long-string:  write specs for failing cases
+- Consider adding .pstr and .long-pstring directives to allow for
+  strings with packed 2 bytes per word.
+  Could rename current .str and .long-string to .wstr and .long-wstring
+  to stand for "wide string" since each char is 16-bits.
