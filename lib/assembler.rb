@@ -128,6 +128,8 @@ module Assembler
   end
 
   def self.include_directive(args_str, asm)
+    lines = File.readlines(args_str)
+    asm.include lines
   end
 
   def self.handle_command(first_word_str,
@@ -148,6 +150,6 @@ module Assembler
               else
                 Instructions.handle(first_word, args_str)
               end
-    commands.add_command command unless command.nil?
+    commands.add_command command
   end
 end
