@@ -33,3 +33,5 @@
 - Run rubocop
 - Spell out .str and .long-string tests' expected results; provide
   the actual expected machine code for the tests.
+- What happens if you have a comment or an empty line in the middle
+  of an .array or .long-string??
