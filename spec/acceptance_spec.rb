@@ -27,4 +27,5 @@ describe 'Assembler CLI' do
   program_names.each do |name|
     run_cli_test name, 'misc'
   end
+  run_cli_test 'nested-include', 'nested-include'
 end
