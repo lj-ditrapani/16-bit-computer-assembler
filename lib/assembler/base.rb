@@ -64,6 +64,10 @@ module Assembler
     def empty?
       @lines.empty?
     end
+
+    def include(lines)
+      @lines = lines + @lines
+    end
   end
 
   # Holds the list of commands parsed so far
