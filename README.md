@@ -118,11 +118,13 @@ Size cannot be a symbol; it must be a literal integer.
 Fill can be a literal integer or a symbol.
 
 ### .str ###
-A string is a sequence of 7-bit ASCII characters.  Two characters are
-packed into a word.  The first character in the high-order byte and the
-second character into the low-order byte.
+A string is a sequence of 7-bit ASCII characters.
+One character takes up one word.
 The string begins with the first non-whitespace character following
 the .str directive and ends with a new line.
+The generated machine code by the .str directive consists of the length
+of the string followed by the characters of the string in each
+subsequent word.  There is no null terminating character in the binary.
 ```
 # The string "Hello World"
 .str Hello World
@@ -137,6 +139,14 @@ The .str directive and the string must fit on a single line.
 Use the .long-string directive for multi-line strings.
 You cannot embed newlines in a .str string.
 Use the .long-string to embed newlines in a string.
+
+<!--
+### .pstr ###
+.pstr stands for Packed string.  It is just like the .str directive
+except Two characters are packed into a word.
+The first character in the high-order byte and the
+second character into the low-order byte.
+-->
 
 ### .long-string ###
 Begins a multi-line string
