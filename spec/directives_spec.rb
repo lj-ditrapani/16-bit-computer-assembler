@@ -88,6 +88,7 @@ describe Assembler::Directives do
   tests.each do |args_str|
     describe '.str Directive' do
       words = args_str.split('').map(&:ord)
+      words.unshift words.size
       it ".str #{args_str} -> #{words.inspect}" do
         d = Assembler::Directives
         cmd = d.handle(:'.str', args_str, [], 0, {})
@@ -119,6 +120,7 @@ describe Assembler::Directives do
                ''
              end
       words = lines.join(char).split('').map(&:ord)
+      words.unshift words.size
       it ".long-string #{args_str} #{lines} -> #{words.inspect}" do
         cmd = d.handle(:'.long-string', args_str, asm, 0, {})
         machine_code = cmd.machine_code(symbol_table)
