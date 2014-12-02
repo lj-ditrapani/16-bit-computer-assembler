@@ -10,7 +10,6 @@
     - .include
     - .copy
 - Use Assembler::Directives::XxxxDirective to describe tests?
-- Remove `unless command.nil?` check once commands implemented
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
 - Error-handling for .set directive (if value is not a non-negative
