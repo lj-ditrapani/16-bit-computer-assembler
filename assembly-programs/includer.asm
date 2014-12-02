@@ -6,4 +6,5 @@ a
 b
 c
 .end-long-string
+.fill-array 4 keyboard
 NOP
