@@ -68,11 +68,6 @@ module Assembler::Directives
     end
   end
 
-  def self.handle(directive, args_str, asm, word_index, symbol_table)
-    class_name = directive_to_class_name directive
-    const_get(class_name).new(args_str, asm, word_index, symbol_table)
-  end
-
   class StrDirective < Assembler::Command
     def initialize(args_str, _asm, _word_index, _symbol_table)
       @code = args_str.split('').map(&:ord)
@@ -114,5 +109,22 @@ module Assembler::Directives
     def machine_code(symbol_table)
       @code
     end
+  end
+
+  class CopyDirective < Assembler::Command
+    def initialize(args_str, asm, _word_index, _symbol_table)
+      super()
+      @code = IO.read(args_str).unpack('S>*')
+      @word_length = @code.length
+    end
+
+    def machine_code(_symbol_table)
+      @code
+    end
+  end
+
+  def self.handle(directive, args_str, asm, word_index, symbol_table)
+    class_name = directive_to_class_name directive
+    const_get(class_name).new(args_str, asm, word_index, symbol_table)
   end
 end
