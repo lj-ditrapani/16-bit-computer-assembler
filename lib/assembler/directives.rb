@@ -91,7 +91,7 @@ module Assembler::Directives
         fail(Assembler::AsmError, msg) if asm.empty?
         line = asm.pop_line
       end
-      msg = '.long-string parameter must be keep-newlines or' \
+      msg = '.long-string parameter must be keep-newlines or ' \
             "strip-newlines. Received #{args_str.inspect} instead"
       char = case args_str
              when 'keep-newlines'
