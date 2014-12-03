@@ -85,7 +85,7 @@ module Assembler
   end
 
   def self.to_int(str)
-    fail AsmError, 'Malformed integer' if /^\d[x|X]/ === str[0..1]
+    fail AsmError, 'Malformed integer' if /^\d[x|X]/ =~ str[0..1]
     start, base = case str[0]
                   when '%' then [1, 2]
                   when '$' then [1, 16]

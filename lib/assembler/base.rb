@@ -24,7 +24,7 @@ module Assembler
     attr_reader :type, :value
 
     def initialize(str)
-      if ['$', '%', /\d/].any? { |match| match === str[0] }
+      if [/\$/, /%/, /\d/].any? { |match| match =~ str[0] }
         @type = :int
         @value = Assembler.to_int str
       else
