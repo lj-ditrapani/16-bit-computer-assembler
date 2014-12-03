@@ -75,7 +75,7 @@ module Assembler::Directives
       @word_length = @code.length
     end
 
-    def machine_code(symbol_table)
+    def machine_code(_symbol_table)
       @code
     end
   end
@@ -106,13 +106,13 @@ module Assembler::Directives
       @word_length = @code.length
     end
 
-    def machine_code(symbol_table)
+    def machine_code(_symbol_table)
       @code
     end
   end
 
   class CopyDirective < Assembler::Command
-    def initialize(args_str, asm, _word_index, _symbol_table)
+    def initialize(args_str, _asm, _word_index, _symbol_table)
       super()
       @code = IO.read(args_str).unpack('S>*')
       @word_length = @code.length
