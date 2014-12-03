@@ -28,4 +28,5 @@ describe 'Assembler CLI' do
     run_cli_test name, 'misc'
   end
   run_cli_test 'nested-include', 'nested-include'
+  run_cli_test 'array-and-long-string', 'array-and-long-string'
 end
