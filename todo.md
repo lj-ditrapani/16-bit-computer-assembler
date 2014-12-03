@@ -1,5 +1,3 @@
-- Move test code inside the Assembler module?
-- Use Assembler::Directives::XxxxDirective to describe tests?
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
 - Error-handling for .set directive (if value is not a non-negative
@@ -35,3 +33,6 @@
   the actual expected machine code for the tests.
 - What happens if you have a comment or an empty line in the middle
   of an .array or .long-string??
+- Move test code inside the Assembler module?
+- Use Assembler::Directives::XxxxDirective to describe tests?
+- Learn rake
