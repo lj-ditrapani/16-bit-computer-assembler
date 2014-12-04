@@ -1,9 +1,18 @@
 # Contains pseudo-instructions classes and knows how to handle a
 # pseudo-instruction
 module Assembler::PseudoInstructions
-  class CYP < Assembler::Command
+  class CPY < Assembler::Command
     def initialize(args_str)
-      super
+      super()
+      source, destination = args_str.split
+      @source = Assembler::Token.new source
+      @destination = Assembler::Token.new destination
+    end
+
+    def machine_code(symbol_table)
+      source = @source.get_int symbol_table
+      destination = @destination.get_int symbol_table
+      [7 << 12 | source << 8 | destination]
     end
   end
 
