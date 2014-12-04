@@ -7,6 +7,7 @@
 - Fix rubocop offenses
 - PseudoInstructions
     - specs for pseudoInstructions
+    - refactor pseudoInstructions (return machine code)
 - Refactor directive classes
     - package last 3 asserts into a function?
 - .long-string:  write specs for failing cases
