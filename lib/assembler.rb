@@ -10,7 +10,6 @@ module Assembler
     asm = Assembly.new lines
     commands = CommandList.new
     symbol_table = make_symbol_table
-    new_lines = []
     begin
       # can't use each_with_index since the line_number and word_index
       # can change by a variable # based on the command
@@ -31,20 +30,23 @@ module Assembler
             first_word, args_str, asm, commands, symbol_table
           )
         end
-        new_lines.push line
       end
     rescue AsmError => e
-      $stderr.puts "\n\n****"
-      $stderr.puts "ASSEMBLER ERROR in file #{file_path}"
-      $stderr.puts "LINE # #{asm.line_number}"
-      $stderr.puts e.message
-      $stderr.puts e.backtrace.join "\n"
-      $stderr.puts "****\n\n"
-      exit
+      elaborate_error(e, file_path, asm)
+    else
+      machine_code_arr = commands.machine_code symbol_table
+      machine_code_str = machine_code_arr.pack('S>*')
+      print machine_code_str
     end
-    machine_code_arr = commands.machine_code symbol_table
-    machine_code_str = machine_code_arr.pack('S>*')
-    print machine_code_str
+  end
+
+  def self.elaborate_error(error, file_path, asm)
+    msg = "\n\n****
+    ASSEMBLER ERROR in file #{file_path}
+    LINE # #{asm.line_number}
+    #{error.message}
+    #{error.backtrace.join "\n    "}\n****\n\n"
+    $stderr.print msg
   end
 
   def self.strip(line)
