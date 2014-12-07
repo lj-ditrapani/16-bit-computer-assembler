@@ -1,0 +1,3 @@
+INC R5
+ADD R16 R1 R2
+ADD 1 2 3
