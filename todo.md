@@ -1,3 +1,10 @@
+- Create SymbolTable class.  Subclass Hash.
+  `set_value` and `set_label` methods.
+  Predefined symbols in constant table and update new instance with
+  constant predefined values upon initialization.
+  Refactor token symbol code in `.set_directive` into a
+  SymbolTable class
+  Override .[] to call Hash#.[] and raise ASMError if nil?
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
 - Error-handling for .set directive (if value is not a non-negative
@@ -15,12 +22,6 @@
   strings with packed 2 bytes per word.
   Could rename current .str and .long-string to .wstr and .long-wstring
   to stand for "wide string" since each char is 16-bits.
-- Create SymbolTable class.  Subclass Hash.
-  `set_value` and `set_label` methods.
-  Predefined symbols in constant table and update new instance with
-  constant predefined values upon initialization.
-  Refactor token symbol code in `.set_directive` into a
-  SymbolTable class
 - Make Assembler a class instead of a module?
   Attach asm, commands and symbol table to instance
 - Create fail acceptance tests:
