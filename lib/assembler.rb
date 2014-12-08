@@ -73,7 +73,7 @@ module Assembler
           rescue ArgumentError
             raise AsmError, 'Malformed integer'
           end
-    fail AsmError, 'Number greater than $FFFF' if num > 0xFFFF
+    fail AsmError, "Number greater than $FFFF: #{str}" if num > 0xFFFF
     num
   end
 
