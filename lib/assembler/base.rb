@@ -99,6 +99,14 @@ module Assembler
       fail Assembler::AsmError, "Undefined symbol: #{key.inspect}" if value.nil?
       value
     end
+
+    def set_token(name_symbol, value_token)
+      self[name_symbol] = if value_token.type == :symbol
+                            self[value_token.value]
+                          else
+                            value_token.value
+                          end
+    end
   end
 
   # Holds the list of assembly lines yet to be processed
