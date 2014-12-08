@@ -96,12 +96,7 @@ module Assembler
   def self.set_directive(args_str, symbol_table)
     name, str_value = args_str.split(/\s+/, 2)
     token = Token.new str_value
-    value = if token.type == :symbol
-              symbol_table[token.value]
-            else
-              token.value
-            end
-    symbol_table[name.to_sym] = value
+    symbol_table.set_token(name.to_sym, token)
   end
 
   def self.include_directive(args_str, asm)
