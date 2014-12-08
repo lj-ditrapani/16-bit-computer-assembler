@@ -131,4 +131,26 @@ describe Assembler::Directives do
       end
     end
   end
+
+  describe 'directive_to_class_name' do
+    tests = [
+      [:'.set', :SetDirective],
+      [:'.word', :WordDirective],
+      [:'.array', :ArrayDirective],
+      [:'.fill-array', :FillArrayDirective],
+      [:'.string', :StringDirective],
+      [:'.long-string', :LongStringDirective],
+      [:'.end-long-string', :EndLongStringDirective],
+      [:'.move', :MoveDirective],
+      [:'.include', :IncludeDirective],
+      [:'.copy', :CopyDirective]
+    ]
+    tests.each do |directive, expected_class_name|
+      it "#{directive} --> #{expected_class_name}" do
+        d = Assembler::Directives
+        actual_class_name = d.directive_to_class_name directive
+        assert_equal expected_class_name, actual_class_name
+      end
+    end
+  end
 end
