@@ -21,4 +21,4 @@ def compare_stderr(stderr_path, reg_ex, line_num)
 end
 
 run_failing_cli_test 'bad-int', /Malformed integer/, 2
-run_failing_cli_test 'bad-symbol', /Undefined symbol: "R16"/
+run_failing_cli_test 'bad-symbol', /Undefined symbol: :R16/
