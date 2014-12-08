@@ -1,3 +1,3 @@
-wc lib/assembler.rb
-wc lib/assembler/*
+wc lib/assembler.rb lib/assembler/*
+echo ''
 wc spec/*
