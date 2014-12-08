@@ -13,30 +13,30 @@ module Assembler
     begin
       # can't use each_with_index since the line_number and word_index
       # can change by a variable # based on the command
-      until asm.empty?
-        line = strip(asm.pop_line)
-        next if line.empty?
-        first_word, args_str = line.split(/\s+/, 2)
-        type = line_type first_word
-        case type
-        when :label then
-          label(first_word, symbol_table, commands.word_index)
-        when :set_directive then
-          set_directive(args_str, symbol_table)
-        when :include_directive then
-          include_directive(args_str, asm)
-        when :command then
-          handle_command(
-            first_word, args_str, asm, commands, symbol_table
-          )
-        end
-      end
+      process_next_line(asm, symbol_table, commands) until asm.empty?
     rescue AsmError => e
       elaborate_error(e, file_path, asm)
     else
-      machine_code_arr = commands.machine_code symbol_table
-      machine_code_str = machine_code_arr.pack('S>*')
-      print machine_code_str
+      machine_code(commands, symbol_table)
+    end
+  end
+
+  def self.process_next_line(asm, symbol_table, commands)
+    line = strip(asm.pop_line)
+    return if line.empty?
+    first_word, args_str = line.split(/\s+/, 2)
+    type = line_type first_word
+    case type
+    when :label then
+      label(first_word, symbol_table, commands.word_index)
+    when :set_directive then
+      set_directive(args_str, symbol_table)
+    when :include_directive then
+      include_directive(args_str, asm)
+    when :command then
+      handle_command(
+        first_word, args_str, asm, commands, symbol_table
+      )
     end
   end
 
@@ -47,6 +47,12 @@ module Assembler
     #{error.message}
     #{error.backtrace.join "\n    "}\n****\n\n"
     $stderr.print msg
+  end
+
+  def self.machine_code(commands, symbol_table)
+    machine_code_arr = commands.machine_code symbol_table
+    machine_code_str = machine_code_arr.pack('S>*')
+    print machine_code_str
   end
 
   def self.strip(line)
