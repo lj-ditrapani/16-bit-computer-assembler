@@ -38,3 +38,5 @@
 - Move test code inside the Assembler module?
 - Use Assembler::Directives::XxxxDirective to describe tests?
 - Learn rake
+- Move all test assets (assembly programs, expected output, etc)
+  int spec folder.  Have to update all tests to run correctly.
