@@ -1,7 +1,7 @@
 require './lib/assembler/base'
+require './lib/assembler/instructions'
 require './lib/assembler/directives'
 require './lib/assembler/pseudo_instructions'
-require './lib/assembler/instructions'
 
 # All code for project contained within this top-level module
 module Assembler
