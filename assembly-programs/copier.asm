@@ -5,6 +5,6 @@ a
 b
 c
 .end-long-string
-.copy expected-executables/copied.exe
+.copy spec/expected-executables/copied.exe
 .fill-array 4 keyboard
 NOP
