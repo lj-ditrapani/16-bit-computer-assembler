@@ -8,13 +8,6 @@ module Assembler::PseudoInstructions
     end
   end
 
-  class NOP < Assembler::Instructions::ADI
-    def initialize(_args_str)
-      # ADI R0 0 R0   ---  R0 + 0 => R0
-      super("0 0 0")
-    end
-  end
-
   class WRD < Assembler::Command
     def initialize(args_str)
       # get value, store for later
@@ -33,22 +26,22 @@ module Assembler::PseudoInstructions
     end
   end
 
-  class INC < Assembler::Instructions::ADI
-    def initialize(args_str)
-      super("#{args_str} 1 #{args_str}")
-    end
-  end
+  inc_dec_str = '%{args_str} 1 %{args_str}'
 
-  class DEC < Assembler::Instructions::SBI
-    def initialize(args_str)
-      super("#{args_str} 1 #{args_str}")
-    end
-  end
+  class_data = [
+    [:NOP, :ADI, '0 0 0'],            # ADI R0 0 R0   ---  R0 + 0 => R0
+    [:INC, :ADI, inc_dec_str],
+    [:DEC, :SBI, inc_dec_str],
+    [:JMP, :BRN, '0 NZP %{args_str}']
+  ]
 
-  class JMP < Assembler::Instructions::BRN
-    def initialize(args_str)
-      super("0 NZP " + args_str)
+  class_data.each do |name, super_class, args_str_template|
+    c = Class.new(Assembler::Instructions.const_get(super_class)) do
+      define_method(:initialize) do |args_str|
+        super(args_str_template % {args_str: args_str})
+      end
     end
+    const_set name, c
   end
 
   def self.handle(op_code_symbol, args_str)
