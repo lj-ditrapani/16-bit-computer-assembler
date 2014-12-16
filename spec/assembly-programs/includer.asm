@@ -1,6 +1,6 @@
 NOP
 .str abc
-.include assembly-programs/included.asm
+.include spec/assembly-programs/included.asm
 .long-string strip-newlines
 a
 b

@@ -7,7 +7,7 @@ def run_cli_test(name, expected_exe)
   exe_path = "spec/actual-executables/#{exe_file}"
   expected_exe_path = "spec/expected-executables/#{expected_exe}.exe"
   describe "When the #{asm_file} program is given as CL input" do
-    `./bin/assembler assembly-programs/#{asm_file} > #{exe_path}`
+    `./bin/assembler spec/assembly-programs/#{asm_file} > #{exe_path}`
     it "Should produce the #{expected_exe} file as output" do
       assert FileUtils.cmp(exe_path, expected_exe_path)
     end

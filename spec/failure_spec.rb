@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'fileutils'
 
 def run_failing_cli_test(name, reg_ex, line_num = nil)
-  asm_path = "assembly-programs/failures/#{name}.asm"
+  asm_path = "spec/assembly-programs/failures/#{name}.asm"
   stderr_path = "spec/stderr/#{name}.txt"
   describe "When the #{name}.asm program is given as CL input" do
     `./bin/assembler #{asm_path} 2> #{stderr_path}`
