@@ -1,5 +1,6 @@
 # top-level module
 module Assembler::Instructions
+  # Basic functionality for all Instructions
   class Instruction
     def word_length
       1
@@ -10,22 +11,28 @@ module Assembler::Instructions
     end
   end
 
+  # Superclass for any Instruction where
+  # all its arguments must be tokenized by the Assembler::Token class
   class InstructionWithOnlyTokenArgs < Instruction
     def initialize(args_str)
       @tokens = args_str.split.map { |a| Assembler::Token.new a }
     end
+
+    private
 
     def nibbles(symbol_table)
       ints = @tokens.map { |token| token.get_int(symbol_table) }
       [self.class::OP_CODE] + get_3_nibbles(*ints)
     end
 
-    # Overide for individual Instruction2 classes
+    # Default implementation for instructions with 3 Token arguments
+    # Override for individual Instruction classes with 2 Token arguments
     def get_3_nibbles(*args)
       args
     end
   end
 
+  # Define instructions that have 3 Token arguments
   instructions_with_3_operands = [
     [:ADD, 5],
     [:SUB, 6],
@@ -40,6 +47,8 @@ module Assembler::Instructions
     c::OP_CODE = code
     const_set name, c
   end
+
+  # Define instructions that have 2 Token arguments
 
   get_3_nibbles_HBY_LBY = lambda do |value, register|
     [value >> 4, value & 0xFF, register]
@@ -64,6 +73,7 @@ module Assembler::Instructions
   instructions_with_2_operands.each do |name, code, function|
     c = Class.new(InstructionWithOnlyTokenArgs) do
       define_method(:get_3_nibbles, &function)
+      private :get_3_nibbles
     end
     c::OP_CODE = code
     const_set name, c
