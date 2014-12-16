@@ -27,7 +27,7 @@ module Assembler
       end
 
       # Default implementation for instructions with 3 Token arguments
-      # Override for individual Instruction classes with 2 Token arguments
+      # Override for Instruction classes with 2 Token arguments
       def get_3_nibbles(*args)
         args
       end
@@ -51,25 +51,28 @@ module Assembler
 
     # Define instructions that have 2 Token arguments
 
-    get_3_nibbles_HBY_LBY = lambda do |value, register|
+    # get_3_nibbles for HBY and LBY instructions
+    get_3_nibbles_hby_lby = lambda do |value, register|
       [value >> 4, value & 0xFF, register]
     end
 
-    get_3_nibbles_LOD_NOT =
+    # get_3_nibbles for LOD and NOT instructions
+    get_3_nibbles_lod_not =
         lambda do |source_register, destination_register|
           [source_register, 0, destination_register]
         end
 
-    get_3_nibbles_STR = lambda do |address, register|
+    # get_3_nibbles for STR instruction
+    get_3_nibbles_str = lambda do |address, register|
       [address, register, 0]
     end
 
     instructions_with_2_operands = [
-      [:HBY, 1, get_3_nibbles_HBY_LBY],
-      [:LBY, 2, get_3_nibbles_HBY_LBY],
-      [:LOD, 3, get_3_nibbles_LOD_NOT],
-      [:STR, 4, get_3_nibbles_STR],
-      [:NOT, 0xC, get_3_nibbles_LOD_NOT]
+      [:HBY, 1, get_3_nibbles_hby_lby],
+      [:LBY, 2, get_3_nibbles_hby_lby],
+      [:LOD, 3, get_3_nibbles_lod_not],
+      [:STR, 4, get_3_nibbles_str],
+      [:NOT, 0xC, get_3_nibbles_lod_not]
     ]
     instructions_with_2_operands.each do |name, code, function|
       c = Class.new(InstructionWithOnlyTokenArgs) do
@@ -80,6 +83,7 @@ module Assembler
       const_set name, c
     end
 
+    # The end program (halt) instruction
     class ENDi < Instruction
       def initialize(_)
       end
@@ -89,6 +93,7 @@ module Assembler
       end
     end
 
+    # The shift instruction
     class SHF < Instruction
       def initialize(args_str)
         rs1, dir, ammount, rd = args_str.split
@@ -107,6 +112,7 @@ module Assembler
       end
     end
 
+    # The branch instruction
     class BRN < Instruction
       def initialize(args_str)
         args = args_str.split
@@ -121,8 +127,8 @@ module Assembler
         else
           @value_register = Assembler::Token.new '0'
           cv = args.shift
-          str = 'Bad condition code in BRN, should be - C or V, but got'\
-                " #{cv.inspect} instead"
+          str = 'Bad condition code in BRN, should be - C or V, ' \
+                "but got #{cv.inspect} instead"
           value = case cv
                   when 'V' then 2
                   when 'C' then 1
@@ -141,6 +147,7 @@ module Assembler
       end
     end
 
+    # The "save the program counter" instruction
     class SPC < Instruction
       def initialize(args_str)
         @rs1 = Assembler::Token.new args_str
