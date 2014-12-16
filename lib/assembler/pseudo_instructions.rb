@@ -1,29 +1,17 @@
 # Contains pseudo-instructions classes and knows how to handle a
 # pseudo-instruction
 module Assembler::PseudoInstructions
-  class CPY < Assembler::Command
+  class CPY < Assembler::Instructions::ADI
     def initialize(args_str)
-      super()
       source, destination = args_str.split
-      @source = Assembler::Token.new source
-      @destination = Assembler::Token.new destination
-    end
-
-    def machine_code(symbol_table)
-      source = @source.get_int symbol_table
-      destination = @destination.get_int symbol_table
-      [7 << 12 | source << 8 | destination]
+      super("#{source} 0 #{destination}")
     end
   end
 
-  class NOP < Assembler::Command
+  class NOP < Assembler::Instructions::ADI
     def initialize(_args_str)
-      super()
-    end
-
-    def machine_code(_symbol_table)
       # ADI R0 0 R0   ---  R0 + 0 => R0
-      [0x7000]
+      super("0 0 0")
     end
   end
 
@@ -45,39 +33,21 @@ module Assembler::PseudoInstructions
     end
   end
 
-  class INC < Assembler::Command
+  class INC < Assembler::Instructions::ADI
     def initialize(args_str)
-      super()
-      @register = Assembler::Token.new args_str
-    end
-
-    def machine_code(symbol_table)
-      register = @register.get_int symbol_table
-      [7 << 12 | register << 8 | 1 << 4 | register]
+      super("#{args_str} 1 #{args_str}")
     end
   end
 
-  class DEC < Assembler::Command
+  class DEC < Assembler::Instructions::SBI
     def initialize(args_str)
-      super()
-      @register = Assembler::Token.new args_str
-    end
-
-    def machine_code(symbol_table)
-      register = @register.get_int symbol_table
-      [8 << 12 | register << 8 | 1 << 4 | register]
+      super("#{args_str} 1 #{args_str}")
     end
   end
 
-  class JMP < Assembler::Command
+  class JMP < Assembler::Instructions::BRN
     def initialize(args_str)
-      super()
-      @register = Assembler::Token.new args_str
-    end
-
-    def machine_code(symbol_table)
-      register = @register.get_int symbol_table
-      [0xE << 12 | 0 << 8 | register << 4 | 7]
+      super("0 NZP " + args_str)
     end
   end
 
