@@ -1,3 +1,3 @@
-/actual-executables
+/spec/actual-executables
 /Gemfile.lock
 /spec/stderr
