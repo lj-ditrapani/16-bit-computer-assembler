@@ -10,14 +10,9 @@ module Assembler
     def initialize
       @word_length = 1
     end
-
-    def machine_code(_symbol_table)
-      []
-    end
   end
 
-  class AsmError < StandardError
-  end
+  AsmError = Class.new(StandardError)
 
   # A Token contains an int or a symbol that refers to an int
   class Token
