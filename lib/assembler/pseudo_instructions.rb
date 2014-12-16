@@ -1,5 +1,5 @@
 module Assembler
-  # Contains pseudo-instructions classes and knows how to handle a
+  # Contains pseudo-instruction classes and knows how to handle a
   # pseudo-instruction
   module PseudoInstructions
     # Copy pseudo-instruction:  copy value from one register to another
