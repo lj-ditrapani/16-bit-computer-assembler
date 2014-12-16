@@ -1,4 +1,3 @@
-- Run rubocop on pseudo-instructions.rb
 - Command superclass used by WRD & directives
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
@@ -7,9 +6,7 @@
 - `to_int` error handling:  forbid negative values
 - Re-organize tests to match file hierarchy
 - Fix rubocop offenses
-- PseudoInstructions
-    - specs for pseudoInstructions
-    - refactor pseudoInstructions (return machine code)
+- PseudoInstructions - Specs for pseudoInstructions
 - Refactor directive classes
     - package last 3 asserts into a function?
 - .long-string:  write specs for failing cases
