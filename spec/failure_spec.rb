@@ -3,7 +3,7 @@ require 'fileutils'
 
 def run_failing_cli_test(name, reg_ex, line_num = nil)
   asm_path = "assembly-programs/failures/#{name}.asm"
-  stderr_path = "stderr/#{name}.txt"
+  stderr_path = "spec/stderr/#{name}.txt"
   describe "When the #{name}.asm program is given as CL input" do
     `./bin/assembler #{asm_path} 2> #{stderr_path}`
     it 'It outputs an AsmError on stderr' do
