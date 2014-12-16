@@ -262,7 +262,7 @@ NOP           |   ADI R0 0 R0
 WRD $1234 R7  |   HBY $12 R7    LBY $34 R7
 INC R3        |   ADI R3 1 R3
 DEC R3        |   SBI R3 1 R3
-JMP R3        |   BRN R0 R3 NZP
+JMP R3        |   BRN R0 NZP R3
 ```
 
 
