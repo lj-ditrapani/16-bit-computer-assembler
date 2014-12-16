@@ -1,5 +1,4 @@
-# rubocop lib
-rubocop spec
+spec/run-rubocop.sh
 ruby spec/assembler_spec.rb
 ruby spec/directives_spec.rb
 ruby spec/instructions_spec.rb
