@@ -1,3 +1,5 @@
+- Run rubocop on pseudo-instructions.rb
+- Command superclass used by WRD & directives
 - Remove call to super() in Command subclasses if not needed
 - Remove `Command#machine_code` when no longer needed
 - Error-handling for .set directive (if value is not a non-negative
