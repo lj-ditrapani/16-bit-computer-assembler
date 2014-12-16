@@ -1,5 +1,3 @@
-- Move all test assets (assembly programs, expected output, etc)
-  int spec folder.  Have to update all tests to run correctly.
 - Refactor directive classes
     - package last 3 asserts into a function?
 - Fix rubocop offenses
