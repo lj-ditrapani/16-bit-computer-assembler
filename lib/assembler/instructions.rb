@@ -179,7 +179,7 @@ module Assembler
     def self.handle(op_code_symbol, args_str)
       # END is a reserved word; rename to ENDi
       op_code_symbol = :ENDi if op_code_symbol == :END
-      const_get(op_code_symbol).new args_str
+      const_get(op_code_symbol).new(args_str)
     end
   end
 end
