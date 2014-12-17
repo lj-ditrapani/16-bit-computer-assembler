@@ -1,1 +1,1 @@
-rubocop spec lib
+rubocop spec lib bin
