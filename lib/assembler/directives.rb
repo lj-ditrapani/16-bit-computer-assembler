@@ -5,6 +5,17 @@ module Assembler::Directives
     str_list.push('Directive').join.to_sym
   end
 
+  class WordDirective < Assembler::Command
+    def initialize(args_str, _asm, _word_index, _symbol_table)
+      super()
+      @value = Assembler::Token.new args_str
+    end
+
+    def machine_code(symbol_table)
+      [@value.get_int(symbol_table)]
+    end
+  end
+
   class MoveDirective < Assembler::Command
     def initialize(args_str, _asm, word_index, symbol_table)
       address_token = Assembler::Token.new args_str
@@ -14,17 +25,6 @@ module Assembler::Directives
 
     def machine_code(_symbol_table)
       (0...@word_length).map { 0x0000 }
-    end
-  end
-
-  class WordDirective < Assembler::Command
-    def initialize(args_str, _asm, _word_index, _symbol_table)
-      super()
-      @value = Assembler::Token.new args_str
-    end
-
-    def machine_code(symbol_table)
-      [@value.get_int(symbol_table)]
     end
   end
 
