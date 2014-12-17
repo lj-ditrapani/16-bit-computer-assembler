@@ -6,10 +6,7 @@ require './lib/assembler/pseudo_instructions'
 # All code for project contained within this top-level module
 module Assembler
   def self.main(file_path)
-    lines = File.readlines(file_path)
-    asm = Assembly.new lines
-    commands = CommandList.new
-    symbol_table = make_symbol_table
+    asm, commands, symbol_table = init_state(file_path)
     begin
       # can't use each_with_index since the line_number and word_index
       # can change by a variable # based on the command
@@ -21,22 +18,25 @@ module Assembler
     end
   end
 
+  def self.init_state(file_path)
+    lines = File.readlines(file_path)
+    [Assembly.new(lines), CommandList.new, make_symbol_table]
+  end
+
   def self.process_next_line(asm, symbol_table, commands)
     line = strip(asm.pop_line)
     return if line.empty?
     first_word, args_str = line.split(/\s+/, 2)
     type = line_type first_word
     case type
-    when :label then
+    when :label
       label(first_word, symbol_table, commands.word_index)
-    when :set_directive then
+    when :set_directive
       set_directive(args_str, symbol_table)
-    when :include_directive then
+    when :include_directive
       include_directive(args_str, asm)
-    when :command then
-      handle_command(
-        first_word, args_str, asm, commands, symbol_table
-      )
+    when :command
+      handle_command(first_word, args_str, asm, commands, symbol_table)
     end
   end
 
@@ -69,18 +69,24 @@ module Assembler
 
   def self.to_int(str)
     fail AsmError, 'Malformed integer' if /^\d[x|X]/ =~ str[0..1]
-    start, base = case str[0]
-                  when '%' then [1, 2]
-                  when '$' then [1, 16]
-                  else [0, 10]
-                  end
-    num = begin
-            Integer(str[start..-1], base)
-          rescue ArgumentError
-            raise AsmError, 'Malformed integer'
-          end
+    start, base = get_start_and_base str[0]
+    num = to_int_with_start_and_base(str, start, base)
     fail AsmError, "Number greater than $FFFF: #{str}" if num > 0xFFFF
     num
+  end
+
+  def self.get_start_and_base(first_char)
+    case first_char
+    when '%' then [1, 2]
+    when '$' then [1, 16]
+    else [0, 10]
+    end
+  end
+
+  def self.to_int_with_start_and_base(str, start, base)
+    Integer(str[start..-1], base)
+  rescue ArgumentError
+    raise AsmError, 'Malformed integer'
   end
 
   def self.line_type(first_word)
