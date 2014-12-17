@@ -43,10 +43,7 @@ module Assembler::Directives
       lines[-1] = lines[-1].gsub!(']', '')
       str = lines.join ' '
       @tokens = str.split.map { |e| Assembler::Token.new(e) }
-    end
-
-    def word_length
-      @tokens.length
+      @word_length = @tokens.length
     end
 
     def machine_code(symbol_table)
@@ -57,8 +54,8 @@ module Assembler::Directives
   class FillArrayDirective < Assembler::Command
     def initialize(args_str, _asm, _word_index, _symbol_table)
       size, fill = args_str.split
-      @word_length = Assembler.to_int size
       @fill = Assembler::Token.new fill
+      @word_length = Assembler.to_int size
     end
 
     def machine_code(symbol_table)
