@@ -122,18 +122,24 @@ module Assembler
                           commands,
                           symbol_table)
     first_word = first_word_str.to_sym
-    pseudo_instructions_list = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
     word_index = commands.word_index
-    command = if first_word_str[0] == '.'
-                args = [
-                  first_word, args_str, asm, word_index, symbol_table
-                ]
-                Directives.handle(*args)
-              elsif pseudo_instructions_list.include? first_word
-                PseudoInstructions.handle(first_word, args_str)
-              else
-                Instructions.handle(first_word, args_str)
-              end
+    extra_args = [asm, word_index, symbol_table]
+    command = create_command(first_word, args_str, extra_args)
     commands.add_command command
+  end
+
+  def self.pseudo_instruction?(first_word)
+    pseudo_instructions_list = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
+    pseudo_instructions_list.include? first_word
+  end
+
+  def self.create_command(first_word, args_str, extra_args)
+    if first_word.to_s[0] == '.'
+      Directives.handle(first_word, args_str, *extra_args)
+    elsif pseudo_instruction? first_word
+      PseudoInstructions.handle(first_word, args_str)
+    else
+      Instructions.handle(first_word, args_str)
+    end
   end
 end
