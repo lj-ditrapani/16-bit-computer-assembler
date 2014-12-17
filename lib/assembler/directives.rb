@@ -30,24 +30,38 @@ module Assembler::Directives
 
   class ArrayDirective < Assembler::Command
     def initialize(args_str, asm)
-      unless args_str[0] == '['
-        fail Assembler::AsmError, "Array must start with '['"
-      end
+      check_for_open_bracket(args_str)
+      lines = get_array_lines(args_str, asm)
+      @tokens = lines_to_tokens(lines)
+      @word_length = @tokens.length
+    end
+
+    def machine_code(symbol_table)
+      @tokens.map { |t| t.get_int(symbol_table) }
+    end
+
+    private
+
+    def check_for_open_bracket(args_str)
+      found = args_str[0] == '['
+      fail Assembler::AsmError, "Array must start with '['" unless found
+    end
+
+    def get_array_lines(args_str, asm)
       line = args_str[1..-1]
       lines = [line]
       until line =~ /]/
         line = Assembler.strip(asm.pop_line)
         lines.push line
       end
+      lines
+    end
+
+    def lines_to_tokens(lines)
       # Remove trailing ']'
       lines[-1] = lines[-1].gsub!(']', '')
       str = lines.join ' '
-      @tokens = str.split.map { |e| Assembler::Token.new(e) }
-      @word_length = @tokens.length
-    end
-
-    def machine_code(symbol_table)
-      @tokens.map { |t| t.get_int(symbol_table) }
+      str.split.map { |e| Assembler::Token.new(e) }
     end
   end
 
@@ -77,6 +91,20 @@ module Assembler::Directives
 
   class LongStringDirective < Assembler::Command
     def initialize(args_str, asm)
+      lines = get_string_lines(asm)
+      char = get_join_char(args_str)
+      @code = lines.join(char).split('').map(&:ord)
+      @code.unshift @code.length
+      @word_length = @code.length
+    end
+
+    def machine_code(_symbol_table)
+      @code
+    end
+
+    private
+
+    def get_string_lines(asm)
       msg = 'Missing .end-long-string to end .long-string directive'
       lines = []
       fail(Assembler::AsmError, msg) if asm.empty?
@@ -86,23 +114,20 @@ module Assembler::Directives
         fail(Assembler::AsmError, msg) if asm.empty?
         line = asm.pop_line
       end
-      msg = '.long-string parameter must be keep-newlines or ' \
-            "strip-newlines. Received #{args_str.inspect} instead"
-      char = case args_str
-             when 'keep-newlines'
-               "\n"
-             when 'strip-newlines'
-               ''
-             else
-               fail Assembler::AsmError, msg
-             end
-      @code = lines.join(char).split('').map(&:ord)
-      @code.unshift @code.length
-      @word_length = @code.length
+      lines
     end
 
-    def machine_code(_symbol_table)
-      @code
+    def get_join_char(args_str)
+      msg = '.long-string parameter must be keep-newlines or ' \
+            "strip-newlines. Received #{args_str.inspect} instead"
+      case args_str
+      when 'keep-newlines'
+        "\n"
+      when 'strip-newlines'
+        ''
+      else
+        fail Assembler::AsmError, msg
+      end
     end
   end
 
