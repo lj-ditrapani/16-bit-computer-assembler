@@ -6,7 +6,7 @@ module Assembler::Directives
   end
 
   class WordDirective < Assembler::Command
-    def initialize(args_str, _asm, _word_index, _symbol_table)
+    def initialize(args_str)
       super()
       @value = Assembler::Token.new args_str
     end
@@ -17,7 +17,7 @@ module Assembler::Directives
   end
 
   class MoveDirective < Assembler::Command
-    def initialize(args_str, _asm, word_index, symbol_table)
+    def initialize(args_str, word_index, symbol_table)
       address_token = Assembler::Token.new args_str
       address = address_token.get_int symbol_table
       @word_length = address - word_index
@@ -29,7 +29,7 @@ module Assembler::Directives
   end
 
   class ArrayDirective < Assembler::Command
-    def initialize(args_str, asm, _word_index, _symbol_table)
+    def initialize(args_str, asm)
       unless args_str[0] == '['
         fail Assembler::AsmError, "Array must start with '['"
       end
@@ -52,7 +52,7 @@ module Assembler::Directives
   end
 
   class FillArrayDirective < Assembler::Command
-    def initialize(args_str, _asm, _word_index, _symbol_table)
+    def initialize(args_str)
       size, fill = args_str.split
       @fill = Assembler::Token.new fill
       @word_length = Assembler.to_int size
@@ -64,7 +64,7 @@ module Assembler::Directives
   end
 
   class StrDirective < Assembler::Command
-    def initialize(args_str, _asm, _word_index, _symbol_table)
+    def initialize(args_str)
       @code = args_str.split('').map(&:ord)
       @code.unshift @code.length
       @word_length = @code.length
@@ -76,7 +76,7 @@ module Assembler::Directives
   end
 
   class LongStringDirective < Assembler::Command
-    def initialize(args_str, asm, _word_index, _symbol_table)
+    def initialize(args_str, asm)
       msg = 'Missing .end-long-string to end .long-string directive'
       lines = []
       fail(Assembler::AsmError, msg) if asm.empty?
@@ -107,7 +107,7 @@ module Assembler::Directives
   end
 
   class CopyDirective < Assembler::Command
-    def initialize(args_str, _asm, _word_index, _symbol_table)
+    def initialize(args_str)
       @code = IO.read(args_str).unpack('S>*')
       @word_length = @code.length
     end
@@ -118,7 +118,14 @@ module Assembler::Directives
   end
 
   def self.handle(directive, args_str, asm, word_index, symbol_table)
-    class_name = directive_to_class_name directive
-    const_get(class_name).new(args_str, asm, word_index, symbol_table)
+    directive_class = const_get directive_to_class_name directive
+    args = [args_str]
+    case directive
+    when :'.move'
+      args += [word_index, symbol_table]
+    when :'.array', :'.long-string'
+      args.push(asm)
+    end
+    directive_class.new(*args)
   end
 end
