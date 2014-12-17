@@ -42,15 +42,15 @@ module Assembler::Directives
       # Remove trailing ']'
       lines[-1] = lines[-1].gsub!(']', '')
       str = lines.join ' '
-      @elements = str.split.map { |e| Assembler.to_int e }
+      @tokens = str.split.map { |e| Assembler::Token.new(e) }
     end
 
     def word_length
-      @elements.length
+      @tokens.length
     end
 
-    def machine_code(_symbol_table)
-      @elements
+    def machine_code(symbol_table)
+      @tokens.map { |t| t.get_int(symbol_table) }
     end
   end
 
