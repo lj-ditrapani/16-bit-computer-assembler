@@ -56,7 +56,6 @@ module Assembler::Directives
 
   class FillArrayDirective < Assembler::Command
     def initialize(args_str, _asm, _word_index, _symbol_table)
-      super()
       size, fill = args_str.split
       @word_length = Assembler.to_int size
       @fill = Assembler::Token.new fill
@@ -70,7 +69,7 @@ module Assembler::Directives
   class StrDirective < Assembler::Command
     def initialize(args_str, _asm, _word_index, _symbol_table)
       @code = args_str.split('').map(&:ord)
-      @code.unshift @code.size
+      @code.unshift @code.length
       @word_length = @code.length
     end
 
@@ -101,7 +100,7 @@ module Assembler::Directives
                fail Assembler::AsmError, msg
              end
       @code = lines.join(char).split('').map(&:ord)
-      @code.unshift @code.size
+      @code.unshift @code.length
       @word_length = @code.length
     end
 
@@ -112,7 +111,6 @@ module Assembler::Directives
 
   class CopyDirective < Assembler::Command
     def initialize(args_str, _asm, _word_index, _symbol_table)
-      super()
       @code = IO.read(args_str).unpack('S>*')
       @word_length = @code.length
     end
