@@ -27,8 +27,11 @@ module Assembler
     line = strip(asm.pop_line)
     return if line.empty?
     first_word, args_str = line.split(/\s+/, 2)
-    type = line_type first_word
-    case type
+    distpatch(first_word, args_str, asm, symbol_table, commands)
+  end
+
+  def self.distpatch(first_word, args_str, asm, symbol_table, commands)
+    case line_type(first_word)
     when :label
       label(first_word, symbol_table, commands.word_index)
     when :set_directive
