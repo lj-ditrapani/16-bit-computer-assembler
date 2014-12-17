@@ -30,7 +30,6 @@ module Assembler::Directives
 
   class ArrayDirective < Assembler::Command
     def initialize(args_str, asm, _word_index, _symbol_table)
-      super()
       unless args_str[0] == '['
         fail Assembler::AsmError, "Array must start with '['"
       end
