@@ -10,8 +10,8 @@ module Assembler
       end
     end
 
-    # Word pseudo-instruction:  insert 16-bit value at current memory
-    # address
+    # Sets register to 16-bit value using HBY + LBY instruction sequence
+    # Example:    WRD $1234 R7    ==>    HBY $12 R7    LBY $34 R7
     class WRD < Assembler::Command
       def initialize(args_str)
         # get value, store for later
