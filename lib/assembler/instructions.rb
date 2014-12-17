@@ -116,34 +116,47 @@ module Assembler
     class BRN < Instruction
       def initialize(args_str)
         args = args_str.split
-        if args.length == 3
-          @value_register = Assembler::Token.new args.shift
-          nzp = args.shift
-          cond = 0
-          cond += 4 if nzp =~ /N/
-          cond += 2 if nzp =~ /Z/
-          cond += 1 if nzp =~ /P/
-          @cond = cond
-        else
-          @value_register = Assembler::Token.new '0'
-          cv = args.shift
-          str = 'Bad condition code in BRN, should be - C or V, ' \
-                "but got #{cv.inspect} instead"
-          value = case cv
-                  when 'V' then 2
-                  when 'C' then 1
-                  when '-' then 0
-                  else fail Assembler::AsmError, str
-                  end
-          @cond = 8 | value
-        end
-        @address_register = Assembler::Token.new args.shift
+        @cond, value_str =
+          if args.length == 3
+            parse_nzp_condition_value(args)
+          else
+            parse_cv_condition_value(args)
+          end
+        @value_register = Assembler::Token.new(value_str)
+        @address_register = Assembler::Token.new(args[-1])
       end
 
       def nibbles(symbol_table)
         rv = @value_register.get_int symbol_table
         rp = @address_register.get_int symbol_table
         [0xE, rv, rp, @cond]
+      end
+
+      private
+
+      def parse_nzp_condition_value(args)
+        nzp = args[1]
+        cond = 0
+        cond += 4 if nzp =~ /N/
+        cond += 2 if nzp =~ /Z/
+        cond += 1 if nzp =~ /P/
+        [cond, args[0]]
+      end
+
+      def parse_cv_condition_value(args)
+        code = parse_cv_code(args[0])
+        [8 | code, '0']
+      end
+
+      def parse_cv_code(cv)
+        str = 'Bad condition code in BRN, should be - C or V, ' \
+              "but got #{cv.inspect} instead"
+        case cv
+        when 'V' then 2
+        when 'C' then 1
+        when '-' then 0
+        else fail Assembler::AsmError, str
+        end
       end
     end
 
