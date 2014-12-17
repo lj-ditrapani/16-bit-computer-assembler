@@ -1,15 +1,14 @@
-- Refactor directive classes
-    - package last 3 asserts into a function?
 - Fix rubocop offenses
-- Command superclass used by WRD & directives
-- Remove call to super() in Command subclasses if not needed
 - Make Assembler a class instead of a module?
   Attach asm, commands and symbol table to instance
 - Spell out .str and .long-string tests' expected results; provide
   the actual expected machine code for the tests.
 - Move test code inside the Assembler module?
 - Use Assembler::Directives::XxxxDirective to describe tests?
+- Command superclass used by WRD & directives
 - Learn rake:  use rake instead of test.sh
+- Refactor `directives_spec`
+    - package last 3 asserts into a function?
 
 
 Extra specs
