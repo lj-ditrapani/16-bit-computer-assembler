@@ -27,17 +27,13 @@ module Assembler
     line = strip(asm.pop_line)
     return if line.empty?
     first_word, args_str = line.split(/\s+/, 2)
-    type = line_type first_word
-    case type
-    when :label
-      label(first_word, symbol_table, commands.word_index)
-    when :set_directive
-      set_directive(args_str, symbol_table)
-    when :include_directive
-      include_directive(args_str, asm)
-    when :command
-      handle_command(first_word, args_str, asm, commands, symbol_table)
-    end
+    map = {
+      label: [:label, first_word, symbol_table, commands.word_index],
+      set_directive: [:set_directive, args_str, symbol_table],
+      include_directive: [:include_directive, args_str, asm],
+      command: [:handle_command, first_word, args_str,
+                asm, commands, symbol_table] }
+    send(*(map[line_type(first_word)]))
   end
 
   def self.elaborate_error(error, file_path, asm)
