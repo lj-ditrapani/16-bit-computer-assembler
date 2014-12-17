@@ -1,4 +1,6 @@
 - Fix rubocop offenses
+    - Directives:  refactor long methods
+    - assembler.rb:  refactor long methods
 - Make Assembler a class instead of a module?
   Attach asm, commands and symbol table to instance
 - Spell out .str and .long-string tests' expected results; provide
