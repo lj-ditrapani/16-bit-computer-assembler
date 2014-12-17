@@ -1,15 +1,25 @@
 - Separate branch: refactor to create Assembler class
   Make Assembler a class instead of a module?
   Attach asm, commands and symbol table to instance
+- Assembler.rb has many methods only called from one other method.
+  Create Helper module inside Assembler and put all "private" methods
+  there?  Then prefix calss with `Helper.<message>`
+- Rename asm to source
+- Assembler class has source, commands and `symbol_table` instance vars
+
+Less pressing
+
+- Learn rake:  use rake instead of test.sh
+- Command superclass used by WRD & directives
+
+Spec related refactoring
+
 - Spell out .str and .long-string tests' expected results; provide
   the actual expected machine code for the tests.
 - Move test code inside the Assembler module?
 - Use Assembler::Directives::XxxxDirective to describe tests?
-- Command superclass used by WRD & directives
-- Learn rake:  use rake instead of test.sh
 - Refactor `directives_spec`
     - package last 3 asserts into a function?
-
 
 Extra specs
 
