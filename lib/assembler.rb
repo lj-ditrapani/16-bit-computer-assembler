@@ -6,13 +6,13 @@ require './lib/assembler/pseudo_instructions'
 # All code for project contained within this top-level module
 module Assembler
   def self.main(file_path)
-    asm, commands, symbol_table = init_state(file_path)
+    source, commands, symbol_table = init_state(file_path)
     begin
       # can't use each_with_index since the line_number and word_index
       # can change by a variable # based on the command
-      process_next_line(asm, symbol_table, commands) until asm.empty?
+      process_next_line(source, symbol_table, commands) until source.empty?
     rescue AsmError => e
-      elaborate_error(e, file_path, asm)
+      elaborate_error(e, file_path, source)
     else
       machine_code(commands, symbol_table)
     end
@@ -20,33 +20,33 @@ module Assembler
 
   def self.init_state(file_path)
     lines = File.readlines(file_path)
-    [Assembly.new(lines), CommandList.new, make_symbol_table]
+    [Source.new(lines), CommandList.new, make_symbol_table]
   end
 
-  def self.process_next_line(asm, symbol_table, commands)
-    line = strip(asm.pop_line)
+  def self.process_next_line(source, symbol_table, commands)
+    line = strip(source.pop_line)
     return if line.empty?
     first_word, args_str = line.split(/\s+/, 2)
-    distpatch(first_word, args_str, asm, symbol_table, commands)
+    distpatch(first_word, args_str, source, symbol_table, commands)
   end
 
-  def self.distpatch(first_word, args_str, asm, symbol_table, commands)
+  def self.distpatch(first_word, args_str, source, symbol_table, commands)
     case line_type(first_word)
     when :label
       label(first_word, symbol_table, commands.word_index)
     when :set_directive
       set_directive(args_str, symbol_table)
     when :include_directive
-      include_directive(args_str, asm)
+      include_directive(args_str, source)
     when :command
-      handle_command(first_word, args_str, asm, commands, symbol_table)
+      handle_command(first_word, args_str, source, commands, symbol_table)
     end
   end
 
-  def self.elaborate_error(error, file_path, asm)
+  def self.elaborate_error(error, file_path, source)
     msg = "\n\n****
     ASSEMBLER ERROR in file #{file_path}
-    LINE # #{asm.line_number}
+    LINE # #{source.line_number}
     #{error.message}
     #{error.backtrace.join "\n    "}\n****\n\n"
     $stderr.print msg
@@ -114,19 +114,19 @@ module Assembler
     symbol_table.set_token(name.to_sym, token)
   end
 
-  def self.include_directive(args_str, asm)
+  def self.include_directive(args_str, source)
     lines = File.readlines(args_str)
-    asm.include lines
+    source.include lines
   end
 
   def self.handle_command(first_word_str,
                           args_str,
-                          asm,
+                          source,
                           commands,
                           symbol_table)
     first_word = first_word_str.to_sym
     word_index = commands.word_index
-    extra_args = [asm, word_index, symbol_table]
+    extra_args = [source, word_index, symbol_table]
     command = create_command(first_word, args_str, extra_args)
     commands.add_command command
   end

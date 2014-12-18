@@ -104,8 +104,8 @@ module Assembler
     end
   end
 
-  # Holds the list of assembly lines yet to be processed
-  class Assembly
+  # Holds the list of source assembly lines yet to be processed
+  class Source
     attr_reader :line_number
 
     def initialize(lines)
