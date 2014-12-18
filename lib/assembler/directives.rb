@@ -33,9 +33,9 @@ module Assembler
 
     # Set contiguous memory addresses to specified values
     class ArrayDirective < Assembler::Command
-      def initialize(args_str, asm)
+      def initialize(args_str, source)
         check_for_open_bracket(args_str)
-        lines = get_array_lines(args_str, asm)
+        lines = get_array_lines(args_str, source)
         @tokens = lines_to_tokens(lines)
         @word_length = @tokens.length
       end
@@ -51,11 +51,11 @@ module Assembler
         fail Assembler::AsmError, "Array must start with '['" unless found
       end
 
-      def get_array_lines(args_str, asm)
+      def get_array_lines(args_str, source)
         line = args_str[1..-1]
         lines = [line]
         until line =~ /]/
-          line = Assembler.strip(asm.pop_line)
+          line = Assembler.strip(source.pop_line)
           lines.push line
         end
         lines
@@ -97,8 +97,8 @@ module Assembler
 
     # Set following memory address to ASCII values of multi-line string
     class LongStringDirective < Assembler::Command
-      def initialize(args_str, asm)
-        lines = get_string_lines(asm)
+      def initialize(args_str, source)
+        lines = get_string_lines(source)
         char = get_join_char(args_str)
         @code = lines.join(char).split('').map(&:ord)
         @code.unshift @code.length
@@ -111,15 +111,15 @@ module Assembler
 
       private
 
-      def get_string_lines(asm)
+      def get_string_lines(source)
         msg = 'Missing .end-long-string to end .long-string directive'
         lines = []
-        fail(Assembler::AsmError, msg) if asm.empty?
-        line = asm.pop_line
+        fail(Assembler::AsmError, msg) if source.empty?
+        line = source.pop_line
         until Assembler.strip(line) == '.end-long-string'
           lines.push line
-          fail(Assembler::AsmError, msg) if asm.empty?
-          line = asm.pop_line
+          fail(Assembler::AsmError, msg) if source.empty?
+          line = source.pop_line
         end
         lines
       end
@@ -150,14 +150,14 @@ module Assembler
       end
     end
 
-    def self.handle(directive, args_str, asm, word_index, symbol_table)
+    def self.handle(directive, args_str, source, word_index, symbol_table)
       directive_class = const_get directive_to_class_name directive
       args = [args_str]
       case directive
       when :'.move'
         args += [word_index, symbol_table]
       when :'.array', :'.long-string'
-        args.push(asm)
+        args.push(source)
       end
       directive_class.new(*args)
     end
