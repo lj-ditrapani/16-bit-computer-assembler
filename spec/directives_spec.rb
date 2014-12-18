@@ -50,14 +50,14 @@ describe Assembler::Directives do
     describe '.array Directive' do
       it ".array #{args_str} -> #{words.inspect}" do
         d = Assembler::Directives
-        asm = Assembler::Source.new lines
-        cmd = d.handle(:'.array', args_str, asm, 0, {})
+        source = Assembler::Source.new lines
+        cmd = d.handle(:'.array', args_str, source, 0, {})
         machine_code = cmd.machine_code({})
         length = words.length
         assert_equal length, cmd.word_length
         assert_equal length, machine_code.length
         assert_equal words, machine_code
-        assert asm.empty?
+        assert source.empty?
       end
     end
   end
@@ -111,7 +111,7 @@ describe Assembler::Directives do
   tests.each do |args_str, lines|
     describe '.long-string Directive' do
       d = Assembler::Directives
-      asm = Assembler::Source.new lines.dup
+      source = Assembler::Source.new lines.dup
       lines = lines.dup
       lines.pop
       char = if args_str == 'keep-newlines'
@@ -122,7 +122,7 @@ describe Assembler::Directives do
       words = lines.join(char).split('').map(&:ord)
       words.unshift words.size
       it ".long-string #{args_str} #{lines} -> #{words.inspect}" do
-        cmd = d.handle(:'.long-string', args_str, asm, 0, {})
+        cmd = d.handle(:'.long-string', args_str, source, 0, {})
         machine_code = cmd.machine_code(symbol_table)
         length = words.length
         assert_equal length, cmd.word_length
