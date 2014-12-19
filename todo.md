@@ -3,9 +3,23 @@
   Attach asm, commands and symbol table to instance
 - Assembler.rb has many methods only called from one other method.
   Create Helper module inside Assembler and put all "private" methods
-  there?  Then prefix calss with `Helper.<message>`
+  there?  Then prefix class with `Helper.<message>`
+- For each set of methods only called by one method, create module
+  or class as separate namespace (class if parameter list is long)
 - Rename asm to source
 - Assembler class has source, commands and `symbol_table` instance vars
+
+Refactoring ideas
+
+- Fork master to "pre rename/pre refactor or
+- Just tag master head revision as "pre-rename/pre-refactor" and then
+  merge in other branch
+- Line class with
+    - methods:  `text`, `first_word` and `args_str`
+    - knows asm file name, line number and `word_length`
+    - Can generate error message info (file name & line #)
+- Refactor methods with long parameter list into class with
+  new that takes first parameters and then method that takes rest
 
 Less pressing
 
