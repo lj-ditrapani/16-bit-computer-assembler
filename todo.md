@@ -6,6 +6,7 @@ Refactoring ideas
     - knows asm file name, line number and `word_length`
     - Can generate error message info (file name & line #)
     - Nested inside Source class
+    - Move Assembler.strip inside Line
 - Source class
     - Should have a nested Line class
     - @lines should be a list of Line instances
