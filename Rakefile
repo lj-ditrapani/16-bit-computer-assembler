@@ -16,3 +16,9 @@ end
 
 desc 'Runs rubocop and tests'
 task default: [:rubocop, :test]
+
+desc 'Search all source files for string (rake "grep[pattern]" in zsh)'
+task :grep, [:pattern] do |_t, args|
+  sh %(grep --color=auto "#{args[:pattern]}" lib/assembler.rb \
+       lib/assembler/*.rb spec/*.rb)
+end
