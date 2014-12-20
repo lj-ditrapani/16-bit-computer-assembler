@@ -50,7 +50,7 @@ describe Assembler::Directives do
     describe '.array Directive' do
       it ".array #{args_str} -> #{words.inspect}" do
         d = Assembler::Directives
-        source = Assembler::Source.new lines
+        source = Assembler::Source.new.include_lines lines
         cmd = d.handle(:'.array', args_str, source, 0, {})
         machine_code = cmd.machine_code({})
         length = words.length
@@ -111,7 +111,7 @@ describe Assembler::Directives do
   tests.each do |args_str, lines|
     describe '.long-string Directive' do
       d = Assembler::Directives
-      source = Assembler::Source.new lines.dup
+      source = Assembler::Source.new.include_lines lines.dup
       lines = lines.dup
       lines.pop
       char = if args_str == 'keep-newlines'

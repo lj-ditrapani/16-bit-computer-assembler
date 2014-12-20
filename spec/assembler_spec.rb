@@ -107,7 +107,7 @@ end
 describe Assembler::Source do
   before do
     lines = %W(a\n b\n c\n)
-    @state = Assembler::Source.new(lines)
+    @state = Assembler::Source.new.include_lines(lines)
   end
 
   describe 'pop_line' do

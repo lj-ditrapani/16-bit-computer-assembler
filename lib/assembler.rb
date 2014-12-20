@@ -19,8 +19,8 @@ module Assembler
   end
 
   def self.init_state(file_path)
-    lines = File.readlines(file_path)
-    [Source.new(lines), CommandList.new, make_symbol_table]
+    source = Source.new.include_file(file_path)
+    [source, CommandList.new, make_symbol_table]
   end
 
   def self.process_next_line(source, symbol_table, commands)
@@ -115,8 +115,7 @@ module Assembler
   end
 
   def self.include_directive(args_str, source)
-    lines = File.readlines(args_str)
-    source.include lines
+    source.include_file args_str
   end
 
   def self.handle_command(first_word_str,

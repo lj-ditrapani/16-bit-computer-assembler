@@ -115,9 +115,9 @@ module Assembler
   class Source
     attr_reader :line_number
 
-    def initialize(lines)
+    def initialize
       @line_number = 0
-      @lines = lines
+      @lines = []
     end
 
     def pop_line
@@ -129,8 +129,15 @@ module Assembler
       @lines.empty?
     end
 
-    def include(lines)
-      @lines = lines + @lines
+    def include_file(file_name)
+      text_lines = File.readlines(file_name)
+      include_lines text_lines
+      self
+    end
+
+    def include_lines(text_lines)
+      @lines = text_lines + @lines
+      self
     end
 
     # Holds a line of source assembly text
