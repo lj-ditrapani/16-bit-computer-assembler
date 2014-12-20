@@ -90,8 +90,12 @@ module Assembler
       merge! SYMBOL_TABLE
     end
 
+    def []=(key, value)
+      super(key.to_sym, value)
+    end
+
     def [](key)
-      value = super
+      value = super(key.to_sym)
       message = "Undefined symbol: #{key.inspect}"
       fail(Assembler::AsmError, message) if value.nil?
       value

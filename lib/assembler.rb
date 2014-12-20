@@ -101,13 +101,13 @@ module Assembler
   end
 
   def self.label(first_word, symbol_table, word_index)
-    symbol_table[first_word[1...-1].to_sym] = word_index
+    symbol_table[first_word[1...-1]] = word_index
   end
 
   def self.set_directive(args_str, symbol_table)
     name, str_value = args_str.split(/\s+/, 2)
     token = Token.new str_value
-    symbol_table.set_token(name.to_sym, token)
+    symbol_table.set_token(name, token)
   end
 
   def self.handle_command(first_word_str,
