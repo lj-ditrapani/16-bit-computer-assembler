@@ -4,6 +4,7 @@ module Assembler
   # are commands (or follow the Command interface).
   # They generate machine code and know how long the
   # machine code will be via the word_length method.
+  # Command is subclassed by PseudoInstructions::WRD & all Directives
   class Command
     attr_reader :word_length
 
