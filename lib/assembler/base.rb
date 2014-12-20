@@ -132,6 +132,55 @@ module Assembler
     def include(lines)
       @lines = lines + @lines
     end
+
+    # Holds a line of source assembly text
+    class Line
+      attr_accessor :word_length
+      attr_reader :text
+
+      def initialize(file_name, line_number, text)
+        @file_name, @line_number, @text = file_name, line_number, text
+      end
+
+      def first_word
+        @first_word ||= strip.split(' ', 2)[0]
+      end
+
+      def args_str
+        @args_str ||= text_to_split.split(' ', 2)[1]
+      end
+
+      def error_info
+        ["ASSEMBLER ERROR in file #{@file_name}",
+         "LINE # #{@line_number}"]
+      end
+
+      # Removes white space a begining and end and comments
+      # Do not call on .str or lines betwenn .long-string
+      def strip
+        @strip ||= _strip
+      end
+
+      def empty?
+        strip.empty?
+      end
+
+      private
+
+      def text_to_split
+        if first_word == '.str'   # don't strip a .str directive
+          @text
+        else                      # only strip if not a .str directive
+          strip
+        end
+      end
+
+      def _strip
+        text_line = @text.strip
+        return '' if text_line.empty? || text_line[0] == '#'
+        text_line.split('#', 2)[0].strip
+      end
+    end
   end
 
   # Holds the list of commands parsed so far
