@@ -1,12 +1,12 @@
 Refactoring ideas
 
 - Separate branch: refactor
-- Line class with
-    - Delete Assembler.strip and use Line#strip instead
 - Source class
     - @lines should be a list of Line instances
     - include tags each line with file name and line #
     - No need to keep track of `line_number` anymore
+- Line class
+    - Delete Assembler.strip and use Line#strip instead
 - Change Assembler module to Assembler class
   Make Assembler a class instead of a module?
 - Assembler class has source, commands and `symbol_table` instance vars
