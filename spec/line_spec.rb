@@ -39,15 +39,13 @@ describe Assembler::Source::Line do
   describe 'first_word' do
     it 'ADD R1 R2 R3 # a comment -> ADD' do
       assert_equal 'ADD', @line.first_word
-      # Idempotent
-      assert_equal 'ADD', @line.first_word
+      assert_equal 'ADD', @line.first_word, 'Must be idempotent'
     end
   end
   describe 'args_str' do
     it 'ADD R1 R2 R3 # a comment -> R1 R2 R3' do
       assert_equal 'R1 R2 R3', @line.args_str
-      # Idempotent
-      assert_equal 'R1 R2 R3', @line.args_str
+      assert_equal 'R1 R2 R3', @line.args_str, 'Must be idempotent'
     end
     it 'should not remove comment at end of .str directive' do
       text = '  .str " my string " # My comment'
