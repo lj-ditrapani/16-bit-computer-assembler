@@ -91,16 +91,23 @@ module Assembler
 
     def [](key)
       value = super
-      fail Assembler::AsmError, "Undefined symbol: #{key.inspect}" if value.nil?
+      message = "Undefined symbol: #{key.inspect}"
+      fail Assembler::AsmError, message if value.nil?
       value
     end
 
     def set_token(name_symbol, value_token)
-      self[name_symbol] = if value_token.type == :symbol
-                            self[value_token.value]
-                          else
-                            value_token.value
-                          end
+      self[name_symbol] = get_int value_token
+    end
+
+    private
+
+    def get_int(value_token)
+      if value_token.type == :symbol
+        self[value_token.value]
+      else
+        value_token.value
+      end
     end
   end
 
