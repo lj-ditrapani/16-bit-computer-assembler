@@ -20,7 +20,7 @@ module Assembler
 
   def self.init_state(file_path)
     source = Source.new.include_file(file_path)
-    [source, CommandList.new, make_symbol_table]
+    [source, CommandList.new, SymbolTable.new]
   end
 
   def self.process_next_line(source, symbol_table, commands)
@@ -64,10 +64,6 @@ module Assembler
     first_word = new_line.split(' ', 2)[0]
     return new_line if first_word == '.str'
     new_line.split('#', 2)[0].strip
-  end
-
-  def self.make_symbol_table
-    Assembler::SymbolTable.new
   end
 
   def self.to_int(str)

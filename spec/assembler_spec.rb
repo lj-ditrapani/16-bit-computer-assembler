@@ -64,7 +64,7 @@ describe Assembler do
     end
   end
 
-  describe 'make_symbol_table has pre-defined symbols' do
+  describe 'symbol_table has pre-defined symbols' do
     tests = [
       [:R0, 0],
       [:R1, 1],
@@ -83,7 +83,7 @@ describe Assembler do
       [:'storage-write-address',  0xFFFE],
       [:'frame-interrupt-vector', 0xFFFF]
     ]
-    st = Assembler.make_symbol_table
+    st = Assembler::SymbolTable.new
     tests.each do |key, value|
       it "has value #{value} associated with key #{key}" do
         assert_equal value, st[key]
