@@ -27,6 +27,8 @@ Refactoring ideas
 
 Less pressing
 
+- Move README.md to doc/assembly-language.md and create new README.md
+  that covers usage and design and refers to assembly-language.md
 - Command superclass used by WRD & directives
 
 Spec related refactoring
