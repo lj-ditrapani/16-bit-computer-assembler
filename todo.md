@@ -17,6 +17,7 @@ Refactoring ideas
   or class as separate namespace (class if parameter list is long)
 - Refactor methods with long parameter list into class with
   new that takes first parameters and then method that takes rest
+- Delete `include_directive` method
 
 Less pressing
 
