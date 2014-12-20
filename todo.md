@@ -1,3 +1,5 @@
+Refactoring ideas
+
 - Separate branch: refactor to create Assembler class
   Make Assembler a class instead of a module?
   Attach asm, commands and symbol table to instance
@@ -6,24 +8,18 @@
   there?  Then prefix class with `Helper.<message>`
 - For each set of methods only called by one method, create module
   or class as separate namespace (class if parameter list is long)
-- Rename asm to source
 - Assembler class has source, commands and `symbol_table` instance vars
-
-Refactoring ideas
-
-- Fork master to "pre rename/pre refactor or
-- Just tag master head revision as "pre-rename/pre-refactor" and then
-  merge in other branch
 - Line class with
     - methods:  `text`, `first_word` and `args_str`
     - knows asm file name, line number and `word_length`
     - Can generate error message info (file name & line #)
 - Refactor methods with long parameter list into class with
   new that takes first parameters and then method that takes rest
+- Should have method for loading file.  Used at begining and for every
+  .include directive
 
 Less pressing
 
-- Learn rake:  use rake instead of test.sh
 - Command superclass used by WRD & directives
 
 Spec related refactoring
