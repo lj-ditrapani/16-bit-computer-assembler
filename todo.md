@@ -2,29 +2,21 @@ Refactoring ideas
 
 - Separate branch: refactor
 - Line class with
-    - methods:  `text`, `first_word` and `args_str`
-    - knows asm file name, line number and `word_length`
-    - Can generate error message info (file name & line #)
-    - Nested inside Source class
-    - Move Assembler.strip inside Line
+    - Delete Assembler.strip and use Line#strip instead
 - Source class
-    - Should have a nested Line class
     - @lines should be a list of Line instances
-    - include method should take a `file_name`, not a list of text lines
-      include tags each line with file name and line #
+    - include tags each line with file name and line #
+    - No need to keep track of `line_number` anymore
 - Change Assembler module to Assembler class
   Make Assembler a class instead of a module?
-  Attach asm, commands and symbol table to instance
+- Assembler class has source, commands and `symbol_table` instance vars
 - Assembler.rb has many methods only called from one other method.
   Create Helper module inside Assembler and put all "private" methods
   there?  Then prefix class with `Helper.<message>`
 - For each set of methods only called by one method, create module
   or class as separate namespace (class if parameter list is long)
-- Assembler class has source, commands and `symbol_table` instance vars
 - Refactor methods with long parameter list into class with
   new that takes first parameters and then method that takes rest
-- Should have method for loading file.  Used at begining and for every
-  .include directive
 
 Less pressing
 
