@@ -37,7 +37,7 @@ module Assembler
     when :set_directive
       set_directive(args_str, symbol_table)
     when :include_directive
-      include_directive(args_str, source)
+      source.include_file args_str
     when :command
       handle_command(first_word, args_str, source, commands, symbol_table)
     end
@@ -108,10 +108,6 @@ module Assembler
     name, str_value = args_str.split(/\s+/, 2)
     token = Token.new str_value
     symbol_table.set_token(name.to_sym, token)
-  end
-
-  def self.include_directive(args_str, source)
-    source.include_file args_str
   end
 
   def self.handle_command(first_word_str,
