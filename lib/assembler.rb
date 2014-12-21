@@ -26,21 +26,17 @@ module Assembler
   def self.process_next_line(source, symbol_table, commands)
     line = source.pop_line
     return if line.empty?
+    line.word_index = commands.word_index
     distpatch(line, source, symbol_table, commands)
   end
 
   def self.distpatch(line, source, symbol_table, commands)
-    first_word = line.first_word
     args_str = line.args_str
-    case line_type(first_word)
-    when :label
-      label(first_word, symbol_table, commands.word_index)
-    when :set_directive
-      set_directive(args_str, symbol_table)
-    when :include_directive
-      source.include_file args_str
-    when :command
-      handle_command(first_word, args_str, source, commands, symbol_table)
+    case line_type(line.first_word)
+    when :label then label(line, symbol_table)
+    when :set_directive then set_directive(args_str, symbol_table)
+    when :include_directive then source.include_file args_str
+    when :command then handle_command(line, source, commands, symbol_table)
     end
   end
 
@@ -92,8 +88,8 @@ module Assembler
     end
   end
 
-  def self.label(first_word, symbol_table, word_index)
-    symbol_table[first_word[1...-1]] = word_index
+  def self.label(line, symbol_table)
+    symbol_table[line.first_word[1...-1]] = line.word_index
   end
 
   def self.set_directive(args_str, symbol_table)
@@ -102,14 +98,10 @@ module Assembler
     symbol_table.set_token(name, token)
   end
 
-  def self.handle_command(first_word_str,
-                          args_str,
-                          source,
-                          commands,
-                          symbol_table)
+  def self.handle_command(line, source, commands, symbol_table)
+    first_word_str, args_str = line.first_word, line. args_str
     first_word = first_word_str.to_sym
-    word_index = commands.word_index
-    extra_args = [source, word_index, symbol_table]
+    extra_args = [source, commands.word_index, symbol_table]
     command = create_command(first_word, args_str, extra_args)
     commands.add_command command
   end
