@@ -25,7 +25,7 @@ module Assembler
     def initialize(str)
       if [/\$/, /%/, /\d/].any? { |match| match =~ str[0] }
         @type = :int
-        @value = Assembler.to_int str
+        @value = ::Assembler.to_int str
       else
         @type = :symbol
         @value = str.to_sym
@@ -255,7 +255,7 @@ module Assembler
         begin
           array.concat cmd.machine_code(symbol_table)
         rescue AsmError => e
-          Assembler.elaborate_error(e, cmd.source_info)
+          ::Assembler.elaborate_error(e, cmd.source_info)
         end
       end
     end
