@@ -2,7 +2,8 @@ Refactoring ideas
 
 - Separate branch: refactor
 - Line class:  pass line as argument in place of
-  `first_word` & `args_str` for handle methods and anywhere else needed
+  `first_word` & `args_str` for `create_command`, `handle` method
+  and anywhere else needed.
 - Change Assembler module to Assembler class
   Make Assembler a class instead of a module?
 - Assembler class has source, commands and `symbol_table` instance vars
