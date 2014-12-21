@@ -14,10 +14,12 @@ describe Assembler::Source::Line do
       assert_equal text, line.text
     end
   end
-  describe 'error_info' do
-    it 'Returns file_name and line_number in message' do
-      error_lines = ['ASSEMBLER ERROR in file test.asm', 'LINE # 42']
-      assert_equal error_lines, @line.error_info
+  describe 'source_info' do
+    it 'Returns source_info with file_name and line_number' do
+      error_lines = ['ASSEMBLER ERROR in file test.asm',
+                     'LINE # 42',
+                     'SOURCE CODE: ADD R1 R2 R3  # a comment']
+      assert_equal error_lines, @line.source_info.error_info
     end
   end
   line_with_text = ->(text) { Line.new('test.asm', 42, text) }

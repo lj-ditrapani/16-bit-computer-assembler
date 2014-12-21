@@ -107,31 +107,27 @@ end
 describe Assembler::Source do
   before do
     lines = %W(a\n b\n c\n)
-    @state = Assembler::Source.new.include_lines(lines)
+    @source = Assembler::Source.new.include_lines(lines)
   end
 
   describe 'pop_line' do
     before do
-      @line = @state.pop_line
+      @line = @source.pop_line
     end
     it 'should return the first line' do
-      assert_equal 'a', @line
-    end
-    it 'should increment the line_number' do
-      assert_equal 1, @state.line_number
+      assert_equal 'a', @line.text
+      assert_equal 'LINE # 1', @line.source_info.error_info[1]
     end
   end
 
   describe 'pop 2 lines' do
     before do
-      @line = @state.pop_line
-      @line = @state.pop_line
+      @line = @source.pop_line
+      @line = @source.pop_line
     end
     it 'should return the second line' do
-      assert_equal 'b', @line
-    end
-    it 'should increment the line_number twice' do
-      assert_equal 2, @state.line_number
+      assert_equal 'b', @line.text
+      assert_equal 'LINE # 2', @line.source_info.error_info[1]
     end
   end
 

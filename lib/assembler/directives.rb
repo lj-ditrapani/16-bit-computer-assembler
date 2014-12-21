@@ -55,7 +55,7 @@ module Assembler
         line = args_str[1..-1]
         lines = [line]
         until line =~ /]/
-          line = Assembler.strip(source.pop_line)
+          line = source.pop_line.strip
           lines.push line
         end
         lines
@@ -116,8 +116,8 @@ module Assembler
         lines = []
         fail(Assembler::AsmError, msg) if source.empty?
         line = source.pop_line
-        until Assembler.strip(line) == '.end-long-string'
-          lines.push line
+        until line.strip == '.end-long-string'
+          lines.push line.text
           fail(Assembler::AsmError, msg) if source.empty?
           line = source.pop_line
         end

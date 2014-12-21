@@ -106,19 +106,14 @@ describe Assembler::Directives do
     [' a', 'b ', ".end-long-string\t# end"],
     ['a', "\t\"b\"  \t", 'c d', '.end-long-string']
   ]
-  tests = list.map { |lines| ['keep-newlines', lines] } +
-          list.map { |lines| ['strip-newlines', lines] }
-  tests.each do |args_str, lines|
+  tests = list.map { |lines| ['keep-newlines', "\n", lines] } +
+          list.map { |lines| ['strip-newlines', '', lines] }
+  tests.each do |args_str, char, lines|
     describe '.long-string Directive' do
       d = Assembler::Directives
       source = Assembler::Source.new.include_lines lines.dup
       lines = lines.dup
       lines.pop
-      char = if args_str == 'keep-newlines'
-               "\n"
-             else
-               ''
-             end
       words = lines.join(char).split('').map(&:ord)
       words.unshift words.size
       it ".long-string #{args_str} #{lines} -> #{words.inspect}" do

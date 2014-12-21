@@ -12,7 +12,7 @@ module Assembler
       # can change by a variable # based on the command
       process_next_line(source, symbol_table, commands) until source.empty?
     rescue AsmError => e
-      elaborate_error(e, file_path, source)
+      elaborate_error(e, source.current_line.source_info)
     else
       machine_code(commands, symbol_table)
     end
@@ -24,13 +24,14 @@ module Assembler
   end
 
   def self.process_next_line(source, symbol_table, commands)
-    line = strip(source.pop_line)
+    line = source.pop_line
     return if line.empty?
-    first_word, args_str = line.split(/\s+/, 2)
-    distpatch(first_word, args_str, source, symbol_table, commands)
+    distpatch(line, source, symbol_table, commands)
   end
 
-  def self.distpatch(first_word, args_str, source, symbol_table, commands)
+  def self.distpatch(line, source, symbol_table, commands)
+    first_word = line.first_word
+    args_str = line.args_str
     case line_type(first_word)
     when :label
       label(first_word, symbol_table, commands.word_index)
@@ -43,13 +44,12 @@ module Assembler
     end
   end
 
-  def self.elaborate_error(error, file_path, source)
-    msg = "\n\n****
-    ASSEMBLER ERROR in file #{file_path}
-    LINE # #{source.line_number}
-    #{error.message}
-    #{error.backtrace.join "\n    "}\n****\n\n"
-    $stderr.print msg
+  def self.elaborate_error(error, source_info)
+    msg_lines = ["\n\n****"] +
+                source_info.error_info +
+                ["#{error.message}",
+                 "#{error.backtrace.join "\n    "}\n****\n\n"]
+    $stderr.print msg_lines.join("\n")
   end
 
   def self.machine_code(commands, symbol_table)
