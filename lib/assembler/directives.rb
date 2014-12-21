@@ -150,12 +150,13 @@ module Assembler
       end
     end
 
-    def self.handle(directive, args_str, source, word_index, symbol_table)
+    def self.handle(line, source, symbol_table)
+      directive = line.first_word.to_sym
       directive_class = const_get directive_to_class_name directive
-      args = [args_str]
+      args = [line.args_str]
       case directive
       when :'.move'
-        args += [word_index, symbol_table]
+        args += [line.word_index, symbol_table]
       when :'.array', :'.long-string'
         args.push(source)
       end

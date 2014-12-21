@@ -99,10 +99,7 @@ module Assembler
   end
 
   def self.handle_command(line, source, commands, symbol_table)
-    first_word_str, args_str = line.first_word, line. args_str
-    first_word = first_word_str.to_sym
-    extra_args = [source, commands.word_index, symbol_table]
-    command = create_command(first_word, args_str, extra_args)
+    command = create_command(line, source, symbol_table)
     commands.add_command command
   end
 
@@ -111,13 +108,14 @@ module Assembler
     pseudo_instructions_list.include? first_word
   end
 
-  def self.create_command(first_word, args_str, extra_args)
-    if first_word.to_s[0] == '.'
-      Directives.handle(first_word, args_str, *extra_args)
-    elsif pseudo_instruction? first_word
-      PseudoInstructions.handle(first_word, args_str)
+  def self.create_command(line, source, symbol_table)
+    first_sym, args_str = line.first_word.to_sym, line.args_str
+    if first_sym.to_s[0] == '.'
+      Directives.handle(line, source, symbol_table)
+    elsif pseudo_instruction? first_sym
+      PseudoInstructions.handle(first_sym, args_str)
     else
-      Instructions.handle(first_word, args_str)
+      Instructions.handle(first_sym, args_str)
     end
   end
 end

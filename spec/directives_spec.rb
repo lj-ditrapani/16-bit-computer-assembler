@@ -2,16 +2,27 @@ require 'minitest/autorun'
 require './lib/assembler'
 
 describe Assembler::Directives do
+  Source = Assembler::Source
   tests = [
     ['$00FF', 0x0010, 239],
     ['audio', 0x005, (0xD800 - 5)]
   ]
   symbol_table = { audio: 0xD800 }
+  handle = lambda do |directive, args_str, text_lines, word_index, st|
+    text = "#{directive}\t#{args_str}"
+    line = Source::Line.new('f.asm', 5, text)
+    line.word_index = word_index
+    source = if text_lines.class == Assembler::Source
+               text_lines
+             else
+               Source.new.include_lines text_lines
+             end
+    Assembler::Directives.handle(line, source, st)
+  end
   tests.each do |args_str, word_index, word_length|
     describe '.move Directive' do
       it ".move #{args_str} -> array of #{word_length} zeros" do
-        d = Assembler::Directives
-        cmd = d.handle(:'.move', args_str, [], word_index, symbol_table)
+        cmd = handle.call(:'.move', args_str, [], word_index, symbol_table)
         machine_code = cmd.machine_code symbol_table
         assert_equal word_length, cmd.word_length
         assert_equal word_length, machine_code.length
@@ -27,8 +38,7 @@ describe Assembler::Directives do
   tests.each do |args_str, word|
     describe '.word Directive' do
       it ".word #{args_str} -> [#{word}]" do
-        d = Assembler::Directives
-        cmd = d.handle(:'.word', args_str, [], 0, symbol_table)
+        cmd = handle.call(:'.word', args_str, [], 0, symbol_table)
         machine_code = cmd.machine_code symbol_table
         assert_equal 1, cmd.word_length
         assert_equal 1, machine_code.length
@@ -49,9 +59,8 @@ describe Assembler::Directives do
   tests.each do |args_str, lines, words|
     describe '.array Directive' do
       it ".array #{args_str} -> #{words.inspect}" do
-        d = Assembler::Directives
-        source = Assembler::Source.new.include_lines lines
-        cmd = d.handle(:'.array', args_str, source, 0, {})
+        source = Source.new.include_lines lines
+        cmd = handle.call(:'.array', args_str, source, 0, {})
         machine_code = cmd.machine_code({})
         length = words.length
         assert_equal length, cmd.word_length
@@ -71,8 +80,7 @@ describe Assembler::Directives do
   tests.each do |args_str, words|
     describe '.fill-array Directive' do
       it ".fill-array #{args_str} -> #{words.inspect}" do
-        d = Assembler::Directives
-        cmd = d.handle(:'.fill-array', args_str, [], 0, {})
+        cmd = handle.call(:'.fill-array', args_str, [], 0, {})
         machine_code = cmd.machine_code(symbol_table)
         length = words.length
         assert_equal length, cmd.word_length
@@ -90,8 +98,7 @@ describe Assembler::Directives do
       words = args_str.split('').map(&:ord)
       words.unshift words.size
       it ".str #{args_str} -> #{words.inspect}" do
-        d = Assembler::Directives
-        cmd = d.handle(:'.str', args_str, [], 0, {})
+        cmd = handle.call(:'.str', args_str, [], 0, {})
         machine_code = cmd.machine_code(symbol_table)
         length = words.length
         assert_equal length, cmd.word_length
@@ -110,14 +117,13 @@ describe Assembler::Directives do
           list.map { |lines| ['strip-newlines', '', lines] }
   tests.each do |args_str, char, lines|
     describe '.long-string Directive' do
-      d = Assembler::Directives
-      source = Assembler::Source.new.include_lines lines.dup
-      lines = lines.dup
-      lines.pop
-      words = lines.join(char).split('').map(&:ord)
+      source_lines = lines.dup
+      str_lines = lines.dup
+      str_lines.pop
+      words = str_lines.join(char).split('').map(&:ord)
       words.unshift words.size
       it ".long-string #{args_str} #{lines} -> #{words.inspect}" do
-        cmd = d.handle(:'.long-string', args_str, source, 0, {})
+        cmd = handle.call(:'.long-string', args_str, source_lines, 0, {})
         machine_code = cmd.machine_code(symbol_table)
         length = words.length
         assert_equal length, cmd.word_length
