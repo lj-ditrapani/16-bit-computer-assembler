@@ -1,19 +1,6 @@
 Refactoring ideas
 
 - Separate branch: refactor
-- Line class:  pass line as argument in place of
-  `first_word` & `args_str` for `create_command`, `handle` method
-  and anywhere else needed.
-- Change Assembler module to Assembler class
-  Make Assembler a class instead of a module?
-- Assembler class has source, commands and `symbol_table` instance vars
-- Assembler instance methods:  `initialize`, `process_next_line,`
-  `dispatch`, `machine_code`, `handle_command`
-- Assembler.rb has many methods only called from one other method.
-  Create Helper module inside Assembler and put all "private" methods
-  there?  Then prefix class with `Helper.<message>`
-- For each set of methods only called by one method, create module
-  or class as separate namespace (class if parameter list is long)
 - Refactor methods with long parameter list into class with
   new that takes first parameters and then method that takes rest
 - Possibly break `Symbol_table`, `Source`, and `CommandList` classes
@@ -22,6 +9,13 @@ Refactoring ideas
   Command should also have a `source_info` object to hold
   line number and file name & return `error_info`.
 - `to_int` uses `get_start_and_base` and `to_int_with_start_and_base`
+  The methods are only called from `to_int`.  Put methods in sub-module?
+  Create Int16 module. `Int16.to_int str` vs `::Assembler.to_int str`.
+- Move `Assembler.pseudo_instruction?` to
+  `Assembler::PseudoInstruction.pseudo_instruction?`
+- Move `Assembler.to_int` & `Assembler.elaborate_error` to base.rb file.
+- `label` and `set_directive` could become private methods of Assembler
+  class
 
 Less pressing
 
