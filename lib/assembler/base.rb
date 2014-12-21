@@ -1,11 +1,14 @@
 # Toplevel module
 module Assembler
   # Instructions, pseudo-instructions, and most directives
-  # are commands (or follow the Command interface).
-  # They generate machine code and know how long the
-  # machine code will be via the word_length method.
-  # Command is subclassed by PseudoInstructions::WRD & all Directives
+  # are commands.
+  # They generate machine code (via the `machine_code` message) and know
+  # how long the machine code will be via the `word_length` method.
+  # They also hold a SourceInfo object for error reporting.
+  # Command is subclassed by all commands in the Instructions,
+  # PseudoInstructions, and Directives modules
   class Command
+    attr_accessor :source_info
     attr_reader :word_length
 
     def initialize
@@ -249,7 +252,11 @@ module Assembler
 
     def machine_code(symbol_table)
       @commands.reduce([]) do |array, cmd|
-        array.concat cmd.machine_code(symbol_table)
+        begin
+          array.concat cmd.machine_code(symbol_table)
+        rescue Assembler::AsmError => e
+          Assembler.elaborate_error(e, cmd.source_info)
+        end
       end
     end
   end

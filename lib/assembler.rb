@@ -27,10 +27,10 @@ module Assembler
     line = source.pop_line
     return if line.empty?
     line.word_index = commands.word_index
-    distpatch(line, source, symbol_table, commands)
+    dispatch(line, source, symbol_table, commands)
   end
 
-  def self.distpatch(line, source, symbol_table, commands)
+  def self.dispatch(line, source, symbol_table, commands)
     args_str = line.args_str
     case line_type(line.first_word)
     when :label then label(line, symbol_table)
@@ -100,6 +100,7 @@ module Assembler
 
   def self.handle_command(line, source, commands, symbol_table)
     command = create_command(line, source, symbol_table)
+    command.source_info = line.source_info
     commands.add_command command
   end
 

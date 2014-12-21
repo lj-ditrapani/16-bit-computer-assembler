@@ -2,7 +2,7 @@ module Assembler
   # Contains instruction classes and knows how to handle an instruction
   module Instructions
     # Basic functionality for all Instructions
-    class Instruction
+    class Instruction < Assembler::Command
       def word_length
         1
       end
