@@ -100,7 +100,7 @@ module Assembler
     def [](key)
       value = super(key.to_sym)
       message = "Undefined symbol: #{key.inspect}"
-      fail(Assembler::AsmError, message) if value.nil?
+      fail(AsmError, message) if value.nil?
       value
     end
 
@@ -254,7 +254,7 @@ module Assembler
       @commands.reduce([]) do |array, cmd|
         begin
           array.concat cmd.machine_code(symbol_table)
-        rescue Assembler::AsmError => e
+        rescue AsmError => e
           Assembler.elaborate_error(e, cmd.source_info)
         end
       end

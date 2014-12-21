@@ -10,7 +10,7 @@ module Assembler
       exit
     end
     file_path = ARGV[0]
-    Assembler.main(file_path)
+    main(file_path)
   end
 end
 

@@ -7,10 +7,10 @@ module Assembler
     end
 
     # insert 16-bit value at current memory address
-    class WordDirective < Assembler::Command
+    class WordDirective < Command
       def initialize(args_str)
         super()
-        @value = Assembler::Token.new args_str
+        @value = Token.new args_str
       end
 
       def machine_code(symbol_table)
@@ -19,9 +19,9 @@ module Assembler
     end
 
     # Move cursor forward to memory address and zero-fill hole
-    class MoveDirective < Assembler::Command
+    class MoveDirective < Command
       def initialize(args_str, word_index, symbol_table)
-        address_token = Assembler::Token.new args_str
+        address_token = Token.new args_str
         address = address_token.get_int symbol_table
         @word_length = address - word_index
       end
@@ -32,7 +32,7 @@ module Assembler
     end
 
     # Set contiguous memory addresses to specified values
-    class ArrayDirective < Assembler::Command
+    class ArrayDirective < Command
       def initialize(args_str, source)
         check_for_open_bracket(args_str)
         lines = get_array_lines(args_str, source)
@@ -48,7 +48,7 @@ module Assembler
 
       def check_for_open_bracket(args_str)
         found = args_str[0] == '['
-        fail Assembler::AsmError, "Array must start with '['" unless found
+        fail AsmError, "Array must start with '['" unless found
       end
 
       def get_array_lines(args_str, source)
@@ -65,15 +65,15 @@ module Assembler
         # Remove trailing ']'
         lines[-1] = lines[-1].gsub!(']', '')
         str = lines.join ' '
-        str.split.map { |e| Assembler::Token.new(e) }
+        str.split.map { |e| Token.new(e) }
       end
     end
 
     # Set contiguous memory addresses all to same value
-    class FillArrayDirective < Assembler::Command
+    class FillArrayDirective < Command
       def initialize(args_str)
         size, fill = args_str.split
-        @fill = Assembler::Token.new fill
+        @fill = Token.new fill
         @word_length = Assembler.to_int size
       end
 
@@ -83,7 +83,7 @@ module Assembler
     end
 
     # Set following memory address to ASCII values of string
-    class StrDirective < Assembler::Command
+    class StrDirective < Command
       def initialize(args_str)
         @code = args_str.split('').map(&:ord)
         @code.unshift @code.length
@@ -96,7 +96,7 @@ module Assembler
     end
 
     # Set following memory address to ASCII values of multi-line string
-    class LongStringDirective < Assembler::Command
+    class LongStringDirective < Command
       def initialize(args_str, source)
         lines = get_string_lines(source)
         char = get_join_char(args_str)
@@ -114,11 +114,11 @@ module Assembler
       def get_string_lines(source)
         msg = 'Missing .end-long-string to end .long-string directive'
         lines = []
-        fail(Assembler::AsmError, msg) if source.empty?
+        fail(AsmError, msg) if source.empty?
         line = source.pop_line
         until line.strip == '.end-long-string'
           lines.push line.text
-          fail(Assembler::AsmError, msg) if source.empty?
+          fail(AsmError, msg) if source.empty?
           line = source.pop_line
         end
         lines
@@ -133,13 +133,13 @@ module Assembler
         when 'strip-newlines'
           ''
         else
-          fail Assembler::AsmError, msg
+          fail AsmError, msg
         end
       end
     end
 
     # Copy binary value from file directly into program
-    class CopyDirective < Assembler::Command
+    class CopyDirective < Command
       def initialize(args_str)
         @code = IO.read(args_str).unpack('S>*')
         @word_length = @code.length

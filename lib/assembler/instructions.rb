@@ -2,13 +2,13 @@ module Assembler
   # Contains instruction classes and knows how to handle an instruction
   module Instructions
     # Basic functionality for all Instructions
-    class Instruction < Assembler::Command
+    class Instruction < Command
       def word_length
         1
       end
 
       def machine_code(symbol_table)
-        [Assembler::Instructions.make_word(*nibbles(symbol_table))]
+        [Instructions.make_word(*nibbles(symbol_table))]
       end
     end
 
@@ -16,7 +16,7 @@ module Assembler
     # all its arguments must be tokenized by the Assembler::Token class
     class InstructionWithOnlyTokenArgs < Instruction
       def initialize(args_str)
-        @tokens = args_str.split.map { |a| Assembler::Token.new a }
+        @tokens = args_str.split.map { |a| Token.new a }
       end
 
       private
@@ -97,10 +97,10 @@ module Assembler
     class SHF < Instruction
       def initialize(args_str)
         rs1, dir, ammount, rd = args_str.split
-        @rs1 = Assembler::Token.new rs1
+        @rs1 = Token.new rs1
         @dir = dir
-        @ammount = Assembler::Token.new ammount
-        @rd = Assembler::Token.new rd
+        @ammount = Token.new ammount
+        @rd = Token.new rd
       end
 
       def nibbles(symbol_table)
@@ -122,8 +122,8 @@ module Assembler
           else
             parse_cv_condition_value(args)
           end
-        @value_register = Assembler::Token.new(value_str)
-        @address_register = Assembler::Token.new(args[-1])
+        @value_register = Token.new(value_str)
+        @address_register = Token.new(args[-1])
       end
 
       def nibbles(symbol_table)
@@ -155,7 +155,7 @@ module Assembler
         when 'V' then 2
         when 'C' then 1
         when '-' then 0
-        else fail Assembler::AsmError, str
+        else fail AsmError, str
         end
       end
     end
@@ -163,7 +163,7 @@ module Assembler
     # The "save the program counter" instruction
     class SPC < Instruction
       def initialize(args_str)
-        @rs1 = Assembler::Token.new args_str
+        @rs1 = Token.new args_str
       end
 
       def nibbles(symbol_table)

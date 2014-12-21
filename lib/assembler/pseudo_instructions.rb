@@ -3,7 +3,7 @@ module Assembler
   # pseudo-instruction
   module PseudoInstructions
     # Copy pseudo-instruction:  copy value from one register to another
-    class CPY < Assembler::Instructions::ADI
+    class CPY < Instructions::ADI
       def initialize(args_str)
         source, destination = args_str.split
         super("#{source} 0 #{destination}")
@@ -12,12 +12,12 @@ module Assembler
 
     # Sets register to 16-bit value using HBY + LBY instruction sequence
     # Example:    WRD $1234 R7    ==>    HBY $12 R7    LBY $34 R7
-    class WRD < Assembler::Command
+    class WRD < Command
       def initialize(args_str)
         # get value, store for later
         value_str, register = args_str.split
-        @value = Assembler::Token.new value_str
-        @register = Assembler::Token.new register
+        @value = Token.new value_str
+        @register = Token.new register
         @word_length = 2
       end
 
@@ -40,7 +40,7 @@ module Assembler
     ]
 
     class_data.each do |name, super_class, args_str_template|
-      c = Class.new(Assembler::Instructions.const_get(super_class)) do
+      c = Class.new(Instructions.const_get(super_class)) do
         define_method(:initialize) do |args_str|
           super(args_str_template % { args_str: args_str })
         end
