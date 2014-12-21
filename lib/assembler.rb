@@ -58,14 +58,6 @@ module Assembler
     print machine_code_str
   end
 
-  def self.strip(line)
-    new_line = line.strip
-    return '' if new_line.empty? || new_line[0] == '#'
-    first_word = new_line.split(' ', 2)[0]
-    return new_line if first_word == '.str'
-    new_line.split('#', 2)[0].strip
-  end
-
   def self.to_int(str)
     fail AsmError, 'Malformed integer' if /^\d[x|X]/ =~ str[0..1]
     start, base = get_start_and_base str[0]

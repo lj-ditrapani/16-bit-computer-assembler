@@ -2,29 +2,6 @@ require 'minitest/autorun'
 require './lib/assembler'
 
 describe Assembler do
-  describe 'strip' do
-    it 'should remove line comments at beginning of line' do
-      line = "# this is a comment\n"
-      new_line = Assembler.strip(line)
-      assert_empty new_line
-    end
-    it 'should strip white space and beginning and end of line' do
-      line = "  \t .word  42  \t  \n"
-      new_line = Assembler.strip(line)
-      assert_equal '.word  42', new_line
-    end
-    it 'should not remove comment at end of .str directive' do
-      line = '  .str " my string " # My comment'
-      new_line = Assembler.strip(line)
-      assert_equal '.str " my string " # My comment', new_line
-    end
-    it 'should remove comment at end of line' do
-      line = "  ADI R1 $A R3 \t # My comment\n"
-      new_line = Assembler.strip(line)
-      assert_equal 'ADI R1 $A R3', new_line
-    end
-  end
-
   describe 'to_int' do
     tests = [
       ['$10', 16],
