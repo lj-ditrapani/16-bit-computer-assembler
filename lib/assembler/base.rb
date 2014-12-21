@@ -154,7 +154,7 @@ module Assembler
 
     # Holds a line of source assembly text
     class Line
-      attr_accessor :word_length
+      attr_accessor :word_index
       attr_reader :text, :source_info
 
       def initialize(file_name, line_number, text)
