@@ -1,12 +1,8 @@
 Refactoring ideas
 
 - Separate branch: refactor
-- Source class
-    - @lines should be a list of Line instances
-    - include tags each line with file name and line #
-    - No need to keep track of `line_number` anymore
-- Line class
-    - Delete Assembler.strip and use Line#strip instead
+- Line class:  pass line as argument in place of
+  `first_word` & `args_str` for handle methods and anywhere else needed
 - Change Assembler module to Assembler class
   Make Assembler a class instead of a module?
 - Assembler class has source, commands and `symbol_table` instance vars
@@ -17,6 +13,11 @@ Refactoring ideas
   or class as separate namespace (class if parameter list is long)
 - Refactor methods with long parameter list into class with
   new that takes first parameters and then method that takes rest
+- Possibly break `Symbol_table`, `Source`, and `CommandList` classes
+  into their own files (one file per class)
+- SourceInfo class:
+  Command should also have a `source_info` object to hold
+  line number and file name & return `error_info`.
 
 Less pressing
 
