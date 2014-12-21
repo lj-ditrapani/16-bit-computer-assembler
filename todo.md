@@ -7,6 +7,8 @@ Refactoring ideas
 - Change Assembler module to Assembler class
   Make Assembler a class instead of a module?
 - Assembler class has source, commands and `symbol_table` instance vars
+- Assembler instance methods:  `initialize`, `process_next_line,`
+  `dispatch`, `machine_code`, `handle_command`
 - Assembler.rb has many methods only called from one other method.
   Create Helper module inside Assembler and put all "private" methods
   there?  Then prefix class with `Helper.<message>`
@@ -19,6 +21,7 @@ Refactoring ideas
 - SourceInfo class:
   Command should also have a `source_info` object to hold
   line number and file name & return `error_info`.
+- `to_int` uses `get_start_and_base` and `to_int_with_start_and_base`
 
 Less pressing
 
