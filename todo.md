@@ -1,5 +1,7 @@
 Refactoring ideas
 
+- Rename `elaborate_error` to handle error because of call to exit
+- What is error code for call to exit?
 - Move README.md to doc/assembly-language.md and create new README.md
   that covers usage and design and refers to assembly-language.md
 
