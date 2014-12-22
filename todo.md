@@ -1,10 +1,5 @@
 Refactoring ideas
 
-- Move `Assembler.Int16` & `Assembler.elaborate_error` to base.rb file.
-- `label` and `set_directive` could become private methods of Assembler
-  class
-- Refactor methods with long parameter list into class with
-  new that takes first parameters and then method that takes rest
 - Possibly break `Symbol_table`, `Source`, and `CommandList` classes
   into their own files (one file per class)
 - Move README.md to doc/assembly-language.md and create new README.md
