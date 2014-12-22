@@ -1,7 +1,5 @@
 Refactoring ideas
 
-- Possibly break `Symbol_table`, `Source`, and `CommandList` classes
-  into their own files (one file per class)
 - Move README.md to doc/assembly-language.md and create new README.md
   that covers usage and design and refers to assembly-language.md
 
