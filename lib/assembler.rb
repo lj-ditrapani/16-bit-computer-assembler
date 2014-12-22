@@ -53,7 +53,7 @@ module Assembler
 
     def create_command(line)
       first_sym, args_str = line.first_word.to_sym, line.args_str
-      if first_sym.to_s[0] == '.'
+      if Directives.directive? first_sym
         Directives.handle(line, @source, @symbol_table)
       elsif PseudoInstructions.pseudo_instruction? first_sym
         PseudoInstructions.handle(first_sym, args_str)

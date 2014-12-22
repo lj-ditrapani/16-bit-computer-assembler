@@ -1,6 +1,21 @@
 module Assembler
   # Contains directive classes and knows how to handle directives
   module Directives
+    DIRECTIVES_LIST = [
+      # .set and .include already handled
+      :'.word',
+      :'.array',
+      :'.fill-array',
+      :'.str',
+      :'.long-string',  # .end-long-string consumed by LongString class
+      :'.move',
+      :'.copy'
+    ]
+
+    def self.directive?(first_word_symbol)
+      DIRECTIVES_LIST.include? first_word_symbol
+    end
+
     def self.directive_to_class_name(symbol)
       str_list = symbol[1..-1].split('-').map(&:capitalize)
       str_list.push('Directive').join.to_sym
