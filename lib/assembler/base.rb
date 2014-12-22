@@ -76,7 +76,8 @@ module Assembler
     msg_lines = ["\n\n****"] +
                 source_info.error_info +
                 ["#{error.message}",
-                 "#{error.backtrace.join "\n    "}\n****\n\n"]
+                 "****\n\n"]
     $stderr.print msg_lines.join("\n")
+    exit(1)
   end
 end
