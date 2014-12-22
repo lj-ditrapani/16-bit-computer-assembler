@@ -1,27 +1,16 @@
 Refactoring ideas
 
-- Separate branch: refactor
+- Move `Assembler.pseudo_instruction?` to
+  `Assembler::PseudoInstruction.pseudo_instruction?`
+- Move `Assembler.Int16` & `Assembler.elaborate_error` to base.rb file.
+- `label` and `set_directive` could become private methods of Assembler
+  class
 - Refactor methods with long parameter list into class with
   new that takes first parameters and then method that takes rest
 - Possibly break `Symbol_table`, `Source`, and `CommandList` classes
   into their own files (one file per class)
-- SourceInfo class:
-  Command should also have a `source_info` object to hold
-  line number and file name & return `error_info`.
-- `to_int` uses `get_start_and_base` and `to_int_with_start_and_base`
-  The methods are only called from `to_int`.  Put methods in sub-module?
-  Create Int16 module. `Int16.to_int str` vs `::Assembler.to_int str`.
-- Move `Assembler.pseudo_instruction?` to
-  `Assembler::PseudoInstruction.pseudo_instruction?`
-- Move `Assembler.to_int` & `Assembler.elaborate_error` to base.rb file.
-- `label` and `set_directive` could become private methods of Assembler
-  class
-
-Less pressing
-
 - Move README.md to doc/assembly-language.md and create new README.md
   that covers usage and design and refers to assembly-language.md
-- Command superclass used by WRD & directives
 
 Spec related refactoring
 
