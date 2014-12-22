@@ -27,11 +27,6 @@ module Assembler
     end
 
     def machine_code(symbol_table)
-      array = @commands.map { |cmd| cmd.machine_code symbol_table }
-      array.flatten
-    end
-
-    def machine_code(symbol_table)
       @commands.reduce([]) do |array, cmd|
         begin
           array.concat cmd.machine_code(symbol_table)
