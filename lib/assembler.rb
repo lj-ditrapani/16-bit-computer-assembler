@@ -55,7 +55,7 @@ module Assembler
       first_sym, args_str = line.first_word.to_sym, line.args_str
       if first_sym.to_s[0] == '.'
         Directives.handle(line, @source, @symbol_table)
-      elsif ::Assembler.pseudo_instruction? first_sym
+      elsif PseudoInstructions.pseudo_instruction? first_sym
         PseudoInstructions.handle(first_sym, args_str)
       else
         Instructions.handle(first_sym, args_str)
@@ -122,10 +122,5 @@ module Assembler
     name, str_value = args_str.split(/\s+/, 2)
     token = Token.new str_value
     symbol_table.set_token(name, token)
-  end
-
-  def self.pseudo_instruction?(first_word)
-    pseudo_instructions_list = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
-    pseudo_instructions_list.include? first_word
   end
 end
