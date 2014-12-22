@@ -25,7 +25,7 @@ module Assembler
     def initialize(str)
       if [/\$/, /%/, /\d/].any? { |match| match =~ str[0] }
         @type = :int
-        @value = ::Assembler.to_int str
+        @value = Int16.to_int str
       else
         @type = :symbol
         @value = str.to_sym

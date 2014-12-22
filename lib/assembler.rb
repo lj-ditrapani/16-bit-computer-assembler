@@ -76,26 +76,30 @@ module Assembler
     $stderr.print msg_lines.join("\n")
   end
 
-  def self.to_int(str)
-    fail AsmError, 'Malformed integer' if /^\d[x|X]/ =~ str[0..1]
-    start, base = get_start_and_base str[0]
-    num = to_int_with_start_and_base(str, start, base)
-    fail AsmError, "Number greater than $FFFF: #{str}" if num > 0xFFFF
-    num
-  end
-
-  def self.get_start_and_base(first_char)
-    case first_char
-    when '%' then [1, 2]
-    when '$' then [1, 16]
-    else [0, 10]
+  # Code to parse 16-bit integer from string.
+  # `to_int` is the public method
+  module Int16
+    def self.to_int(str)
+      fail AsmError, 'Malformed integer' if /^\d[x|X]/ =~ str[0..1]
+      start, base = get_start_and_base str[0]
+      num = to_int_with_start_and_base(str, start, base)
+      fail AsmError, "Number greater than $FFFF: #{str}" if num > 0xFFFF
+      num
     end
-  end
 
-  def self.to_int_with_start_and_base(str, start, base)
-    Integer(str[start..-1], base)
-  rescue ArgumentError
-    raise AsmError, 'Malformed integer'
+    def self.get_start_and_base(first_char)
+      case first_char
+      when '%' then [1, 2]
+      when '$' then [1, 16]
+      else [0, 10]
+      end
+    end
+
+    def self.to_int_with_start_and_base(str, start, base)
+      Integer(str[start..-1], base)
+    rescue ArgumentError
+      raise AsmError, 'Malformed integer'
+    end
   end
 
   def self.line_type(first_word)

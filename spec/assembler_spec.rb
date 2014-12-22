@@ -18,14 +18,14 @@ describe Assembler do
     ]
     tests.each do |str, num|
       it "#{str.inspect} --> #{num}" do
-        assert_equal num, Assembler.to_int(str)
+        assert_equal num, Assembler::Int16.to_int(str)
       end
     end
     tests = ['0xFF00', '$FFEZ', 'hello', '13F']
     tests.each do |str|
       it "#{str.inspect} raises exception" do
         err = assert_raises Assembler::AsmError do
-          Assembler.to_int str
+          Assembler::Int16.to_int str
         end
         assert_match 'Malformed integer', err.message
       end
@@ -34,7 +34,7 @@ describe Assembler do
     tests.each do |str|
       it "#{str.inspect} raises exception" do
         err = assert_raises Assembler::AsmError do
-          Assembler.to_int str
+          Assembler::Int16.to_int str
         end
         assert_match 'Number greater than $FFFF', err.message
       end

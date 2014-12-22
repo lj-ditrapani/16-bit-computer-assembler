@@ -74,7 +74,7 @@ module Assembler
       def initialize(args_str)
         size, fill = args_str.split
         @fill = Token.new fill
-        @word_length = ::Assembler.to_int size
+        @word_length = Int16.to_int size
       end
 
       def machine_code(symbol_table)
