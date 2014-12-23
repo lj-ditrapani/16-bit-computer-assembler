@@ -70,7 +70,7 @@ module Assembler
         line = args_str[1..-1]
         lines = [line]
         until line =~ /]/
-          line = source.pop_line.strip
+          line = source.pop_sub_line.strip
           lines.push line
         end
         lines
