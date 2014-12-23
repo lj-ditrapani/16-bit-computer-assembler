@@ -1,7 +1,7 @@
 module Assembler
   # Contains directive classes and knows how to handle directives
   module Directives
-    DIRECTIVES_LIST = [
+    DIRECTIVE_LIST = [
       # .set and .include already handled
       :'.word',
       :'.array',
@@ -13,7 +13,7 @@ module Assembler
     ]
 
     def self.directive?(first_word_symbol)
-      DIRECTIVES_LIST.include? first_word_symbol
+      DIRECTIVE_LIST.include? first_word_symbol
     end
 
     def self.directive_to_class_name(symbol)

@@ -2,11 +2,12 @@ module Assembler
   # Contains pseudo-instruction classes and knows how to handle a
   # pseudo-instruction
   module PseudoInstructions
-    PSEUDO_INSTRUCTIONS_LIST = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
+    PSEUDO_INSTRUCTION_LIST = [:CPY, :NOP, :WRD, :INC, :DEC, :JMP]
 
     def self.pseudo_instruction?(first_word_symbol)
-      PSEUDO_INSTRUCTIONS_LIST.include? first_word_symbol
+      PSEUDO_INSTRUCTION_LIST.include? first_word_symbol
     end
+
     # Copy pseudo-instruction:  copy value from one register to another
     class CPY < Instructions::ADI
       def initialize(args_str)
