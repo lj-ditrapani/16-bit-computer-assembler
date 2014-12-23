@@ -11,7 +11,7 @@ def get_err_path(err_file, asm_path)
   end
 end
 
-def run_failing_cli_test(name, reg_ex, line_num = nil, err_file = nil)
+def run_failing_cli_test(name, reg_ex, line_num, err_file = nil)
   asm_path = "#{FAIL_DIR}/#{name}.asm"
   err_path = get_err_path err_file, asm_path
   stderr_path = "spec/stderr/#{name}.txt"
@@ -32,11 +32,12 @@ def compare_stderr(stderr_path, reg_ex, asm_path, line_num)
   end
 end
 
-run_failing_cli_test 'bad-int', /Malformed integer '3bad'/, 2
-run_failing_cli_test 'bad-symbol', /Undefined symbol: :R16/, 2
-run_failing_cli_test 'not-a-directive', /First word '\.NOT' not/, 4
-run_failing_cli_test 'not-an-instruction', /First word 'MAD' not/, 2
-run_failing_cli_test 'error-from-included',
-                     /First word 'include' not/,
-                     3,
-                     'included'
+tests = [
+  ['bad-int', /Malformed integer '3bad'/, 2],
+  ['bad-symbol', /Undefined symbol: :R16/, 2],
+  ['not-a-directive', /First word '\.NOT' not/, 4],
+  ['not-an-instruction', /First word 'MAD' not/, 2],
+  ['error-from-included', /First word 'include' not/, 3, 'included']
+]
+
+tests.each { |args| run_failing_cli_test(*args) }
