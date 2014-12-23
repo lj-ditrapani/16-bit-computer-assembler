@@ -10,6 +10,9 @@ require './lib/assembler/pseudo_instructions'
 module Assembler
   # Has main algorithm and state of source, commands, and symbol_table
   class Assembler
+    BAD_FIRST_WORD_MSG = "First word '%s' not a valid directive, " \
+                         'instruction or pseudo-intruction.'
+
     def initialize(file_path)
       @source = Source.new.include_file(file_path)
       @commands, @symbol_table = CommandList.new, SymbolTable.new
@@ -60,8 +63,10 @@ module Assembler
         Directives.handle(line, @source, @symbol_table)
       elsif PseudoInstructions.pseudo_instruction? first_sym
         PseudoInstructions.handle(first_sym, args_str)
-      else
+      elsif Instructions.instruction? first_sym
         Instructions.handle(first_sym, args_str)
+      else
+        fail AsmError, BAD_FIRST_WORD_MSG % first_sym
       end
     end
 

@@ -21,5 +21,7 @@ def compare_stderr(stderr_path, reg_ex, asm_path, line_num)
   end
 end
 
-run_failing_cli_test 'bad-int', /Malformed integer/, 2
+run_failing_cli_test 'bad-int', /Malformed integer '3bad'/, 2
 run_failing_cli_test 'bad-symbol', /Undefined symbol: :R16/, 2
+run_failing_cli_test 'not-a-directive', /First word '\.NOT' not/, 4
+run_failing_cli_test 'not-an-instruction', /First word 'MAD' not/, 2
