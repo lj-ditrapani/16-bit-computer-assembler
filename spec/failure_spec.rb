@@ -37,7 +37,8 @@ tests = [
   ['bad-symbol', /Undefined symbol: :R16/, 2],
   ['not-a-directive', /First word '\.NOT' not/, 4],
   ['not-an-instruction', /First word 'MAD' not/, 2],
-  ['error-from-included', /First word 'include' not/, 3, 'included']
+  ['error-from-included', /First word 'include' not/, 3, 'included'],
+  ['neg-set', /Undefined symbol: :"-5"/, 1]
 ]
 
 tests.each { |args| run_failing_cli_test(*args) }
