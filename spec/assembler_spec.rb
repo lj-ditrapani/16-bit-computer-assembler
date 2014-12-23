@@ -27,7 +27,7 @@ describe Assembler do
         err = assert_raises Assembler::AsmError do
           Assembler::Int16.to_int str
         end
-        assert_match 'Malformed integer', err.message
+        assert_match "Malformed integer '#{str}'", err.message
       end
     end
     tests = ['$10000', '66000']
