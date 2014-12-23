@@ -20,17 +20,10 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
-    - Put asm programs in assembly-programs/failures directory
-    - Write `acceptance_fail_spec.rb` with hash mapping
-      file-name -> exception message regex.
-      For each hash entry, assemble progam while expecting failure.
 - .long-string:  write specs for failing cases
-- Error-handling for .set directive (if value is not a non-negative
-  integer and not a previously-defined symbol)
+- Negative values get treated like symbols because they don't start
+  with a digit, a $ or a %
 - `to_int` error handling:  forbid negative values
-- Each command needs to hold the file name and line number of source
-  line to give better error messages
-
 
 Future Improvements
 
