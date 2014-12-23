@@ -1,6 +1,14 @@
 module Assembler
   # Contains instruction classes and knows how to handle an instruction
   module Instructions
+    instruction_list_str = %w(END HBY LBY LOD STR ADD SUB ADI
+                              SBI AND ORR XOR NOT SHF BRN SPC)
+    INSTRUCTION_LIST = instruction_list_str.map(&:to_sym)
+
+    def self.instruction?(first_word_symbol)
+      INSTRUCTION_LIST.include? first_word_symbol
+    end
+
     # Basic functionality for all Instructions
     class Instruction < Command
       def word_length
