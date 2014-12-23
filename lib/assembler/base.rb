@@ -80,7 +80,7 @@ module Assembler
     end
   end
 
-  def self.elaborate_error(error, source_info)
+  def self.handle_error(error, source_info)
     msg_lines = ["\n\n****"] +
                 source_info.error_info +
                 ["#{error.message}",

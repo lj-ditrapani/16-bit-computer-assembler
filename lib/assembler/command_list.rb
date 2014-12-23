@@ -31,7 +31,7 @@ module Assembler
         begin
           array.concat cmd.machine_code(symbol_table)
         rescue AsmError => e
-          ::Assembler.elaborate_error(e, cmd.source_info)
+          ::Assembler.handle_error(e, cmd.source_info)
         end
       end
     end

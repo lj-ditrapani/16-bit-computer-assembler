@@ -21,7 +21,7 @@ module Assembler
     def assemble
       process_next_line until @source.empty?
     rescue AsmError => e
-      ::Assembler.elaborate_error(e, @source.current_line.source_info)
+      ::Assembler.handle_error(e, @source.current_line.source_info)
     else
       machine_code
     end
