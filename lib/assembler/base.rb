@@ -50,10 +50,10 @@ module Assembler
   # `to_int` is the public method
   module Int16
     def self.to_int(str)
-      fail AsmError, 'Malformed integer' if /^\d[x|X]/ =~ str[0..1]
+      raise_malformed str if /^\d[x|X]/ =~ str[0..1]
       start, base = get_start_and_base str[0]
       num = to_int_with_start_and_base(str, start, base)
-      fail AsmError, "Number greater than $FFFF: #{str}" if num > 0xFFFF
+      raise_too_large num, str if num > 0xFFFF
       num
     end
 
@@ -68,7 +68,15 @@ module Assembler
     def self.to_int_with_start_and_base(str, start, base)
       Integer(str[start..-1], base)
     rescue ArgumentError
-      raise AsmError, 'Malformed integer'
+      raise_malformed str
+    end
+
+    def self.raise_malformed(str)
+      fail AsmError, "Malformed integer '#{str}'"
+    end
+
+    def self.raise_too_large(num, str)
+      fail AsmError, "Number greater than $FFFF: #{str}" if num > 0xFFFF
     end
   end
 
