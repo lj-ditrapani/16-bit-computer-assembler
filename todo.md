@@ -18,9 +18,6 @@ Extra specs
 
 Error handling
 
-- `create_command` should call Instructions.intstruction? in an
-  elsif clause and then else clause raises error:
-  `first_word` not a valid instruction pseudo instruction or directive
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
     - Put asm programs in assembly-programs/failures directory
