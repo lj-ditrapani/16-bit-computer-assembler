@@ -32,13 +32,21 @@ def compare_stderr(stderr_path, reg_ex, asm_path, line_num)
   end
 end
 
+end_long_string_before = /end-long-string directive must come after .lo/
+long_string_arg = /strip-newlines. Received \"drop-newlines\" instead/
+missing_long_string = /Missing .end-long-string to end .long-string d/
+
 tests = [
   ['bad-int', /Malformed integer: '3bad'/, 2],
   ['bad-symbol', /Undefined symbol: :R16/, 2],
   ['not-a-directive', /First word '\.NOT' not/, 4],
   ['not-an-instruction', /First word 'MAD' not/, 2],
   ['error-from-included', /First word 'include' not/, 3, 'included'],
-  ['neg-set', /Undefined symbol: :"-5"/, 1]
+  ['neg-set', /Undefined symbol: :"-5"/, 1],
+  ['lone-end-long-string', end_long_string_before, 4],
+  ['end-long-string-before-long-string', end_long_string_before, 5],
+  ['long-string-bad-arg', long_string_arg, 4],
+  ['missing-end-long-string', missing_long_string, 3]
 ]
 
 tests.each { |args| run_failing_cli_test(*args) }

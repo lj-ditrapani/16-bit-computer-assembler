@@ -66,7 +66,7 @@ module Assembler
       elsif Instructions.instruction? first_sym
         Instructions.handle(first_sym, args_str)
       else
-        fail AsmError, BAD_FIRST_WORD_MSG % first_sym
+        handle_error first_sym
       end
     end
 
@@ -82,6 +82,15 @@ module Assembler
 
     def handle_include_directive(args_str)
       @source.include_file args_str
+    end
+
+    def handle_error(first_sym)
+      if first_sym == :'.end-long-string'
+        fail AsmError, '.end-long-string directive must come after ' \
+                       '.long-string-directive'
+      else
+        fail AsmError, BAD_FIRST_WORD_MSG % first_sym
+      end
     end
   end
 

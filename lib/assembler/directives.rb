@@ -113,8 +113,8 @@ module Assembler
     # Set following memory address to ASCII values of multi-line string
     class LongStringDirective < Command
       def initialize(args_str, source)
-        lines = get_string_lines(source)
         char = get_join_char(args_str)
+        lines = get_string_lines(source)
         @code = lines.join(char).split('').map(&:ord)
         @code.unshift @code.length
         @word_length = @code.length
