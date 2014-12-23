@@ -127,16 +127,19 @@ module Assembler
       private
 
       def get_string_lines(source)
-        msg = 'Missing .end-long-string to end .long-string directive'
         lines = []
-        fail(AsmError, msg) if source.empty?
-        line = source.pop_line
+        line = check_and_pop source
         until line.strip == '.end-long-string'
           lines.push line.text
-          fail(AsmError, msg) if source.empty?
-          line = source.pop_line
+          line = check_and_pop source
         end
         lines
+      end
+
+      def check_and_pop(source)
+        msg = 'Missing .end-long-string to end .long-string directive'
+        fail(AsmError, msg) if source.empty?
+        source.pop_sub_line
       end
 
       def get_join_char(args_str)

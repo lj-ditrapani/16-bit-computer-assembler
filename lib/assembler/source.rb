@@ -11,6 +11,10 @@ module Assembler
       @current_line = @lines.shift
     end
 
+    def pop_sub_line
+      @lines.shift
+    end
+
     def empty?
       @lines.empty?
     end

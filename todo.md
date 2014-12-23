@@ -20,8 +20,7 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
-- .long-string:  write specs for failing cases
-    - No .end-long-string
+- .array error handling
 - Wrong number of args for instructions, directives, etc
 - Negative values get treated like symbols because they don't start
   with a digit, a $ or a %
