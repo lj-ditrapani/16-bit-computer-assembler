@@ -47,7 +47,8 @@ tests = [
   ['end-long-string-before-long-string', end_long_string_before, 5],
   ['long-string-bad-arg', long_string_arg, 4],
   ['missing-end-long-string', missing_long_string, 3],
-  ['array-start-with-bracket', "Array must start with '['", 3]
+  ['array-start-with-bracket', "Array must start with '['", 3],
+  ['array-missing-bracket', "Missing ']' to end array", 2]
 ]
 
 tests.each { |args| run_failing_cli_test(*args) }

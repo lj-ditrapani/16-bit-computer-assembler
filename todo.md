@@ -20,8 +20,6 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
-- .array error handling
-    - end with ]
 - Wrong number of args for instructions, directives, etc
 - SymbolTable:  do not allow reserved words as symbols
   (no directives, instructions, or pseudo-instructions)

@@ -70,6 +70,7 @@ module Assembler
         line = args_str[1..-1]
         lines = [line]
         until line =~ /]/
+          fail AsmError, "Missing ']' to end array" if source.empty?
           line = source.pop_sub_line.strip
           lines.push line
         end
