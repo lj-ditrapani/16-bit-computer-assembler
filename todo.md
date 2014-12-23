@@ -21,8 +21,38 @@ Error handling
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
 - Wrong number of args for instructions, directives, etc
+    - Add `arg_count(args_str, count)` method to Command
+    - fails w/msg if count does not match on split
+    - Or could add it to constructor
+        - nil option:  for array and str
+        - 0   option:  checks args_str == nil
+        - 1+  option:  args_str.split.size == count
+    - Directives        num
+        - .set          2
+        - .word         1
+        - .array        *
+        - .fill-array   2
+        - .str          *
+        - .long-string  1 (non-token; key-word)
+        - .move         1
+        - .include      1 (non-token; file)
+        - .copy         1 (non-token; file)
+    - .copy, .include:  file exits error
+    - bin/assembler     file exits error
+    - pseudo-instructions
+        - NOP           0
+        - INC/DEC/JMP   1
+        - CPY/WRD       2
+- SHF and BRN have special, non-token args, need special errors
+- Register (R) arguments must be 0-15
+- i4 arguments must be 0-15
+- i8 arguments must be 0-255
+- Special:  D(LR), value-condition(NZP), flag-condition(CV-)
+  .long-string keep-newlines/strip-newlines
+- Label missing closing )
 - SymbolTable:  do not allow reserved words as symbols
   (no directives, instructions, or pseudo-instructions)
+  (what about LR, NZP, CV-, strip-newlines, keep-newlines
 - Negative values get treated like symbols because they don't start
   with a digit, a $ or a %
 
