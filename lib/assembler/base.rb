@@ -53,7 +53,8 @@ module Assembler
       raise_malformed str if /^\d[x|X]/ =~ str[0..1]
       start, base = get_start_and_base str[0]
       num = to_int_with_start_and_base(str, start, base)
-      raise_too_large num, str if num > 0xFFFF
+      raise_too_large str if num > 0xFFFF
+      raise_negative str if num < 0
       num
     end
 
@@ -75,9 +76,17 @@ module Assembler
       fail AsmError, "Malformed integer '#{str}'"
     end
 
-    def self.raise_too_large(num, str)
-      fail AsmError, "Number greater than $FFFF: #{str}" if num > 0xFFFF
+    def self.raise_too_large(str)
+      fail AsmError, "Number greater than $FFFF: #{str}"
     end
+
+    def self.raise_negative(str)
+      fail AsmError, "Negative numbers not allowed: #{str}"
+    end
+
+    # def self.raise_asm_error(str, message)
+    #   fail AsmError, "Negative numbers not allowed: #{str}"
+    # end
   end
 
   def self.handle_error(error, source_info)

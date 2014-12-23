@@ -32,11 +32,20 @@ describe Assembler do
     end
     tests = ['$10000', '66000']
     tests.each do |str|
-      it "#{str.inspect} raises exception" do
+      it "#{str.inspect} raises 'Number too large' exception" do
         err = assert_raises Assembler::AsmError do
           Assembler::Int16.to_int str
         end
         assert_match 'Number greater than $FFFF', err.message
+      end
+    end
+    tests = ['-100', '$-600', '%-100']
+    tests.each do |str|
+      it "#{str.inspect} raises exception" do
+        err = assert_raises Assembler::AsmError do
+          Assembler::Int16.to_int str
+        end
+        assert_match "Negative numbers not allowed: #{str}", err.message
       end
     end
   end
