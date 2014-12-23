@@ -27,7 +27,7 @@ describe Assembler do
         err = assert_raises Assembler::AsmError do
           Assembler::Int16.to_int str
         end
-        assert_match "Malformed integer '#{str}'", err.message
+        assert_match "Malformed integer: '#{str}'", err.message
       end
     end
     tests = ['$10000', '66000']
@@ -36,7 +36,7 @@ describe Assembler do
         err = assert_raises Assembler::AsmError do
           Assembler::Int16.to_int str
         end
-        assert_match 'Number greater than $FFFF', err.message
+        assert_match "Number greater than $FFFF: '#{str}'", err.message
       end
     end
     tests = ['-100', '$-600', '%-100']
@@ -45,7 +45,7 @@ describe Assembler do
         err = assert_raises Assembler::AsmError do
           Assembler::Int16.to_int str
         end
-        assert_match "Negative numbers not allowed: #{str}", err.message
+        assert_match "Negative numbers not allowed: '#{str}'", err.message
       end
     end
   end

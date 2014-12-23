@@ -23,7 +23,6 @@ Error handling
 - .long-string:  write specs for failing cases
 - Negative values get treated like symbols because they don't start
   with a digit, a $ or a %
-- `to_int` error handling:  forbid negative values
 
 Future Improvements
 

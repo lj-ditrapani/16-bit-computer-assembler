@@ -73,20 +73,20 @@ module Assembler
     end
 
     def self.raise_malformed(str)
-      fail AsmError, "Malformed integer '#{str}'"
+      raise_asm_error "Malformed integer: '%s'", str
     end
 
     def self.raise_too_large(str)
-      fail AsmError, "Number greater than $FFFF: #{str}"
+      raise_asm_error "Number greater than $FFFF: '%s'", str
     end
 
     def self.raise_negative(str)
-      fail AsmError, "Negative numbers not allowed: #{str}"
+      raise_asm_error "Negative numbers not allowed: '%s'", str
     end
 
-    # def self.raise_asm_error(str, message)
-    #   fail AsmError, "Negative numbers not allowed: #{str}"
-    # end
+    def self.raise_asm_error(message, str)
+      fail AsmError, message % str
+    end
   end
 
   def self.handle_error(error, source_info)

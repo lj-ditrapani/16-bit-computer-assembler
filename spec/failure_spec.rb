@@ -33,7 +33,7 @@ def compare_stderr(stderr_path, reg_ex, asm_path, line_num)
 end
 
 tests = [
-  ['bad-int', /Malformed integer '3bad'/, 2],
+  ['bad-int', /Malformed integer: '3bad'/, 2],
   ['bad-symbol', /Undefined symbol: :R16/, 2],
   ['not-a-directive', /First word '\.NOT' not/, 4],
   ['not-an-instruction', /First word 'MAD' not/, 2],
