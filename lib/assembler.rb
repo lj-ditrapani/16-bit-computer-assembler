@@ -73,16 +73,4 @@ module Assembler
     asm = Assembler.new file_path
     print asm.assemble
   end
-
-  def self.line_type(first_word)
-    if first_word[0] == '('
-      :label
-    elsif first_word == '.set'
-      :set_directive
-    elsif first_word == '.include'
-      :include_directive
-    else
-      :command
-    end
-  end
 end

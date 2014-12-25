@@ -76,18 +76,6 @@ describe Assembler do
       end
     end
   end
-
-  describe 'line_type' do
-    it 'returns label for a label' do
-      type = Assembler.line_type '(my-label)'
-      assert_equal :label, type
-    end
-    it 'returns :set_directive for a .set directive' do
-      type = Assembler.line_type '.set'
-      assert_equal :set_directive, type
-    end
-  end
-
 end
 
 describe Assembler::Source do
