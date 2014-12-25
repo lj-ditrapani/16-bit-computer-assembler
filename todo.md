@@ -1,6 +1,8 @@
 Refactoring ideas
 
-- Move .set and .include directive code into Directives
+- Move label, .set and .include directive code into Directives
+- Then remove `Assembler.line_type` method
+- Then remove `Assembler.line_type` spec
 - Move README.md to doc/assembly-language.md and create new README.md
   that covers usage and design and refers to assembly-language.md
 
