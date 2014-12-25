@@ -1,20 +1,8 @@
 Refactoring ideas
 
+- Move .set and .include directive code into Directives
 - Move README.md to doc/assembly-language.md and create new README.md
   that covers usage and design and refers to assembly-language.md
-
-Spec related refactoring
-
-- Spell out .str and .long-string tests' expected results; provide
-  the actual expected machine code for the tests.
-- Move test code inside the Assembler module?
-- Use Assembler::Directives::XxxxDirective to describe tests?
-- Refactor `directives_spec`
-    - package last 3 asserts into a function?
-
-Extra specs
-
-- PseudoInstructions - Specs for pseudoInstructions
 
 Error handling
 
@@ -45,8 +33,14 @@ Error handling
         - CPY/WRD       2
 - SHF and BRN have special, non-token args, need special errors
 - Register (R) arguments must be 0-15
+- Use `Int16.to_int str, limit=16`
+  `to_int` gets second, default argument that checks result is
+  less than 2 ** limit
 - i4 arguments must be 0-15
 - i8 arguments must be 0-255
+- SHF ammount will have special check SHF class (must be 1-8)
+  SHF asks Token for 16-bit value, then does own check with result
+- All others are 16-bit 0x0000-0xFFFF
 - Special:  D(LR), value-condition(NZP), flag-condition(CV-)
   .long-string keep-newlines/strip-newlines
 - Label missing closing )
@@ -55,6 +49,16 @@ Error handling
   (what about LR, NZP, CV-, strip-newlines, keep-newlines
 - Negative values get treated like symbols because they don't start
   with a digit, a $ or a %
+
+Spec related refactoring
+
+- Spell out .str and .long-string tests' expected results; provide
+  the actual expected machine code for the tests.
+- Move test code inside the Assembler module?
+
+Extra specs
+
+- PseudoInstructions - Specs for pseudoInstructions
 
 Future Improvements
 
