@@ -1,10 +1,10 @@
 require './lib/assembler/base'
-require './lib/assembler/source'
 require './lib/assembler/command_list'
 require './lib/assembler/symbol_table'
 require './lib/assembler/instructions'
 require './lib/assembler/directives'
 require './lib/assembler/pseudo_instructions'
+require './lib/assembler/source'
 
 # All code for project contained within this top-level module
 module Assembler

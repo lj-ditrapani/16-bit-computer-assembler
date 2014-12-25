@@ -169,6 +169,20 @@ module Assembler
       end
     end
 
+    # Sets entry in symbol table with key as label name and value as
+    # current word index.  User text is of form `(label-name)`, but Line
+    # text is tranformed to `.label label-name`
+    class LabelDirective < Command
+      def self.label?(_text)
+        # text[0] == '('
+        false
+      end
+
+      def self.to_directive_form(text)
+        ".label #{text[0..-1]}"
+      end
+    end
+
     def self.handle(line, source, symbol_table)
       directive = line.first_word.to_sym
       directive_class = const_get directive_to_class_name directive
