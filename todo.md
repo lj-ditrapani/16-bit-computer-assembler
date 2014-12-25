@@ -1,8 +1,5 @@
 Refactoring ideas
 
-- Move label, .set and .include directive code into Directives
-- Then remove `Assembler.line_type` method
-- Then remove `Assembler.line_type` spec
 - Move README.md to doc/assembly-language.md and create new README.md
   that covers usage and design and refers to assembly-language.md
 
@@ -45,7 +42,6 @@ Error handling
 - All others are 16-bit 0x0000-0xFFFF
 - Special:  D(LR), value-condition(NZP), flag-condition(CV-)
   .long-string keep-newlines/strip-newlines
-- Label missing closing )
 - SymbolTable:  do not allow reserved words as symbols
   (no directives, instructions, or pseudo-instructions)
   (what about LR, NZP, CV-, strip-newlines, keep-newlines
