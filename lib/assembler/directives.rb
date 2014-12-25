@@ -173,8 +173,8 @@ module Assembler
 
     # A command that does not generate any machine code
     class NoMachineCodeCommand < Command
-      def initialize
-        @word_length = 0
+      def word_length
+        0
       end
 
       def machine_code(_symbol_table)
@@ -184,22 +184,21 @@ module Assembler
 
     # Sets entry in symbol table with key as label name and value as
     # current word index.  User text is of form `(label-name)`, but Line
-    # text is transformed to `.label label-name`
+    # text is transformed to `.label (label-name)`
     class LabelDirective < NoMachineCodeCommand
-      def self.label?(_text)
-        # text[0] == '('
-        false
+      def self.label?(text)
+        text[0] == '('
       end
 
       def self.to_directive_form(text)
-        ".label #{text[0..-1]}"
+        '.label ' + text
       end
 
       def initialize(args_str, word_index, symbol_table)
         unless args_str[-1] == ')'
-          fail AsmError, "Missing closing ')' in label '(#{args_str}'"
+          fail AsmError, "Missing closing ')' in label '#{args_str}'"
         end
-        symbol_table[args_str[0...-1]] = word_index
+        symbol_table[args_str[1...-1]] = word_index
       end
     end
 

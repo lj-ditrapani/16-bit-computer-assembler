@@ -30,7 +30,7 @@ module Assembler
       line = @source.pop_line
       return if line.empty?
       line.word_index = @commands.word_index
-      dispatch line
+      handle_command line
     end
 
     def machine_code
@@ -39,17 +39,6 @@ module Assembler
     end
 
     private
-
-    def dispatch(line)
-      a = ::Assembler
-      args_str = line.args_str
-      case a.line_type(line.first_word)
-      when :label then handle_label(line)
-      when :set_directive then handle_set_directive(args_str)
-      when :include_directive then handle_include_directive(args_str)
-      when :command then handle_command(line)
-      end
-    end
 
     def handle_command(line)
       command = create_command(line)
@@ -68,20 +57,6 @@ module Assembler
       else
         handle_error first_sym
       end
-    end
-
-    def handle_label(line)
-      @symbol_table[line.first_word[1...-1]] = line.word_index
-    end
-
-    def handle_set_directive(args_str)
-      name, str_value = args_str.split(/\s+/, 2)
-      token = Token.new str_value
-      @symbol_table.set_token(name, token)
-    end
-
-    def handle_include_directive(args_str)
-      @source.include_file args_str
     end
 
     def handle_error(first_sym)
