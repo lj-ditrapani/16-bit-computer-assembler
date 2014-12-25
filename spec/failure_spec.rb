@@ -48,7 +48,8 @@ tests = [
   ['long-string-bad-arg', long_string_arg, 4],
   ['missing-end-long-string', missing_long_string, 3],
   ['array-start-with-bracket', "Array must start with '['", 3],
-  ['array-missing-bracket', "Missing ']' to end array", 2]
+  ['array-missing-bracket', "Missing ']' to end array", 2],
+  ['label-no-close', "Missing closing ')' in label '(my-label'", 3]
 ]
 
 tests.each { |args| run_failing_cli_test(*args) }
