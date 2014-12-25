@@ -21,7 +21,7 @@ describe Assembler::Directives do
     Assembler::Directives.handle(line, source, SYMBOL_TABLE)
   end
 
-  describe '.move Directive' do
+  describe Assembler::Directives::MoveDirective do
     tests = [
       ['$00FF', 0x0010, 239],
       ['audio', 0x005, (0xD800 - 5)]
@@ -34,7 +34,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe '.word Directive' do
+  describe Assembler::Directives::WordDirective do
     tests = [
       ['42', 42],
       ['audio', 0xD800]
@@ -47,7 +47,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe '.array Directive' do
+  describe Assembler::Directives::ArrayDirective do
     tests = [
       ['[1 2 3]', [], [1, 2, 3]],
       ['[ 1 2 3', ['  4 5 6', '  7 8 9]'], [1, 2, 3, 4, 5, 6, 7, 8, 9]],
@@ -68,7 +68,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe '.fill-array Directive' do
+  describe Assembler::Directives::FillArrayDirective do
     tests = [
       ['1 0', [0]],
       ['3 42', [42, 42, 42]],
@@ -84,7 +84,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe '.str Directive' do
+  describe Assembler::Directives::StrDirective do
     tests = [
       '', 'a', 'a ', "a \t", 'abc', 'a b c', 'a "b" c', 'Hellow World',
       'She said "hi" '
@@ -99,7 +99,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe '.long-string Directive' do
+  describe Assembler::Directives::LongStringDirective do
     list = [
       ['.end-long-string'],
       [' a b ', '.end-long-string  # end'],
