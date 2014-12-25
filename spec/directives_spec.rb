@@ -4,6 +4,7 @@ require './lib/assembler'
 describe Assembler::Directives do
   Source = Assembler::Source
   SYMBOL_TABLE = { audio: 0xD800 }
+  D = Assembler::Directives
 
   def check(cmd, expected_machine_code)
     actual_machine_code = cmd.machine_code SYMBOL_TABLE
@@ -21,7 +22,7 @@ describe Assembler::Directives do
     Assembler::Directives.handle(line, source, SYMBOL_TABLE)
   end
 
-  describe Assembler::Directives::MoveDirective do
+  describe D::MoveDirective do
     tests = [
       ['$00FF', 0x0010, 239],
       ['audio', 0x005, (0xD800 - 5)]
@@ -34,7 +35,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe Assembler::Directives::WordDirective do
+  describe D::WordDirective do
     tests = [
       ['42', 42],
       ['audio', 0xD800]
@@ -47,7 +48,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe Assembler::Directives::ArrayDirective do
+  describe D::ArrayDirective do
     tests = [
       ['[1 2 3]', [], [1, 2, 3]],
       ['[ 1 2 3', ['  4 5 6', '  7 8 9]'], [1, 2, 3, 4, 5, 6, 7, 8, 9]],
@@ -68,7 +69,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe Assembler::Directives::FillArrayDirective do
+  describe D::FillArrayDirective do
     tests = [
       ['1 0', [0]],
       ['3 42', [42, 42, 42]],
@@ -84,7 +85,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe Assembler::Directives::StrDirective do
+  describe D::StrDirective do
     tests = [
       '', 'a', 'a ', "a \t", 'abc', 'a b c', 'a "b" c', 'Hellow World',
       'She said "hi" '
@@ -99,7 +100,7 @@ describe Assembler::Directives do
     end
   end
 
-  describe Assembler::Directives::LongStringDirective do
+  describe D::LongStringDirective do
     list = [
       ['.end-long-string'],
       [' a b ', '.end-long-string  # end'],
@@ -136,8 +137,7 @@ describe Assembler::Directives do
     ]
     tests.each do |directive, expected_class_name|
       it "#{directive} --> #{expected_class_name}" do
-        d = Assembler::Directives
-        actual_class_name = d.directive_to_class_name directive
+        actual_class_name = D.directive_to_class_name directive
         assert_equal expected_class_name, actual_class_name
       end
     end
