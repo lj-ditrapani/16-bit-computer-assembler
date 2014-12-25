@@ -2,13 +2,15 @@ module Assembler
   # Contains directive classes and knows how to handle directives
   module Directives
     DIRECTIVE_LIST = [
-      # .set and .include already handled
+      :'.label',
+      :'.set',
       :'.word',
       :'.array',
       :'.fill-array',
       :'.str',
       :'.long-string',  # .end-long-string consumed by LongString class
       :'.move',
+      :'.include',
       :'.copy'
     ]
 
@@ -169,10 +171,21 @@ module Assembler
       end
     end
 
+    # A command that does not generate any machine code
+    class NoMachineCodeCommand < Command
+      def initialize
+        @word_length = 0
+      end
+
+      def machine_code(_symbol_table)
+        []
+      end
+    end
+
     # Sets entry in symbol table with key as label name and value as
     # current word index.  User text is of form `(label-name)`, but Line
-    # text is tranformed to `.label label-name`
-    class LabelDirective < Command
+    # text is transformed to `.label label-name`
+    class LabelDirective < NoMachineCodeCommand
       def self.label?(_text)
         # text[0] == '('
         false
@@ -181,6 +194,30 @@ module Assembler
       def self.to_directive_form(text)
         ".label #{text[0..-1]}"
       end
+
+      def initialize(args_str, word_index, symbol_table)
+        unless args_str[-1] == ')'
+          fail AsmError, "Missing closing ')' in label '(#{args_str}'"
+        end
+        symbol_table[args_str[0...-1]] = word_index
+      end
+    end
+
+    # Add entry in symbol table with key as first argument and
+    # value as second argument
+    class SetDirective < NoMachineCodeCommand
+      def initialize(args_str, _word_index, symbol_table)
+        name, str_value = args_str.split(/\s+/, 2)
+        token = Token.new str_value
+        symbol_table.set_token(name, token)
+      end
+    end
+
+    # Include in source lines from file specified by file-name argument
+    class IncludeDirective < NoMachineCodeCommand
+      def initialize(args_str, source)
+        source.include_file args_str
+      end
     end
 
     def self.handle(line, source, symbol_table)
@@ -188,9 +225,9 @@ module Assembler
       directive_class = const_get directive_to_class_name directive
       args = [line.args_str]
       case directive
-      when :'.move'
+      when :'.move', :'.set', :'.label'
         args += [line.word_index, symbol_table]
-      when :'.array', :'.long-string'
+      when :'.array', :'.long-string', :'.include'
         args.push(source)
       end
       directive_class.new(*args)
