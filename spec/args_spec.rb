@@ -68,8 +68,6 @@ describe Assembler::Args do
     end
   end
 
-  # 'S T'
-  # '8 4'
   symbol_table = { R0: 0, R1: 1, R2: 2, RF: 15, big: 65_535, med: 255 }
 
   it "'4 4 4' and 'R0 R1 R2' -> 3 Tokens" do
