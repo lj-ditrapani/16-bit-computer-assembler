@@ -58,23 +58,13 @@ describe Assembler::Args do
   it 'Returns limited Tokens when format uses T 8 4' do
     symbol_table = { sixteen: 65_536, eight: 256, four: 16 }
     args = Args.new('T 8 4').parse('sixteen eight four')
-    v = symbol_table[:sixteen]
-    msg = "Value must be less than #{v}: '#{v}'"
-    err = assert_raises Assembler::AsmError do
-      args[0].get_int symbol_table
+    [:sixteen, :eight, :four].each_with_index do |key, i|
+      v = symbol_table[key]
+      msg = "Value must be less than #{v}: '#{v}'"
+      err = assert_raises Assembler::AsmError do
+        args[i].get_int symbol_table
+      end
+      assert_match msg, err.message
     end
-    assert_match msg, err.message
-    v = symbol_table[:eight]
-    msg = "Value must be less than #{v}: '#{v}'"
-    err = assert_raises Assembler::AsmError do
-      args[1].get_int symbol_table
-    end
-    assert_match msg, err.message
-    v = symbol_table[:four]
-    msg = "Value must be less than #{v}: '#{v}'"
-    err = assert_raises Assembler::AsmError do
-      args[2].get_int symbol_table
-    end
-    assert_match msg, err.message
   end
 end
