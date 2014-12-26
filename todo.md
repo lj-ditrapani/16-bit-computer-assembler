@@ -31,6 +31,7 @@ Error handling
         - INC/DEC/JMP   1
         - CPY/WRD       2
 - SHF and BRN have special, non-token args, need special errors
+- BRN can have 2 or 3 args
 - Register (R) arguments must be 0-15
 - Use `Int16.to_int str, limit=16`
   `to_int` gets second, default argument that checks result is
