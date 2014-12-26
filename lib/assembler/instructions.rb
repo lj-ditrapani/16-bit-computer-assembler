@@ -24,7 +24,7 @@ module Assembler
     # all its arguments must be tokenized by the Assembler::Token class
     class InstructionWithOnlyTokenArgs < Instruction
       def initialize(args_str)
-        @tokens = args_str.split.map { |a| Token.new a }
+        @tokens = Args.new(self.class::FORMAT).parse(args_str)
       end
 
       private
@@ -54,6 +54,7 @@ module Assembler
     instructions_with_3_operands.each do |name, code|
       c = Class.new(InstructionWithOnlyTokenArgs)
       c::OP_CODE = code
+      c::FORMAT = '4 4 4'
       const_set name, c
     end
 
@@ -88,6 +89,7 @@ module Assembler
         private :get_3_nibbles
       end
       c::OP_CODE = code
+      c::FORMAT = '8 4'
       const_set name, c
     end
 
