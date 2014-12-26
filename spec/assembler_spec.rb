@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require './lib/assembler'
 
 describe Assembler do
-  describe 'to_int' do
+  describe Assembler::Int16 do
     tests = [
       ['$10', 16],
       ['$FF', 255],
@@ -32,11 +32,12 @@ describe Assembler do
     end
     tests = ['$10000', '66000']
     tests.each do |str|
-      it "#{str.inspect} raises 'Number too large' exception" do
+      it "#{str.inspect} raises 'Value too large' exception" do
         err = assert_raises Assembler::AsmError do
           Assembler::Int16.to_int str
         end
-        assert_match "Number greater than $FFFF: '#{str}'", err.message
+        assert_match "Value must be less than 65536: '#{str}'",
+                     err.message
       end
     end
     tests = ['-100', '$-600', '%-100']
@@ -45,7 +46,38 @@ describe Assembler do
         err = assert_raises Assembler::AsmError do
           Assembler::Int16.to_int str
         end
-        assert_match "Negative numbers not allowed: '#{str}'", err.message
+        assert_match "Negative numbers not allowed: '#{str}'",
+                     err.message
+      end
+    end
+    tests = [
+      ['$FFF', 16, 0xFFF],
+      ['$10', 8, 16],
+      ['$FF', 8, 255],
+      ['$F', 4, 15],
+      ['%1111', 4, 15]
+    ]
+    tests.each do |str, limit, num|
+      it "#{str.inspect} with limit #{limit} --> #{num}" do
+        assert_equal num, Assembler::Int16.to_int(str, limit)
+      end
+    end
+    tests = [
+      ['$1_0000', 16],
+      ['$100', 8],
+      ['%1_0000_0000', 8],
+      ['16', 4],
+      ['$10', 4],
+      ['%1_0000', 4]
+    ]
+    tests.each do |str, limit_exp|
+      it "Fails given #{str.inspect} and limit_exp #{limit_exp}" do
+        err = assert_raises Assembler::AsmError do
+          Assembler::Int16.to_int str, limit_exp
+        end
+        limit = 2**limit_exp
+        assert_match "Value must be less than #{limit}: '#{str}'",
+                     err.message
       end
     end
   end

@@ -49,11 +49,14 @@ module Assembler
   # Code to parse 16-bit integer from string.
   # `to_int` is the public method
   module Int16
-    def self.to_int(str)
+    POWERS_2 = { 4 => 16, 8 => 256, 16 => 65_536 }
+
+    def self.to_int(str, limit_exp = 16)
       raise_malformed str if /^\d[x|X]/ =~ str[0..1]
       start, base = get_start_and_base str[0]
       num = to_int_with_start_and_base(str, start, base)
-      raise_too_large str if num > 0xFFFF
+      limit = POWERS_2[limit_exp]
+      raise_too_large(str, limit) if num >= limit
       raise_negative str if num < 0
       num
     end
@@ -73,19 +76,19 @@ module Assembler
     end
 
     def self.raise_malformed(str)
-      raise_asm_error "Malformed integer: '%s'", str
+      raise_asm_error "Malformed integer: '#{str}'"
     end
 
-    def self.raise_too_large(str)
-      raise_asm_error "Number greater than $FFFF: '%s'", str
+    def self.raise_too_large(str, limit)
+      raise_asm_error "Value must be less than #{limit}: '#{str}'"
     end
 
     def self.raise_negative(str)
-      raise_asm_error "Negative numbers not allowed: '%s'", str
+      raise_asm_error "Negative numbers not allowed: '#{str}'"
     end
 
-    def self.raise_asm_error(message, str)
-      fail AsmError, message % str
+    def self.raise_asm_error(message)
+      fail AsmError, message
     end
   end
 
