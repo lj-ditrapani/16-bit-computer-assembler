@@ -22,10 +22,11 @@ module Assembler
   class Token
     attr_reader :type, :value
 
-    def initialize(str)
+    def initialize(str, limit_exp = 16)
+      @limit_exp = limit_exp
       if [/\$/, /%/, /\d/].any? { |match| match =~ str[0] }
         @type = :int
-        @value = Int16.to_int str
+        @value = to_int str
       else
         @type = :symbol
         @value = str.to_sym
@@ -37,12 +38,18 @@ module Assembler
       if @type == :int
         @value
       else
-        symbol_table[@value]
+        to_int(symbol_table[@value].to_s)
       end
     end
 
     def to_s
       "#<Assembler::Token #{@type} #{@value}>"
+    end
+
+    private
+
+    def to_int(str)
+      Int16.to_int str, @limit_exp
     end
   end
 

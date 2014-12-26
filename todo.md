@@ -7,11 +7,6 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
-- Use `Int16.to_int str, limit=16`
-  `to_int` gets second, default argument that checks result is
-  less than 2 ** limit
-- Then Token.new should take in an optional limit value
-  (default limit = 16)
 - Args class:  `Args.new(format).parse(agrs_str)`.
   Format: space delimited string of format tokens.
   Format tokens:

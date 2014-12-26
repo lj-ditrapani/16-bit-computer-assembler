@@ -188,4 +188,25 @@ describe Assembler::Token do
     assert_equal :int, token.type
     assert_equal 0xF099, token.value
   end
+  symbol_table = { a: 16, b: 256, c: 65_536 }
+  tests = [
+    ['16', 4],
+    ['256', 8],
+    ['65_536', 16],
+    [:a, 4],
+    [:b, 8],
+    [:c, 16]
+  ]
+  tests.each do |str, limit_exp|
+    it "Fails given #{str.inspect} and limit_exp #{limit_exp}" do
+      err = assert_raises Assembler::AsmError do
+        token = Assembler::Token.new str, limit_exp
+        token.get_int symbol_table
+      end
+      limit = 2**limit_exp
+      str = symbol_table[str] unless symbol_table[str].nil?
+      assert_match "Value must be less than #{limit}: '#{str}'",
+                   err.message
+    end
+  end
 end
