@@ -59,7 +59,7 @@ module Assembler
       end
 
       def args_str
-        @args_str ||= text_to_split.split(' ', 2)[1]
+        @args_str ||= _args_str
       end
 
       # Removes white space a begining and end and comments
@@ -86,6 +86,15 @@ module Assembler
         text_line = @text.strip
         return '' if text_line.empty? || text_line[0] == '#'
         text_line.split('#', 2)[0].strip
+      end
+
+      def _args_str
+        a = text_to_split.split(' ', 2)[1]
+        if a.nil?
+          ''
+        else
+          a
+        end
       end
 
       # Contains `file_name`, `line_number`, and `text` state.
