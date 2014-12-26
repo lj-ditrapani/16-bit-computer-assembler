@@ -10,7 +10,7 @@ Error handling
 - Args class:  `Args.new(format).parse(agrs_str)`.
   Format: space delimited string of format tokens.
   Format tokens:
-    - - (appears alone) No args, `args_str = nil`
+    - - (appears alone) No args, `args_str = ''`
     - * (appears alone) Don't parse, just return raw `args_str`
     - S Element is special, return raw string
     - T Element is 16-bit token

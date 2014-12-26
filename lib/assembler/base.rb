@@ -107,4 +107,31 @@ module Assembler
     $stderr.print msg_lines.join("\n")
     exit(1)
   end
+
+  # Parses the argument string of a command according to the given
+  # format.
+  # Returns a list of the parsed arguments.
+  # fails if the argument string does not match the given format.
+  class Args
+    def initialize(format)
+      @format = format.split
+    end
+
+    def parse(args_str)
+      if @format == ['*']
+        args_str
+      elsif @format == ['-']
+        parse_blank(args_str)
+      else
+        parse_all(args_str)
+      end
+    end
+
+    def parse_blank(args_str)
+      unless args_str == ''
+        fail AsmError,  "Expected 0 arguments, received: '#{args_str}'"
+      end
+      []
+    end
+  end
 end
