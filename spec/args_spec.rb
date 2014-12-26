@@ -67,4 +67,34 @@ describe Assembler::Args do
       assert_match msg, err.message
     end
   end
+
+  # 'S T'
+  # '8 4'
+  symbol_table = { R0: 0, R1: 1, R2: 2, RF: 15, big: 65_535, med: 255 }
+
+  it "'4 4 4' and 'R0 R1 R2' -> 3 Tokens" do
+    args = Args.new('4 4 4').parse('R0 R1 R2')
+    assert_equal [0, 1, 2], args.map { |e| e.get_int symbol_table }
+  end
+
+  it "'S T' and 'my-label big' -> [my-label, Token(big)]" do
+    args = Args.new('S T').parse('my-label big')
+    assert_equal 2, args.size
+    assert_equal 'my-label', args[0]
+    assert_equal 65_535, args[1].get_int(symbol_table)
+  end
+
+  it "'8 4' and 'med RF' -> [Token(med), Token(RF)]" do
+    args = Args.new('8 4').parse('med RF')
+    assert_equal 2, args.size
+    assert_equal [255, 15], args.map { |e| e.get_int symbol_table }
+  end
+
+  it "'4 S S 4' and 'R1 R 7 R0' -> [Token(R1), 'R', '7', Token(R0)]" do
+    args = Args.new('4 S S 4').parse('R1 R 7 R0')
+    assert_equal 4, args.size
+    assert_equal %w(R 7), args[1..2]
+    r_numbers = [args[0], args[3]].map { |e| e.get_int symbol_table }
+    assert_equal [1, 0], r_numbers
+  end
 end

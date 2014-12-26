@@ -8,16 +8,6 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
-- Args class:  `Args.new(format).parse(agrs_str)`.
-  Format: space delimited string of format tokens.
-  Format tokens:
-    - - (appears alone) No args, `args_str = ''`
-    - * (appears alone) Don't parse, just return raw `args_str`
-    - S Element is special, return raw string
-    - T Element is 16-bit token
-    - 8 Element is 8-bit token
-    - 4 Element is 4-bit token
-    - F Element is a file name; check if file exists
 - Wrong number of args for instructions, directives, etc
     - Add `parse_args(format, args_str)` method to Command
       Args.new(format).parse(args_str)
