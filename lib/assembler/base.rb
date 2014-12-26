@@ -151,5 +151,10 @@ module Assembler
       end
       file_name
     end
+
+    def make_token(format, arg)
+      limit_exp = { 'T' => 16, '8' => 8, '4' => 4 }[format]
+      Token.new arg, limit_exp
+    end
   end
 end
