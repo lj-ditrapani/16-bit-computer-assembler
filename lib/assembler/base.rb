@@ -114,24 +114,42 @@ module Assembler
   # fails if the argument string does not match the given format.
   class Args
     def initialize(format)
+      format = '' if format == '-'
       @format = format.split
     end
 
     def parse(args_str)
       if @format == ['*']
         args_str
-      elsif @format == ['-']
-        parse_blank(args_str)
       else
         parse_all(args_str)
       end
     end
 
-    def parse_blank(args_str)
-      unless args_str == ''
-        fail AsmError,  "Expected 0 arguments, received: '#{args_str}'"
+    private
+
+    def parse_all(args_str)
+      count = @format.size
+      msg = "Expected #{count} arguments, received: '#{args_str}'"
+      fail AsmError, msg unless count == args_str.split.size
+      @format.zip(args_str.split).map { |f, arg| parse_one(f, arg) }
+    end
+
+    def parse_one(format, arg)
+      if format == 'S'
+        arg
+      elsif format == 'F'
+        check_file_name arg
+      else
+        make_token format, arg
       end
-      []
+    end
+
+    def check_file_name(file_name)
+      unless File.file?(file_name)
+        fail AsmError, "File does not exist: '#{file_name}'"
+      end
+      file_name
     end
   end
 end

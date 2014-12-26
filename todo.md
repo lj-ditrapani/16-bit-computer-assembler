@@ -2,6 +2,7 @@ Refactoring ideas
 
 - Move README.md to doc/assembly-language.md and create new README.md
   that covers usage and design and refers to assembly-language.md
+- Flip assembly-language spec format around (start with instructions...)
 
 Error handling
 
