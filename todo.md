@@ -7,12 +7,27 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
+- Use `Int16.to_int str, limit=16`
+  `to_int` gets second, default argument that checks result is
+  less than 2 ** limit
+- Then Token.new should take in an optional limit value
+  (default limit = 16)
+- Args class:  `Args.new(format).parse(agrs_str)`.
+  Format: space delimited string of format tokens.
+  Format tokens:
+    - - (appears alone) No args, `args_str = nil`
+    - * (appears alone) Don't parse, just return raw `args_str`
+    - S Element is special, return raw string
+    - T Element is 16-bit token
+    - 8 Element is 8-bit token
+    - 4 Element is 4-bit token
+    - F Element is a file name; check if file exists
 - Wrong number of args for instructions, directives, etc
-    - Add `arg_count(args_str, count)` method to Command
+    - Add `parse_args(format, args_str)` method to Command
+      Args.new(format).parse(args_str)
     - fails w/msg if count does not match on split
-    - Or could add it to constructor
-        - nil option:  for array and str
-        - 0   option:  checks args_str == nil
+        - *   option:  for array and str
+        - -   option:  checks args_str == nil
         - 1+  option:  args_str.split.size == count
     - Directives        num
         - .set          2
@@ -31,11 +46,8 @@ Error handling
         - INC/DEC/JMP   1
         - CPY/WRD       2
 - SHF and BRN have special, non-token args, need special errors
-- BRN can have 2 or 3 args
+- BRN can have 2 or 3 args (do * format)
 - Register (R) arguments must be 0-15
-- Use `Int16.to_int str, limit=16`
-  `to_int` gets second, default argument that checks result is
-  less than 2 ** limit
 - i4 arguments must be 0-15
 - i8 arguments must be 0-255
 - SHF ammount will have special check SHF class (must be 1-8)
