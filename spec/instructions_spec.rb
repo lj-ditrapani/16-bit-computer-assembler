@@ -3,7 +3,7 @@ require './lib/assembler'
 
 describe Assembler::Instructions do
   tests = [
-    [:END, nil, 0x0000],
+    [:END, '', 0x0000],
     [:HBY, '$AB RC', 0x1ABC],
     [:LBY, '$CB RA', 0x2CBA],
     [:LOD, 'RA RC', 0x3A0C],
