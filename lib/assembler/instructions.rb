@@ -24,7 +24,7 @@ module Assembler
     # all its arguments must be tokenized by the Assembler::Token class
     class InstructionWithOnlyTokenArgs < Instruction
       def initialize(args_str)
-        @tokens = Args.new(self.class::FORMAT).parse(args_str)
+        @tokens = args(args_str)
       end
 
       private
@@ -95,7 +95,10 @@ module Assembler
 
     # The end program (halt) instruction
     class ENDi < Instruction
-      def initialize(_)
+      FORMAT = '-'
+
+      def initialize(args_str)
+        args(args_str)
       end
 
       def nibbles(_)
@@ -105,12 +108,10 @@ module Assembler
 
     # The shift instruction
     class SHF < Instruction
+      FORMAT = '4 S 4 4'
+
       def initialize(args_str)
-        rs1, dir, ammount, rd = args_str.split
-        @rs1 = Token.new rs1
-        @dir = dir
-        @ammount = Token.new ammount
-        @rd = Token.new rd
+        @rs1, @dir, @ammount, @rd = args(args_str)
       end
 
       def nibbles(symbol_table)
@@ -132,8 +133,8 @@ module Assembler
           else
             parse_cv_condition_value(args)
           end
-        @value_register = Token.new(value_str)
-        @address_register = Token.new(args[-1])
+        @value_register = Token.new(value_str, 4)
+        @address_register = Token.new(args[-1], 4)
       end
 
       def nibbles(symbol_table)
@@ -172,8 +173,10 @@ module Assembler
 
     # The "save the program counter" instruction
     class SPC < Instruction
+      FORMAT = '4'
+
       def initialize(args_str)
-        @rs1 = Token.new args_str
+        @rs1 = args(args_str)[0]
       end
 
       def nibbles(symbol_table)
