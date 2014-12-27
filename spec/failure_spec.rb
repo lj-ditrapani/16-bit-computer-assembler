@@ -51,7 +51,8 @@ tests = [
   ['array-missing-bracket', "Missing ']' to end array", 2],
   ['label-no-close', "Missing closing ')' in label '(my-label'", 3],
   ['add-2-args', "Expected 3 arguments, received: '1 2'", 2],
-  ['lod-3-args', "Expected 2 arguments, received: 'RA R1 R2'", 1]
+  ['lod-3-args', "Expected 2 arguments, received: 'RA R1 R2'", 1],
+  ['word-multi-args', "Expected 1 arguments, received: '57 92'", 1]
 ]
 
 tests.each { |args| run_failing_cli_test(*args) }
