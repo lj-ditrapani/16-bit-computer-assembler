@@ -2,6 +2,9 @@ Refactoring ideas
 
 Error handling
 
+- Create fail line tests.  Give asm line and expected failure.
+    - These tests will run much faster than acceptance tests & faster to
+      write.
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
     - Number of args, type of args
@@ -26,7 +29,7 @@ Spec related refactoring
 
 Extra specs
 
-- PseudoInstructions - Specs for pseudoInstructions
+- Specs for PseudoInstructions (already tested in acceptance specs)
 
 Future Improvements
 
