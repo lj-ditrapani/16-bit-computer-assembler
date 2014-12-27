@@ -14,6 +14,10 @@ module Assembler
     def initialize
       @word_length = 1
     end
+
+    def args(args_str)
+      Args.new(self.class::FORMAT).parse(args_str)
+    end
   end
 
   AsmError = Class.new(StandardError)
