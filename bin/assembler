@@ -4,7 +4,7 @@ require './lib/assembler'
 # Top-level module
 module Assembler
   def self.run_cli
-    usage = 'Usage:  ./assembler.rb path/to/file.asm > path/to/file.exe'
+    usage = 'Usage:  bin/assembler path/to/file.asm > path/to/file.exe'
     if ARGV.length != 1
       puts usage
       exit

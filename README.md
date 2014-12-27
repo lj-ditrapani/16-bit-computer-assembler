@@ -7,7 +7,7 @@ The specification of the assembly language is in
 The assembler prints the assembled machine code to standard out.
 Redirect standard out to write to a file.
 
-Usage:  `./assembler.rb path/to/file.asm > path/to/file.exe`
+Usage:  `bin/assembler path/to/file.asm > path/to/file.exe`
 
 It is a two pass assembler.  On the first pass, the assembler generates
 a list of 'Commands' and fills in the symbol table.  On the second pass,
