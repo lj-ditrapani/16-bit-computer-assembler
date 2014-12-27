@@ -25,9 +25,11 @@ module Assembler
 
     # insert 16-bit value at current memory address
     class WordDirective < Command
+      FORMAT = 'T'
+
       def initialize(args_str)
+        @value = args(args_str)[0]
         super()
-        @value = Token.new args_str
       end
 
       def machine_code(symbol_table)
@@ -37,8 +39,10 @@ module Assembler
 
     # Move cursor forward to memory address and zero-fill hole
     class MoveDirective < Command
+      FORMAT = 'T'
+
       def initialize(args_str, word_index, symbol_table)
-        address_token = Token.new args_str
+        address_token = args(args_str)[0]
         address = address_token.get_int symbol_table
         @word_length = address - word_index
       end
@@ -89,10 +93,11 @@ module Assembler
 
     # Set contiguous memory addresses all to same value
     class FillArrayDirective < Command
-      def initialize(args_str)
-        size, fill = args_str.split
-        @fill = Token.new fill
-        @word_length = Int16.to_int size
+      FORMAT = 'T T'
+
+      def initialize(args_str, _, symbol_table)
+        size, @fill = args(args_str)
+        @word_length = size.get_int symbol_table
       end
 
       def machine_code(symbol_table)
@@ -115,8 +120,10 @@ module Assembler
 
     # Set following memory address to ASCII values of multi-line string
     class LongStringDirective < Command
+      FORMAT = 'S'
+
       def initialize(args_str, source)
-        char = get_join_char(args_str)
+        char = get_join_char(args(args_str)[0])
         lines = get_string_lines(source)
         @code = lines.join(char).split('').map(&:ord)
         @code.unshift @code.length
@@ -161,8 +168,10 @@ module Assembler
 
     # Copy binary value from file directly into program
     class CopyDirective < Command
+      FORMAT = 'F'
+
       def initialize(args_str)
-        @code = IO.read(args_str).unpack('S>*')
+        @code = IO.read(args(args_str)[0]).unpack('S>*')
         @word_length = @code.length
       end
 
@@ -186,6 +195,8 @@ module Assembler
     # current word index.  User text is of form `(label-name)`, but Line
     # text is transformed to `.label (label-name)`
     class LabelDirective < NoMachineCodeCommand
+      FORMAT = 'S'
+
       def self.label?(text)
         text[0] == '('
       end
@@ -195,6 +206,7 @@ module Assembler
       end
 
       def initialize(args_str, word_index, symbol_table)
+        args(args_str)            # Ensure exactly 1 argument
         unless args_str[-1] == ')'
           fail AsmError, "Missing closing ')' in label '#{args_str}'"
         end
@@ -205,17 +217,20 @@ module Assembler
     # Add entry in symbol table with key as first argument and
     # value as second argument
     class SetDirective < NoMachineCodeCommand
+      FORMAT = 'S T'
+
       def initialize(args_str, _word_index, symbol_table)
-        name, str_value = args_str.split(/\s+/, 2)
-        token = Token.new str_value
+        name, token = args args_str
         symbol_table.set_token(name, token)
       end
     end
 
     # Include in source lines from file specified by file-name argument
     class IncludeDirective < NoMachineCodeCommand
+      FORMAT = 'F'
+
       def initialize(args_str, source)
-        source.include_file args_str
+        source.include_file(args(args_str)[0])
       end
     end
 
@@ -224,7 +239,7 @@ module Assembler
       directive_class = const_get directive_to_class_name directive
       args = [line.args_str]
       case directive
-      when :'.move', :'.set', :'.label'
+      when :'.move', :'.set', :'.label', :'.fill-array'
         args += [line.word_index, symbol_table]
       when :'.array', :'.long-string', :'.include'
         args.push(source)
