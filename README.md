@@ -1,5 +1,5 @@
-Assembler of ljd 16-bit CPU
-===========================
+Assembler for ljd 16-bit CPU
+============================
 
 The specification of the assembly language is in
 [doc/language-spec.md](https://github.com/lj-ditrapani/16-bit-computer-assembler/doc/language-spec.md).
