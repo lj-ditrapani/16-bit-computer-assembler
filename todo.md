@@ -10,14 +10,7 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
-- Delete all '*' format related spec & code in Args; useless
 - Wrong number of args for instructions, directives, etc
-    - Add `parse_args(format, args_str)` method to Command
-      Args.new(format).parse(args_str)
-    - fails w/msg if count does not match on split
-        - *   option:  for array and str
-        - -   option:  checks args_str == nil
-        - 1+  option:  args_str.split.size == count
     - Directives        num
         - .set          2
         - .word         1

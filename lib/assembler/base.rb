@@ -123,11 +123,7 @@ module Assembler
     end
 
     def parse(args_str)
-      if @format == ['*']
-        args_str
-      else
-        parse_all(args_str)
-      end
+      parse_all(args_str)
     end
 
     private

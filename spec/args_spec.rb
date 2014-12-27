@@ -4,12 +4,7 @@ require './lib/assembler/base'
 describe Assembler::Args do
   Args = Assembler::Args
   it 'Can be instantiated' do
-    Args.new '*'
-  end
-
-  it 'Returns raw args_str when format is *' do
-    args_str = 'this is my string # :)'
-    assert_equal args_str, Args.new('*').parse(args_str)
+    Args.new '-'
   end
 
   it 'Returns empty list when format is -' do
