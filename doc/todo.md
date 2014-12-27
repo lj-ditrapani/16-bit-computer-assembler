@@ -1,7 +1,5 @@
 Refactoring ideas
 
-- README.md to cover usage and design and refers to assembly-language.md
-
 Error handling
 
 - Create fail acceptance tests:
