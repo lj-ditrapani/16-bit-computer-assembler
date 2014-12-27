@@ -2,7 +2,7 @@ Assembler for ljd 16-bit CPU
 ============================
 
 The specification of the assembly language is in
-[doc/language-spec.md](https://github.com/lj-ditrapani/16-bit-computer-assembler/blob/master/doc/language-spec.md).
+[doc/assembly-language.md](https://github.com/lj-ditrapani/16-bit-computer-assembler/blob/master/doc/assembly-language.md).
 
 
 It is a two pass assembler.  On the first pass, the assembler generates
