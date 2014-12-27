@@ -11,6 +11,9 @@ module Assembler
     # Copy pseudo-instruction:  copy value from one register to another
     class CPY < Instructions::ADI
       def initialize(args_str)
+        Args.new('4 4').parse(args_str)
+        # Just ensuring that there are 2 args
+        # Cannot use args because it will ovewrite ADI format
         source, destination = args_str.split
         super("#{source} 0 #{destination}")
       end
@@ -19,11 +22,10 @@ module Assembler
     # Sets register to 16-bit value using HBY + LBY instruction sequence
     # Example:    WRD $1234 R7    ==>    HBY $12 R7    LBY $34 R7
     class WRD < Command
+      FORMAT = 'T 4'
+
       def initialize(args_str)
-        # get value, store for later
-        value_str, register = args_str.split
-        @value = Token.new value_str
-        @register = Token.new register
+        @value, @register = args(args_str)
         @word_length = 2
       end
 
@@ -39,15 +41,16 @@ module Assembler
     inc_dec_str = '%{args_str} 1 %{args_str}'
 
     class_data = [
-      [:NOP, :ADI, '0 0 0'],          # ADI R0 0 R0   ---  R0 + 0 => R0
-      [:INC, :ADI, inc_dec_str],
-      [:DEC, :SBI, inc_dec_str],
-      [:JMP, :BRN, '0 NZP %{args_str}']
+      [:NOP, :ADI, '0 0 0', '-'],  # ADI R0 0 R0   ---  R0 + 0 => R0
+      [:INC, :ADI, inc_dec_str, '4'],
+      [:DEC, :SBI, inc_dec_str, '4'],
+      [:JMP, :BRN, '0 NZP %{args_str}', '4']
     ]
 
-    class_data.each do |name, super_class, args_str_template|
+    class_data.each do |name, super_class, args_str_template, format|
       c = Class.new(Instructions.const_get(super_class)) do
         define_method(:initialize) do |args_str|
+          Args.new(format).parse(args_str)    # Just check arg count
           super(args_str_template % { args_str: args_str })
         end
       end
