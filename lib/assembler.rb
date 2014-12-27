@@ -14,6 +14,12 @@ module Assembler
                          'instruction or pseudo-intruction.'
 
     def initialize(file_path)
+      begin
+        Args.new('F').parse(file_path)
+      rescue AsmError => e
+        $stderr.puts "\n\n***\n#{e.message}\n***\n\n"
+        exit(1)
+      end
       @source = Source.new.include_file(file_path)
       @commands, @symbol_table = CommandList.new, SymbolTable.new
     end

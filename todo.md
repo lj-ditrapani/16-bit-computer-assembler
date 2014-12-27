@@ -10,23 +10,7 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
-- Wrong number of args for instructions, directives, etc
-    - Directives        num
-        - .set          2
-        - .word         1
-        - .array        *
-        - .fill-array   2
-        - .str          *
-        - .long-string  1 (non-token; key-word)
-        - .move         1
-        - .include      1 (non-token; file)
-        - .copy         1 (non-token; file)
-    - .copy, .include:  file exits error
-    - bin/assembler     file exits error
-    - pseudo-instructions
-        - NOP           0
-        - INC/DEC/JMP   1
-        - CPY/WRD       2
+    - Number of args, type of args
 - SHF and BRN have special, non-token args, need special errors
 - SHF ammount will have special check SHF class (must be 1-8)
   SHF asks Token for 16-bit value, then does own check with result

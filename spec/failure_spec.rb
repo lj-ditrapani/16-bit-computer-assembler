@@ -56,3 +56,15 @@ tests = [
 ]
 
 tests.each { |args| run_failing_cli_test(*args) }
+
+describe 'When the dne.asm program is given as CL input' do
+  name = 'dne'
+  stderr_path = "spec/stderr/#{name}.txt"
+  `./bin/assembler #{name}.asm 2> #{stderr_path}`
+  it 'It outputs an AsmError on stderr' do
+    File.open(stderr_path) do |f|
+      str = f.read
+      assert_match "File does not exist: 'dne.asm'", str
+    end
+  end
+end
