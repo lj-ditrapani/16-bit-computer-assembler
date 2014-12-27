@@ -8,6 +8,8 @@ Error handling
 
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
+- Add Args into all classes
+- Delete all '*' format related spec & code in Args; useless
 - Wrong number of args for instructions, directives, etc
     - Add `parse_args(format, args_str)` method to Command
       Args.new(format).parse(args_str)
@@ -32,13 +34,10 @@ Error handling
         - INC/DEC/JMP   1
         - CPY/WRD       2
 - SHF and BRN have special, non-token args, need special errors
-- BRN can have 2 or 3 args (do * format)
-- Register (R) arguments must be 0-15
-- i4 arguments must be 0-15
-- i8 arguments must be 0-255
 - SHF ammount will have special check SHF class (must be 1-8)
   SHF asks Token for 16-bit value, then does own check with result
-- All others are 16-bit 0x0000-0xFFFF
+- Need tests for SHF Direction (L/R) and ammount (1-8)
+- BRN can have 2 or 3 args; use special error handling
 - Special:  D(LR), value-condition(NZP), flag-condition(CV-)
   .long-string keep-newlines/strip-newlines
 - SymbolTable:  do not allow reserved words as symbols
