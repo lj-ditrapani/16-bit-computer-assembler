@@ -38,11 +38,11 @@ missing_long_string = /Missing .end-long-string to end .long-string d/
 
 tests = [
   ['bad-int', /Malformed integer: '3bad'/, 2],
-  ['bad-symbol', /Undefined symbol: :R16/, 2],
+  ['bad-symbol', /Undefined symbol: 'R16'/, 2],
   ['not-a-directive', /First word '\.NOT' not/, 4],
   ['not-an-instruction', /First word 'MAD' not/, 2],
   ['error-from-included', /First word 'include' not/, 3, 'included'],
-  ['neg-set', /Undefined symbol: :"-5"/, 1],
+  ['neg-set', /Undefined symbol: '-5'/, 1],
   ['lone-end-long-string', end_long_string_before, 4],
   ['end-long-string-before-long-string', end_long_string_before, 5],
   ['long-string-bad-arg', long_string_arg, 4],
