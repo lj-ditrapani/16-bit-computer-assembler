@@ -134,12 +134,7 @@ module Assembler
     class BRN < Instruction
       def initialize(args_str)
         args = args_str.split
-        @cond, value_str =
-          if args.length == 3
-            parse_nzp_condition_value(args)
-          else
-            parse_cv_condition_value(args)
-          end
+        @cond, value_str = condition_and_value args, args_str
         @value_register = Token.new(value_str, 4)
         @address_register = Token.new(args[-1], 4)
       end
@@ -151,6 +146,18 @@ module Assembler
       end
 
       private
+
+      def condition_and_value(args, args_str)
+        case args.length
+        when 3
+          parse_nzp_condition_value(args)
+        when 2
+          parse_cv_condition_value(args)
+        else
+          msg = "Expected 2 or 3 arguments, received: '#{args_str}'"
+          fail AsmError, msg
+        end
+      end
 
       def parse_nzp_condition_value(args)
         nzp = args[1]
