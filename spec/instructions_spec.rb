@@ -52,17 +52,10 @@ describe Assembler::Instructions do
     end
   end
 
-  describe 'BRN Exception' do
-    it 'Raises exception when flag condition is invalid' do
-      err = assert_raises Assembler::AsmError do
-        Assembler::Instructions.handle(:BRN, 'N RA')
-      end
-      assert_match(/got "N" instead/, err.message)
-    end
-  end
-
   describe 'Failing instructions raise AsmError' do
-    cond = "Invalid value condition, must be C V or -, received: '%s'"
+    flag = "Invalid flag condition, must be C V or -, received: '%s'"
+    val = 'Invalid value condition, must be combination of NZP, ' \
+          "received:  '%s'"
     b_args = "Expected 2 or 3 arguments, received: '%s'"
     tests = [
       [:SHF, '16 R 7 RC', "Value must be less than 16: '16'"],
@@ -78,15 +71,16 @@ describe Assembler::Instructions do
       [:BRN, 'RB ZP 16', "Value must be less than 16: '16'"],
       [:BRN, 'too_big_4 ZP RC', "Value must be less than 16: '16'"],
       [:BRN, 'RC ZP RA RB', b_args % 'RC ZP RA RB'],
-      [:BRN, 'C RB RC', "Undefined symbol: 'C'"],
+      [:BRN, 'C RB RC', val % 'RB'],
+      [:BRN, 'C N RC', "Undefined symbol: 'C'"],
       [:BRN, 'C', b_args % 'C'],
-      [:BRN, 'R0 - R1',
-       "Invalid value condition, must be combination of NZP, received:  '-'"],
-      [:BRN, 'ZP RA', cond % 'ZP'],
-      [:BRN, 'CV RB', cond % 'CV'],
-      [:BRN, '-V RB', cond % '-V'],
-      [:BRN, 'C- RB', cond % 'C-'],
-      [:BRN, 'CV- RB', cond % 'CV-']
+      [:BRN, 'R0 - R1', val % '-'],
+      [:BRN, 'N RA', flag % 'N'],
+      [:BRN, 'ZP RA', flag % 'ZP'],
+      [:BRN, 'CV RB', flag % 'CV'],
+      [:BRN, '-V RB', flag % '-V'],
+      [:BRN, 'C- RB', flag % 'C-'],
+      [:BRN, 'CV- RB', flag % 'CV-']
     ]
     tests.each do |mnemonic, args_str, error_msg|
       it "#{mnemonic} #{args_str} -> raises #{error_msg}" do
