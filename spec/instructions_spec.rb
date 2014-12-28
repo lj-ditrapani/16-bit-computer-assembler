@@ -63,6 +63,7 @@ describe Assembler::Instructions do
 
   describe 'Failing instructions raise AsmError' do
     cond = "Invalid value condition, must be C V or -, received: '%s'"
+    b_args = "Expected 2 or 3 arguments, received: '%s'"
     tests = [
       [:SHF, '16 R 7 RC', "Value must be less than 16: '16'"],
       [:SHF, 'too_big_4 R 7 RC', "Value must be less than 16: '16'"],
@@ -76,9 +77,9 @@ describe Assembler::Instructions do
       [:BRN, 'RB ZP too_big_4', "Value must be less than 16: '16'"],
       [:BRN, 'RB ZP 16', "Value must be less than 16: '16'"],
       [:BRN, 'too_big_4 ZP RC', "Value must be less than 16: '16'"],
-      [:BRN, 'RC ZP RA RB', "Expected 3 arguments, received: 'RC ZP RA RB'"],
-      [:BRN, 'C RB RC', 'Undefined symbol: :"C"'],
-      [:BRN, 'C', "Expected 2 or 3 arguments, received: 'C'"],
+      [:BRN, 'RC ZP RA RB', b_args % 'RC ZP RA RB'],
+      [:BRN, 'C RB RC', "Undefined symbol: 'C'"],
+      [:BRN, 'C', b_args % 'C'],
       [:BRN, 'R0 - R1',
        "Invalid value condition, must be combination of NZP, received:  '-'"],
       [:BRN, 'ZP RA', cond % 'ZP'],
