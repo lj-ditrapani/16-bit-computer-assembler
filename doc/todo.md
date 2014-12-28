@@ -28,10 +28,6 @@ Spec related refactoring
   the actual expected machine code for the tests.
 - Move test code inside the Assembler module?
 
-Extra specs
-
-- Specs for PseudoInstructions (already tested in acceptance specs)
-
 Future Improvements
 
 - Consider adding .pstr and .long-pstring directives to allow for
