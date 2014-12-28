@@ -12,6 +12,10 @@ task :wc do
   sh %(wc lib/assembler.rb lib/assembler/*)
   puts ''
   sh %(wc spec/*.rb)
+  puts ''
+  cd 'spec/assembly-programs' do
+    sh %(wc *.asm failures/*)
+  end
 end
 
 desc 'Runs rubocop and tests'
