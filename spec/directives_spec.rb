@@ -3,7 +3,9 @@ require './lib/assembler'
 
 describe Assembler::Directives do
   Source = Assembler::Source
-  SYMBOL_TABLE = Assembler::SymbolTable.new
+  symbol_table = Assembler::SymbolTable.new
+  symbol_table[:too_big16] = 2**16
+  SYMBOL_TABLE = symbol_table
   D = Assembler::Directives
 
   def check(cmd, expected_machine_code)
@@ -145,7 +147,19 @@ describe Assembler::Directives do
 
   describe 'Failing directives raise AsmError' do
     tests = [
-      ['.set', 'my-var not-defined', 'Undefined symbol: :"not-defined"']
+      ['.set', 'my-var not-defined', 'Undefined symbol: :"not-defined"'],
+      ['.word', '65_536', "Value must be less than 65536: '65_536'"],
+      ['.word', 'too_big16', "Value must be less than 65536: '65536'"],
+      ['.fill-array', 'not-defined audio', 'Undefined symbol: :"not-defined"'],
+      ['.move', 'too_big16', "Value must be less than 65536: '65536'"],
+      ['.move', 'not-defined', 'Undefined symbol: :"not-defined"'],
+      ['.move', '', "Expected 1 arguments, received: ''"],
+      ['.include', '', "Expected 1 arguments, received: ''"],
+      ['.include', 'dne.asm', "File does not exist: 'dne.asm'"],
+      ['.copy', 'dne.exe', "File does not exist: 'dne.exe'"],
+      ['.label', '()', 'Symbol cannot be empty'],
+      ['.label', '(', "Missing closing ')' in label '('"],
+      ['.array', '[1 2 3a]', "Malformed integer: '3a'"]
     ]
     tests.each do |directive, args_str, error_msg|
       it "#{directive} #{args_str} -> raises #{error_msg}" do
