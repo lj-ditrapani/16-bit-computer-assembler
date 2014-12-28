@@ -161,6 +161,9 @@ module Assembler
 
       def parse_nzp_condition_value(args)
         nzp = args[1]
+        msg = 'Invalid value condition, must be combination of NZP, ' \
+              "received:  '#{nzp}'"
+        fail AsmError, msg unless /^[NZP]+$/ =~ nzp
         cond = 0
         cond += 4 if nzp =~ /N/
         cond += 2 if nzp =~ /Z/
@@ -174,13 +177,13 @@ module Assembler
       end
 
       def parse_cv_code(cv)
-        str = 'Bad condition code in BRN, should be - C or V, ' \
-              "but got #{cv.inspect} instead"
+        msg = 'Invalid flag condition, must be C V or -, received: ' \
+              "'#{cv}'"
         case cv
         when 'V' then 2
         when 'C' then 1
         when '-' then 0
-        else fail AsmError, str
+        else fail AsmError, msg
         end
       end
     end

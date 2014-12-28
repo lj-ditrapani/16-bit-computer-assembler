@@ -9,17 +9,13 @@ Error handling
 - Create fail acceptance tests:
     - Write assembly programs that should trigger exceptions
     - Number of args, type of args
-- SHF and BRN have special, non-token args, need special errors
-- SHF ammount will have special check SHF class (must be 1-8)
-  SHF asks Token for 16-bit value, then does own check with result
-- Need tests for SHF Direction (L/R) and ammount (1-8)
-- BRN can have 2 or 3 args; use special error handling
-- Special:  D(LR), value-condition(NZP), flag-condition(CV-)
 - SymbolTable:  do not allow reserved words as symbols
   (no directives, instructions, or pseudo-instructions)
   (what about LR, NZP, CV-, strip-newlines, keep-newlines
 - Negative values get treated like symbols because they don't start
   with a digit, a $ or a %
+- BRN value condition:  NZZ, NNNN, PZP will all pass without error.
+  Not worth checking?  Currently only check with /^[NZP]+$/ regex.
 
 Spec related refactoring
 
