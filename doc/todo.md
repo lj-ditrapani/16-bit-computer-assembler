@@ -15,7 +15,6 @@ Error handling
 - Need tests for SHF Direction (L/R) and ammount (1-8)
 - BRN can have 2 or 3 args; use special error handling
 - Special:  D(LR), value-condition(NZP), flag-condition(CV-)
-  .long-string keep-newlines/strip-newlines
 - SymbolTable:  do not allow reserved words as symbols
   (no directives, instructions, or pseudo-instructions)
   (what about LR, NZP, CV-, strip-newlines, keep-newlines
