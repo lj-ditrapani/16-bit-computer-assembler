@@ -57,7 +57,7 @@ module Assembler
 
     def [](key)
       value = super(key.to_sym)
-      message = "Undefined symbol: #{key.inspect}"
+      message = "Undefined symbol: '#{key}'"
       fail(AsmError, message) if value.nil?
       value
     end
