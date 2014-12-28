@@ -112,11 +112,18 @@ module Assembler
 
       def initialize(args_str)
         @rs1, @dir, @ammount, @rd = args(args_str)
+        msg = "Direction must be L or R, received: '#{@dir}'"
+        fail AsmError, msg unless %w(L R).include? @dir
       end
 
       def nibbles(symbol_table)
         rs1 = @rs1.get_int symbol_table
-        ammount = @ammount.get_int(symbol_table) - 1
+        ammount = @ammount.get_int(symbol_table)
+        msg1 = "Amount must be greater than 0, received: '#{ammount}'"
+        msg2 = "Amount must be less than 9, received: '#{ammount}'"
+        fail AsmError, msg1 if ammount < 1
+        fail AsmError, msg2 if ammount > 8
+        ammount -= 1
         ammount += 8 if @dir == 'R'
         rd = @rd.get_int symbol_table
         [0xD, rs1, ammount, rd]
