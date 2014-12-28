@@ -3,7 +3,7 @@ require './lib/assembler'
 
 describe Assembler::Directives do
   Source = Assembler::Source
-  SYMBOL_TABLE = { audio: 0xD800 }
+  SYMBOL_TABLE = Assembler::SymbolTable.new
   D = Assembler::Directives
 
   def check(cmd, expected_machine_code)
@@ -139,6 +139,21 @@ describe Assembler::Directives do
       it "#{directive} --> #{expected_class_name}" do
         actual_class_name = D.directive_to_class_name directive
         assert_equal expected_class_name, actual_class_name
+      end
+    end
+  end
+
+  describe 'Failing directives raise AsmError' do
+    tests = [
+      ['.set', 'my-var not-defined', 'Undefined symbol: :"not-defined"']
+    ]
+    tests.each do |directive, args_str, error_msg|
+      it "#{directive} #{args_str} -> raises #{error_msg}" do
+        err = assert_raises Assembler::AsmError do
+          cmd = handle.call(directive, args_str)
+          cmd.machine_code SYMBOL_TABLE
+        end
+        assert_match error_msg, err.message
       end
     end
   end
