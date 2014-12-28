@@ -149,12 +149,12 @@ describe Assembler::Directives do
     long_str = '.long-string parameter must be keep-newlines or ' \
                "strip-newlines. Received \"drop-newlines\" instead"
     tests = [
-      ['.set', 'my-var not-defined', 'Undefined symbol: :"not-defined"'],
+      ['.set', 'my-var not-defined', "Undefined symbol: 'not-defined'"],
       ['.word', '65_536', "Value must be less than 65536: '65_536'"],
       ['.word', 'too_big16', "Value must be less than 65536: '65536'"],
-      ['.fill-array', 'not-defined audio', 'Undefined symbol: :"not-defined"'],
+      ['.fill-array', 'not-defined audio', "Undefined symbol: 'not-defined'"],
       ['.move', 'too_big16', "Value must be less than 65536: '65536'"],
-      ['.move', 'not-defined', 'Undefined symbol: :"not-defined"'],
+      ['.move', 'not-defined', "Undefined symbol: 'not-defined'"],
       ['.move', '', "Expected 1 arguments, received: ''"],
       ['.include', '', "Expected 1 arguments, received: ''"],
       ['.include', 'dne.asm', "File does not exist: 'dne.asm'"],
