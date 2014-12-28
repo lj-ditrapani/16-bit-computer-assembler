@@ -3,6 +3,7 @@ Refactoring ideas
 Error handling
 
 - Create fail line tests.  Give asm line and expected failure.
+    - Use `Xxx.handle` (Directives, Instructions, PseudoI) as interface
     - These tests will run much faster than acceptance tests & faster to
       write.
 - Create fail acceptance tests:
