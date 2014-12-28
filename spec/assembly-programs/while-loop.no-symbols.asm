@@ -33,7 +33,7 @@ SBI R2 1 R2       # R2 - 1 -> R2
 BRN R0 NZP R3     # $.... -> PC (unconditional)
 
 # End of while loop
-SHF R5 left 1 R6  # Double sum
+SHF R5 L 1 R6  # Double sum
 
 # Negate double of sum
 SUB R7 R6 R7      # 0 - R6 -> R7

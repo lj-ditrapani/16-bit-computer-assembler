@@ -40,7 +40,7 @@ JMP start_addr              # $.... -> PC (unconditional)
 
 (loop_end)
 # End of while loop
-SHF sum left 1 R6           # Double sum
+SHF sum L 1 R6           # Double sum
 
 # Negate double of sum
 SUB R7 R6 R7                # 0 - R6 -> R7
