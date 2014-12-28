@@ -21,22 +21,22 @@ module Assembler
 
     BASE = {
       :audio => 0xD800,
-      :"net-in" => 0xDC00,
-      :"net-out" => 0xE000,
-      :"storage-in" => 0xE400,
-      :"storage-out" => 0xE800,
+      :'net-in' => 0xDC00,
+      :'net-out' => 0xE000,
+      :'storage-in' => 0xE400,
+      :'storage-out' => 0xE800,
       :tiles => 0xEC00,
       :grid => 0xF400,
-      :"cell-x-y-flip" => 0xFD60,
+      :'cell-x-y-flip' => 0xFD60,
       :sprites => 0xFE8C,
-      :"cell-colors" => 0xFF8C,
-      :"sprite-colors" => 0xFFAC,
+      :'cell-colors' => 0xFF8C,
+      :'sprite-colors' => 0xFFAC,
       :keyboard => 0xFFFA,
-      :"net-status" => 0xFFFB,
-      :"enable-bits" => 0xFFFC,
-      :"storage-read-address" => 0xFFFD,
-      :"storage-write-address" => 0xFFFE,
-      :"frame-interrupt-vector" => 0xFFFF
+      :'net-status' => 0xFFFB,
+      :'enable-bits' => 0xFFFC,
+      :'storage-read-address' => 0xFFFD,
+      :'storage-write-address' => 0xFFFE,
+      :'frame-interrupt-vector' => 0xFFFF
     }
 
     SYMBOL_TABLE = add_register_symbols
