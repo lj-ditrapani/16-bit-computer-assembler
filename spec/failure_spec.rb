@@ -52,7 +52,10 @@ tests = [
   ['label-no-close', "Missing closing ')' in label '(my-label'", 3],
   ['add-2-args', "Expected 3 arguments, received: '1 2'", 2],
   ['lod-3-args', "Expected 2 arguments, received: 'RA R1 R2'", 1],
-  ['word-multi-args', "Expected 1 arguments, received: '57 92'", 1]
+  ['word-multi-args', "Expected 1 arguments, received: '57 92'", 1],
+  ['shf-amount', "Amount must be greater than 0, received: '0'", 2],
+  ['shf-dir', "Direction must be L or R, received: 'D'", 3],
+  ['brn-value', /combination of NZP, received:  'NZ-'/, 1]
 ]
 
 tests.each { |args| run_failing_cli_test(*args) }

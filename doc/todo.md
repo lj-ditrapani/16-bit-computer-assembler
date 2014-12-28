@@ -2,13 +2,6 @@ Refactoring ideas
 
 Error handling
 
-- Create fail line tests.  Give asm line and expected failure.
-    - Use `Xxx.handle` (Directives, Instructions, PseudoI) as interface
-    - These tests will run much faster than acceptance tests & faster to
-      write.
-- Create fail acceptance tests:
-    - Write assembly programs that should trigger exceptions
-    - Number of args, type of args
 - SymbolTable:  do not allow reserved words as symbols
   (no directives, instructions, or pseudo-instructions)
   (what about LR, NZP, CV-, strip-newlines, keep-newlines
