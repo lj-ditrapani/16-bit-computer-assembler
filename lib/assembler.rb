@@ -13,8 +13,14 @@ module Assembler
     BAD_FIRST_WORD_MSG = "First word '%s' not a valid directive, " \
                          'instruction or pseudo-intruction.'
 
-    def initialize(input)
-      @source = make_source input
+    def initialize(file_path)
+      begin
+        Args.new('F').parse(file_path)
+      rescue AsmError => e
+        $stderr.puts "\n\n***\n#{e.message}\n***\n\n"
+        exit(1)
+      end
+      @source = Source.new.include_file(file_path)
       @commands, @symbol_table = CommandList.new, SymbolTable.new
     end
 
@@ -39,28 +45,6 @@ module Assembler
     end
 
     private
-
-    def make_source(input)
-      if input.key? :file_path
-        make_source_with_file(input[:file_path])
-      else
-        make_source_with_lines(input[:lines])
-      end
-    end
-
-    def make_source_with_file(file_path)
-      begin
-        Args.new('F').parse(file_path)
-      rescue AsmError => e
-        $stderr.puts "\n\n***\n#{e.message}\n***\n\n"
-        exit(1)
-      end
-      Source.new.include_file file_path
-    end
-
-    def make_source_with_lines(lines)
-      Source.new.include_lines lines
-    end
 
     def handle_command(line)
       command = create_command(line)
@@ -92,7 +76,7 @@ module Assembler
   end
 
   def self.main(file_path)
-    asm = Assembler.new(file_path: file_path)
+    asm = Assembler.new file_path
     print asm.assemble
   end
 end
