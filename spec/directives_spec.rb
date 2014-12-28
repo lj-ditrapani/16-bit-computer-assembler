@@ -146,6 +146,8 @@ describe Assembler::Directives do
   end
 
   describe 'Failing directives raise AsmError' do
+    long_str = '.long-string parameter must be keep-newlines or ' \
+               "strip-newlines. Received \"drop-newlines\" instead"
     tests = [
       ['.set', 'my-var not-defined', 'Undefined symbol: :"not-defined"'],
       ['.word', '65_536', "Value must be less than 65536: '65_536'"],
@@ -159,7 +161,8 @@ describe Assembler::Directives do
       ['.copy', 'dne.exe', "File does not exist: 'dne.exe'"],
       ['.label', '()', 'Symbol cannot be empty'],
       ['.label', '(', "Missing closing ')' in label '('"],
-      ['.array', '[1 2 3a]', "Malformed integer: '3a'"]
+      ['.array', '[1 2 3a]', "Malformed integer: '3a'"],
+      ['.long-string', 'drop-newlines', long_str]
     ]
     tests.each do |directive, args_str, error_msg|
       it "#{directive} #{args_str} -> raises #{error_msg}" do
