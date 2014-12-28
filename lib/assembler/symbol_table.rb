@@ -47,6 +47,11 @@ module Assembler
     end
 
     def []=(key, value)
+      key_str = key.to_s
+      fail AsmError, 'Symbol cannot be empty' if key_str.size < 1
+      unless /[a-zA-Z]/ =~ key_str[0]
+        fail AsmError, "Symbol must begin with a letter: '#{key_str}"
+      end
       super(key.to_sym, value)
     end
 
