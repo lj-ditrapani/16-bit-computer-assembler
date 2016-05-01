@@ -1,6 +1,8 @@
 Assembler for ljd 16-bit CPU
 ============================
 
+This is the old design.  See <https://github.com/lj-ditrapani/16-bit-computer-specification> for new design & direction.
+
 The specification of the assembly language is in
 [doc/assembly-language.md](https://github.com/lj-ditrapani/16-bit-computer-assembler/blob/master/doc/assembly-language.md).
 
